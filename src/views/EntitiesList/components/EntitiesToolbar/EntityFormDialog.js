@@ -1,14 +1,21 @@
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
-import {colors, Divider, Typography} from "@material-ui/core";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import PropTypes from "prop-types";
-import React, {useContext, useState} from "react";
+import React, {useContext} from "react";
 import {makeStyles} from "@material-ui/styles";
+import Account from "../../../Account";
 import {EntityContext} from "../../../../contexts/entity-context";
-import {Ratings} from "../../../../components/Rating/Ratings";
+import {AccountProfile} from "../../../Account/components";
+import AccountDetails from "../../../Account/components/AccountDetails";
+import EntityProfile from "../EntityProfile";
+import EntityDetails from "../EntityDetails";
+import {StatesContextProvider} from "../../../../contexts/states-context";
+import {TypesContextProvider} from "../../../../contexts/types-context";
+import {EntityCard} from "../index";
+import {CardActions} from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -28,66 +35,57 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export function EntityDialog(props) {
+export function EntityFormDialog(props) {
   const classes = useStyles();
 
   const {open, onClose} = props;
-  const [entity] = useContext(EntityContext);
 
   return <Dialog
     onClose={onClose}
     open={open}
-    maxWidth={"sm"}
+    maxWidth={"lg"}
     fullWidth={true}
   >
     <DialogTitle>
-      {entity.name}
+      Nova Entidade
     </DialogTitle>
     <DialogContent dividers>
-      <div className={classes.imageContainer}>
-        <img
-          alt="Entidade"
-          className={classes.image}
-          src={entity.avatarUrl}
-        />
-      </div>
-      <Typography
-        align="center"
-        gutterBottom
-        variant="h4"
-      >
-        {entity.name}
-      </Typography>
-      <Typography
-        align="center"
-        variant="body2"
-      >
-        <a target="_blank"
-           href={`https://www.google.com/maps/search/?api=1&query=${entity.address.street},${entity.address.city},${entity.address.state}`}>
-          {`${entity.address.street} - ${entity.address.city} / ${entity.address.state}`}
-        </a>
-      </Typography>
-      <Typography
-        align="center"
-        variant="body1"
-      >
-        {entity.description}
-      </Typography>
-      <Divider variant={"middle"}/>
-      <Ratings rating={entity.rating}/>
+      <Account
+        profile={<EntityCard actions={
+          <>
+            <Button
+              className={classes.uploadButton}
+              color="primary"
+              variant="text"
+            >
+              Upload picture
+            </Button>
+            <Button variant="text">
+              Remove picture
+            </Button>
+          </>
+        }/>}
+        details={
+          <StatesContextProvider>
+            <TypesContextProvider>
+              <EntityDetails/>
+            </TypesContextProvider>
+          </StatesContextProvider>
+        }
+      />
     </DialogContent>
     <DialogActions>
       <Button onClick={onClose} color="secondary">
-        Fechar
+        Cancelar
       </Button>
       <Button onClick={onClose} color="primary" variant={"contained"}>
-        Agendar visita
+        Salvar
       </Button>
     </DialogActions>
   </Dialog>
 }
 
-EntityDialog.propTypes = {
+EntityFormDialog.propTypes = {
   onClose: PropTypes.func,
   open: PropTypes.bool
 }

@@ -36,10 +36,19 @@ export const entitiesMock = [
       "evaluations": [
         {
           "user": {
-            "name": ""
+            "name": "João",
+            "avatar": "https://www.w3schools.com/howto/img_avatar.png"
           },
-          "comment": "",
-          "value": ""
+          "comment": "Cum lura peregrinatione, omnes deuses amor placidus, emeritis turpises. Glos, terror, et diatria.",
+          "value": 4
+        },
+        {
+          "user": {
+            "name": "João",
+            "avatar": "https://www.w3schools.com/howto/img_avatar.png"
+          },
+          "comment": "Cum lura peregrinatione, omnes deuses amor placidus, emeritis turpises. Glos, terror, et diatria.",
+          "value": 4
         }
       ]
     }
@@ -77,6 +86,13 @@ export const entitiesMock = [
     "rating": {
       "average": "3",
       "evaluations": [
+        {
+          "user": {
+            "name": ""
+          },
+          "comment": "Lugar muito tranquilo",
+          "value": 3
+        },
         {
           "user": {
             "name": ""

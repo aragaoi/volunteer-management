@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { makeStyles } from '@material-ui/styles';
-import { Button } from '@material-ui/core';
+import {makeStyles} from '@material-ui/styles';
 
-import { SearchInput } from 'components';
+import {SearchInput} from 'components';
+import {EntityFormDialogButton} from "./EntityFormDialogButton";
+import {EntityContextProvider} from "../../../../contexts/entity-context";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -29,7 +30,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const EntitiesToolbar = props => {
-  const { className, ...rest } = props;
+  const {className, ...rest} = props;
 
   const classes = useStyles();
 
@@ -39,13 +40,10 @@ const EntitiesToolbar = props => {
       className={clsx(classes.root, className)}
     >
       <div className={classes.row}>
-        <span className={classes.spacer} />
-        <Button
-          color="primary"
-          variant="contained"
-        >
-          Adicionar entidade
-        </Button>
+        <span className={classes.spacer}/>
+        <EntityContextProvider>
+          <EntityFormDialogButton/>
+        </EntityContextProvider>
       </div>
       <div className={classes.row}>
         <SearchInput

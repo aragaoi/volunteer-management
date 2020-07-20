@@ -3,7 +3,10 @@ import {makeStyles} from '@material-ui/styles';
 import {Grid} from '@material-ui/core';
 
 import {EntitiesToolbar, EntityCard} from './components';
-import {entitiesMock} from './data';
+import {entitiesMock} from '../../data';
+import {EntityContextProvider} from "../../contexts/entity-context";
+import {RatingStars} from "../../components/Rating/RatingStars";
+import {ProfileDialogButton} from "../../components/Profile/ProfileDialogButton";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -21,7 +24,7 @@ const EntitiesList = () => {
 
   return (
     <div className={classes.root}>
-      <EntitiesToolbar />
+      <EntitiesToolbar/>
       <div className={classes.content}>
         <Grid
           container
@@ -35,7 +38,29 @@ const EntitiesList = () => {
               md={6}
               xs={12}
             >
-              <EntityCard entity={entity} />
+              <EntityContextProvider entity={entity}>
+                <EntityCard actions={
+                  <Grid
+                    container
+                    justify="space-between"
+                  >
+                    <Grid
+                      className={classes.statsItem}
+                      item
+                    >
+                      <RatingStars rating={entity.rating.average}/>
+                    </Grid>
+                    <Grid
+                      className={classes.statsItem}
+                      item
+                    >
+                      <ProfileDialogButton
+                        entity={entity}
+                      />
+                    </Grid>
+                  </Grid>
+                }/>
+              </EntityContextProvider>
             </Grid>
           ))}
         </Grid>

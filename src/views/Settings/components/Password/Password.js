@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { makeStyles } from '@material-ui/styles';
+import {makeStyles} from '@material-ui/styles';
 import {
   Card,
   CardHeader,
@@ -9,7 +9,7 @@ import {
   CardActions,
   Divider,
   Button,
-  TextField
+  TextField, Grid
 } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
@@ -17,7 +17,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const Password = props => {
-  const { className, ...rest } = props;
+  const {className, ...rest} = props;
 
   const classes = useStyles();
 
@@ -40,40 +40,49 @@ const Password = props => {
     >
       <form>
         <CardHeader
-          subheader="Update password"
-          title="Password"
+          title="Senha"
         />
-        <Divider />
+        <Divider/>
         <CardContent>
-          <TextField
-            fullWidth
-            label="Password"
-            name="password"
-            onChange={handleChange}
-            type="password"
-            value={values.password}
-            variant="outlined"
-          />
-          <TextField
-            fullWidth
-            label="Confirm password"
-            name="confirm"
-            onChange={handleChange}
-            style={{ marginTop: '1rem' }}
-            type="password"
-            value={values.confirm}
-            variant="outlined"
-          />
-        </CardContent>
-        <Divider />
-        <CardActions>
-          <Button
-            color="primary"
-            variant="outlined"
+          <Grid
+            container
+            spacing={3}
           >
-            Update
-          </Button>
-        </CardActions>
+            <Grid
+              item
+              md={6}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                label="Senha"
+                name="password"
+                margin="dense"
+                onChange={handleChange}
+                type="password"
+                value={values.password}
+                variant="outlined"
+              />
+            </Grid>
+            <Grid
+              item
+              md={6}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                label="Confirme a senha"
+                name="confirm"
+                margin="dense"
+                onChange={handleChange}
+                // style={{ marginTop: '1rem' }}
+                type="password"
+                value={values.confirm}
+                variant="outlined"
+              />
+            </Grid>
+          </Grid>
+        </CardContent>
       </form>
     </Card>
   );

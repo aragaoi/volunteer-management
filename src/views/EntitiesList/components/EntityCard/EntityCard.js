@@ -1,13 +1,10 @@
-import React, {useState} from 'react';
+import React, {useContext} from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {makeStyles} from '@material-ui/styles';
-import {Card, CardActions, CardContent, colors, Divider, Grid, Typography} from '@material-ui/core';
-import InfoIcon from '@material-ui/icons/Info';
-import StarIcon from '@material-ui/icons/Star';
-import StarBorderIcon from '@material-ui/icons/StarBorder';
-import Button from "@material-ui/core/Button";
-import {EntityDialog} from "./EntityDialog";
+import {Avatar, Card, CardActions, CardContent, colors, Divider, Typography} from '@material-ui/core';
+import {EntityContext} from "../../../../contexts/entity-context";
+import {AddressLink} from "../../../../components/AddressLink";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -55,16 +52,8 @@ const useStyles = makeStyles(theme => ({
 const EntityCard = props => {
   const classes = useStyles();
 
-  const { className, entity, ...rest } = props;
-  const [open, setOpen] = useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const {className, ...rest} = props;
+  const [entity] = useContext(EntityContext);
 
   return (
     <Card
@@ -72,13 +61,11 @@ const EntityCard = props => {
       className={clsx(classes.root, className)}
     >
       <CardContent>
-        <div className={classes.imageContainer}>
-          <img
-            alt="Entidade"
-            className={classes.image}
-            src={entity.avatarUrl}
-          />
-        </div>
+        <Avatar
+          src={entity.avatarUrl}
+          alt="Entidade"
+          className={classes.imageContainer}
+        />
         <Typography
           align="center"
           gutterBottom
@@ -86,15 +73,7 @@ const EntityCard = props => {
         >
           {entity.name}
         </Typography>
-        <Typography
-          align="center"
-          variant="body2"
-        >
-          <a target="_blank"
-             href={`https://www.google.com/maps/search/?api=1&query=${entity.address.street},${entity.address.city},${entity.address.state}`}>
-            {`${entity.address.street} - ${entity.address.city} / ${entity.address.state}`}
-          </a>
-        </Typography>
+        <AddressLink address={entity.address}/>
         <Typography
           align="center"
           variant="body1"
@@ -104,55 +83,15 @@ const EntityCard = props => {
       </CardContent>
       <Divider/>
       <CardActions>
-        <Grid
-          container
-          justify="space-between"
-        >
-          <Grid
-            className={classes.statsItem}
-            item
-          >
-            <Typography
-              display="inline"
-              variant="body2"
-            >
-              {entity.rating && entity.rating.average > 0 &&
-              <>
-                {entity.rating.average > 0 ? <StarIcon/> : <StarBorderIcon/>}
-                {entity.rating.average > 1 ? <StarIcon/> : <StarBorderIcon/>}
-                {entity.rating.average > 2 ? <StarIcon/> : <StarBorderIcon/>}
-                {entity.rating.average > 3 ? <StarIcon/> : <StarBorderIcon/>}
-                {entity.rating.average > 4 ? <StarIcon/> : <StarBorderIcon/>}
-              </>
-              }
-            </Typography>
-          </Grid>
-          <Grid
-            className={classes.statsItem}
-            item
-          >
-            <Button
-              className={classes.button}
-              onClick={handleClickOpen}
-            >
-              <div className={classes.icon}><InfoIcon/></div>
-              Mais detalhes
-            </Button>
-          </Grid>
-        </Grid>
+        {props.actions}
       </CardActions>
-      <EntityDialog
-        entity={entity}
-        onClose={handleClose}
-        open={open}
-      />
     </Card>
   );
 };
 
 EntityCard.propTypes = {
+  actions: PropTypes.any,
   className: PropTypes.string,
-  entity: PropTypes.object.isRequired
 };
 
 export default EntityCard;
