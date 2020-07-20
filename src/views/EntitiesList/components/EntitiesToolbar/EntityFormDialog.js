@@ -16,6 +16,7 @@ import {StatesContextProvider} from "../../../../contexts/states-context";
 import {TypesContextProvider} from "../../../../contexts/types-context";
 import {EntityCard} from "../index";
 import {CardActions} from "@material-ui/core";
+import EntityHours from "../EntityHours";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -64,15 +65,14 @@ export function EntityFormDialog(props) {
               Remove picture
             </Button>
           </>
-        }/>}
-        details={
+        }/>}>
           <StatesContextProvider>
             <TypesContextProvider>
               <EntityDetails/>
             </TypesContextProvider>
           </StatesContextProvider>
-        }
-      />
+          <EntityHours/>
+      </Account>
     </DialogContent>
     <DialogActions>
       <Button onClick={onClose} color="secondary">

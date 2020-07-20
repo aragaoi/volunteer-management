@@ -30,31 +30,28 @@ const Account = (props) => {
           {props.profile}
         </Grid>
         <Grid
-          item
           lg={8}
           md={6}
           xl={8}
           xs={12}
-        >
-          {props.details}
-        </Grid>
-        <Grid
           item
-          lg={4}
-          md={6}
-          xl={4}
-          xs={12}
+          container
+          spacing={4}
         >
-        </Grid>
-        <Grid
-          item
-          lg={8}
-          md={6}
-          xl={8}
-          xs={12}
-          alignContent={"flex-end"}
-        >
-          <Password/>
+          {props.children.map(child =>
+            <Grid
+              item
+              xs={12}
+            >
+              {child}
+            </Grid>)
+          }
+          <Grid
+            item
+            xs={12}
+          >
+            <Password/>
+          </Grid>
         </Grid>
       </Grid>
     </div>

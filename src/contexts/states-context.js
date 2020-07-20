@@ -1,13 +1,14 @@
 import React, {useState, createContext} from "react";
+import {statesMock} from "../data";
 
-export const EntityContext = createContext();
+export const StatesContext = createContext();
 
-export const EntityContextProvider = props => {
-  const [entity, setEntity] = useState({...props.entity});
+export const StatesContextProvider = props => {
+  const [states, setStates] = useState(statesMock);
 
   return (
-    <EntityContext.Provider value={[entity, setEntity]}>
+    <StatesContext.Provider value={[states, setStates]}>
       {props.children}
-    </EntityContext.Provider>
+    </StatesContext.Provider>
   );
 };

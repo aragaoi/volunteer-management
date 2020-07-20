@@ -11,6 +11,8 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import './assets/scss/index.scss';
 import validators from './common/validators';
 import Routes from './Routes';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import MomentUtils from '@date-io/moment';
 
 const browserHistory = createBrowserHistory();
 
@@ -28,7 +30,9 @@ export default class App extends Component {
     return (
       <ThemeProvider theme={theme}>
         <Router history={browserHistory}>
-          <Routes />
+          <MuiPickersUtilsProvider utils={MomentUtils}>
+            <Routes />
+          </MuiPickersUtilsProvider>
         </Router>
       </ThemeProvider>
     );

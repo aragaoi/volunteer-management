@@ -107,6 +107,7 @@ const EntityDetails = props => {
               <TextField
                 multiline
                 rows={2}
+                rowsMax={8}
                 fullWidth
                 label="Descrição"
                 margin="dense"

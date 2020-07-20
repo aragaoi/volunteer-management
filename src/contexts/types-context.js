@@ -1,14 +1,14 @@
 import React, {useState, createContext} from "react";
-import {statesMock} from "../data";
+import {typesMock} from "../data";
 
-export const StatesContext = createContext();
+export const TypesContext = createContext();
 
-export const StatesContextProvider = props => {
-  const [states, setStates] = useState(statesMock);
+export const TypesContextProvider = props => {
+  const [types, setTypes] = useState([...typesMock]);
 
   return (
-    <StatesContext.Provider value={[states, setStates]}>
+    <TypesContext.Provider value={[types, setTypes]}>
       {props.children}
-    </StatesContext.Provider>
+    </TypesContext.Provider>
   );
 };
