@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {makeStyles} from '@material-ui/styles';
 import {Avatar, Card, CardActions, CardContent, colors, Divider, Typography} from '@material-ui/core';
-import {EntityContext} from "../../../../contexts/entity-context";
+import {EntityContext} from "../../../../contexts/entity.context";
 import {AddressLink} from "../../../../components/AddressLink";
 
 const useStyles = makeStyles(theme => ({

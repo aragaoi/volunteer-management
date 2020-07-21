@@ -13,7 +13,7 @@ import {
   Button,
   LinearProgress
 } from '@material-ui/core';
-import {EntityContext} from "../../../contexts/entity-context";
+import {EntityContext} from "../../../contexts/entity.context";
 import {AddressLink} from "../../../components/AddressLink";
 
 const useStyles = makeStyles(theme => ({
@@ -40,7 +40,7 @@ const EntityProfile = props => {
   const classes = useStyles();
 
   const { className, ...rest } = props;
-  const [entity, setEntity] = useContext(EntityContext);
+  const [{entity}] = useContext(EntityContext);
 
   return (
     <Card

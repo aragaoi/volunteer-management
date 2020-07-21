@@ -5,7 +5,8 @@ import {makeStyles} from '@material-ui/styles';
 
 import {SearchInput} from 'components';
 import {EntityFormDialogButton} from "./EntityFormDialogButton";
-import {EntityContextProvider} from "../../../../contexts/entity-context";
+import {EntityStore} from "../../../../contexts/entity.context";
+import {emptyEntity} from "../../../../services/entity.service";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -41,9 +42,9 @@ const EntitiesToolbar = props => {
     >
       <div className={classes.row}>
         <span className={classes.spacer}/>
-        <EntityContextProvider>
+        <EntityStore entity={emptyEntity()}>
           <EntityFormDialogButton/>
-        </EntityContextProvider>
+        </EntityStore>
       </div>
       <div className={classes.row}>
         <SearchInput

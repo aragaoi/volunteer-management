@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import PropTypes, {number} from 'prop-types';
 import {makeStyles} from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Divider, Grid, TextField, Typography} from '@material-ui/core';
-import {EntityContext} from "../../../contexts/entity-context";
+import {EntityContext} from "../../../contexts/entity.context";
 import {TimePicker} from "@material-ui/pickers";
 import Paper from "@material-ui/core/Paper";
 import FormControlLabel from "@material-ui/core/FormControlLabel";

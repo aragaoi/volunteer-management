@@ -13,9 +13,9 @@ import {
   Button,
   TextField
 } from '@material-ui/core';
-import {EntityContext} from "../../../contexts/entity-context";
-import {StatesContext} from "../../../contexts/states-context";
-import {TypesContext} from "../../../contexts/types-context";
+import {EntityContext} from "../../../contexts/entity.context";
+import {StatesContext} from "../../../contexts/states.context";
+import {TypesContext} from "../../../contexts/types.context";
 
 const useStyles = makeStyles(() => ({
   root: {}

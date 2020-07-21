@@ -7,7 +7,7 @@ import Button from "@material-ui/core/Button";
 import PropTypes from "prop-types";
 import React, {useContext, useState} from "react";
 import {makeStyles} from "@material-ui/styles";
-import {EntityContext} from "../../../../contexts/entity-context";
+import {EntityContext} from "../../../../contexts/entity.context";
 import {Ratings} from "../../../../components/Rating/Ratings";
 
 const useStyles = makeStyles(theme => ({
