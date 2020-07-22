@@ -15,7 +15,7 @@ const useStyles = makeStyles(() => ({
 export function RatingStars(props) {
   const classes = useStyles();
 
-  const {stars, size} = props;
+  const {stars, size = "default"} = props;
 
   return <Typography
         className={classes.root}
@@ -36,5 +36,5 @@ export function RatingStars(props) {
 
 RatingStars.propTypes = {
   stars: PropTypes.number.isRequired,
-  size: 'default' | 'inherit' | 'large' | 'small'
+  size: PropTypes.oneOf(['default', 'inherit', 'large', 'small'])
 }

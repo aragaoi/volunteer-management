@@ -32,7 +32,15 @@ const EntityHours = props => {
 
   const handleChange = event => {
     const newState = {...entity};
-    _.set(newState, event.target.name, event.target.value)
+
+    let value;
+    if (event.target.type === "checkbox") {
+      value = event.target.checked;
+    } else {
+      value = event.target.value;
+    }
+
+    _.set(newState, event.target.name, value);
     setEntity(newState);
   };
 
@@ -72,8 +80,8 @@ const EntityHours = props => {
             </Grid>
           </Grid>
 
-          {weekDays.map(weekDay =>
-            <Fragment>
+          {weekDays.map((weekDay, index) =>
+            <Fragment key={index}>
               <Divider variant={"inset"}/>
               <Grid
                 container

@@ -2,15 +2,7 @@ import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {makeStyles} from '@material-ui/styles';
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  CardActions,
-  Divider,
-  Button,
-  TextField, Grid
-} from '@material-ui/core';
+import {Card, CardContent, CardHeader, Divider, Grid, TextField} from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
   root: {}
@@ -21,16 +13,22 @@ const Password = props => {
 
   const classes = useStyles();
 
-  const [values, setValues] = useState({
-    password: '',
-    confirm: ''
-  });
+  const [password, setPassword] = useState();
+  const [confirm, setConfirm] = useState();
 
-  const handleChange = event => {
-    setValues({
-      ...values,
-      [event.target.name]: event.target.value
-    });
+  const handleChangePassword = event => {
+    event.stopPropagation();
+
+    const value = event.target.value;
+    setPassword(value);
+    props.onChange(value);
+  };
+
+  const handleChangeConfirm = event => {
+    event.stopPropagation();
+
+    const value = event.target.value;
+    setConfirm(value);
   };
 
   return (
@@ -58,9 +56,9 @@ const Password = props => {
                 label="Senha"
                 name="password"
                 margin="dense"
-                onChange={handleChange}
+                onChange={handleChangePassword}
                 type="password"
-                value={values.password}
+                value={password}
                 variant="outlined"
               />
             </Grid>
@@ -74,10 +72,10 @@ const Password = props => {
                 label="Confirme a senha"
                 name="confirm"
                 margin="dense"
-                onChange={handleChange}
+                onChange={handleChangeConfirm}
                 // style={{ marginTop: '1rem' }}
                 type="password"
-                value={values.confirm}
+                value={confirm}
                 variant="outlined"
               />
             </Grid>

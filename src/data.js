@@ -32,8 +32,24 @@ export const entitiesMock = [
     "description": "Orfanato que acolhe crianças e adolecentes desde 1990.",
     "avatarUrl": "https://www.geisinger.org/-/media/OneGeisinger/Images/ghs/patient-care/find-a-location/location-ctas/location-placeholder-460.jpg",
     "rating": {
-      "average": "4",
+      "average": 4,
       "evaluations": [
+        {
+          "user": {
+            "name": "João",
+            "avatar": "https://www.w3schools.com/howto/img_avatar.png"
+          },
+          "comment": "Cum lura peregrinatione, omnes deuses amor placidus, emeritis turpises. Glos, terror, et diatria.",
+          "value": 4
+        },
+        {
+          "user": {
+            "name": "João",
+            "avatar": "https://www.w3schools.com/howto/img_avatar.png"
+          },
+          "comment": "Cum lura peregrinatione, omnes deuses amor placidus, emeritis turpises. Glos, terror, et diatria.",
+          "value": 4
+        },
         {
           "user": {
             "name": "João",
@@ -84,7 +100,7 @@ export const entitiesMock = [
     "description": "Casa de repouso para idosos.",
     "avatarUrl": "https://www.geisinger.org/-/media/OneGeisinger/Images/ghs/patient-care/find-a-location/location-ctas/location-placeholder-460.jpg",
     "rating": {
-      "average": "3",
+      "average": 3,
       "evaluations": [
         {
           "user": {
@@ -134,14 +150,14 @@ export const entitiesMock = [
     "description": "ONG de trabalhos culturais com crianças e adolescentes de comunidades carente",
     "avatarUrl": "https://www.geisinger.org/-/media/OneGeisinger/Images/ghs/patient-care/find-a-location/location-ctas/location-placeholder-460.jpg",
     "rating": {
-      "average": "4",
+      "average": 4,
       "evaluations": [
         {
           "user": {
             "name": ""
           },
           "comment": "",
-          "value": ""
+          "value": 3
         }
       ]
     }
@@ -177,7 +193,7 @@ export const entitiesMock = [
     "description": "Casa de recuperação e reinserção social para dependentes químicos.",
     "avatarUrl": "https://www.geisinger.org/-/media/OneGeisinger/Images/ghs/patient-care/find-a-location/location-ctas/location-placeholder-460.jpg",
     "rating": {
-      "average": "5",
+      "average": 5,
       "evaluations": [
         {
           "user": {

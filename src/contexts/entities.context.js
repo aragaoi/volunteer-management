@@ -1,5 +1,6 @@
 import React, {createContext, useEffect, useState} from "react";
 import {entitiesMock} from "../data";
+import {list} from "../services/entity.service";
 
 export const EntitiesContext = createContext([]);
 
@@ -7,7 +8,7 @@ export const EntitiesStore = props => {
   const [entities, setEntities] = useState([]);
 
   useEffect(() => {
-    setEntities(props.entities || entitiesMock);
+    (async () => setEntities(await list()))();
   }, []);
 
   return (

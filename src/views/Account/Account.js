@@ -1,9 +1,8 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {makeStyles} from '@material-ui/styles';
 import {Grid} from '@material-ui/core';
-
-import {AccountProfile, AccountDetails} from './components';
 import {Password} from "../Settings/components";
+import {EntityContext} from "../../contexts/entity.context";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -13,6 +12,12 @@ const useStyles = makeStyles(theme => ({
 
 const Account = (props) => {
   const classes = useStyles();
+
+  const [entity, setEntity] = useContext(EntityContext);
+
+  function handlePasswordChange(password) {
+    setEntity({...entity, password});
+  }
 
   return (
     <div className={classes.root}>
@@ -38,8 +43,9 @@ const Account = (props) => {
           container
           spacing={4}
         >
-          {props.children.map(child =>
+          {props.children && props.children.map((child, index) =>
             <Grid
+              key={index}
               item
               xs={12}
             >
@@ -50,7 +56,7 @@ const Account = (props) => {
             item
             xs={12}
           >
-            <Password/>
+            <Password onChange={handlePasswordChange}/>
           </Grid>
         </Grid>
       </Grid>

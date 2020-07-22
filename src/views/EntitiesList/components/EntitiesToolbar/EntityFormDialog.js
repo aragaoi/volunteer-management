@@ -5,41 +5,33 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import PropTypes from "prop-types";
 import React, {useContext} from "react";
-import {makeStyles} from "@material-ui/styles";
 import Account from "../../../Account";
-import {EntityContext} from "../../../../contexts/entity.context";
-import {AccountProfile} from "../../../Account/components";
-import AccountDetails from "../../../Account/components/AccountDetails";
-import EntityProfile from "../EntityProfile";
 import EntityDetails from "../EntityDetails";
 import {StatesContextProvider} from "../../../../contexts/states.context";
 import {TypesContextProvider} from "../../../../contexts/types.context";
 import {EntityCard} from "../index";
-import {CardActions} from "@material-ui/core";
 import EntityHours from "../EntityHours";
-
-const useStyles = makeStyles(theme => ({
-  root: {},
-  imageContainer: {
-    height: 64,
-    width: 64,
-    margin: '0 auto',
-    border: `1px solid ${theme.palette.divider}`,
-    borderRadius: '5px',
-    overflow: 'hidden',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  image: {
-    width: '100%'
-  }
-}));
+import Grid from "@material-ui/core/Grid";
+import {UploadButtons} from "./UploadButtons";
+import {EntityContext} from "../../../../contexts/entity.context";
+import {save} from "../../../../services/entity.service";
+import {useSnackbar} from "notistack";
 
 export function EntityFormDialog(props) {
-  const classes = useStyles();
-
   const {open, onClose} = props;
+  const {enqueueSnackbar} = useSnackbar();
+  const [entity, setEntity] = useContext(EntityContext);
+
+  const handleUpload = file => {
+    const newState = {...entity};
+    newState.avatarUrl = file;
+    setEntity(newState);
+  };
+
+  async function handleSave() {
+    await save(entity);
+    enqueueSnackbar("Entidade salva com sucesso!", {variant: "success"})
+  }
 
   return <Dialog
     onClose={onClose}
@@ -53,18 +45,9 @@ export function EntityFormDialog(props) {
     <DialogContent dividers>
       <Account
         profile={<EntityCard actions={
-          <>
-            <Button
-              className={classes.uploadButton}
-              color="primary"
-              variant="text"
-            >
-              Upload picture
-            </Button>
-            <Button variant="text">
-              Remove picture
-            </Button>
-          </>
+          <Grid container justify={"center"}>
+            <UploadButtons name="avatarUrl" onChange={handleUpload}/>
+          </Grid>
         }/>}>
           <StatesContextProvider>
             <TypesContextProvider>
@@ -78,7 +61,7 @@ export function EntityFormDialog(props) {
       <Button onClick={onClose} color="secondary">
         Cancelar
       </Button>
-      <Button onClick={onClose} color="primary" variant={"contained"}>
+      <Button onClick={handleSave} color="primary" variant={"contained"}>
         Salvar
       </Button>
     </DialogActions>
