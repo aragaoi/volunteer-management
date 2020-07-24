@@ -1,0 +1,173 @@
+import {
+  Count,
+  CountSchema,
+  Filter,
+  FilterExcludingWhere,
+  repository,
+  Where,
+} from '@loopback/repository';
+import {
+  post,
+  param,
+  get,
+  getModelSchemaRef,
+  patch,
+  put,
+  del,
+  requestBody,
+} from '@loopback/rest';
+import {Institution} from '../models';
+import {InstitutionRepository} from '../repositories';
+
+export class InstitutionController {
+  constructor(
+    @repository(InstitutionRepository)
+    public institutionRepository : InstitutionRepository,
+  ) {}
+
+  @post('/institutions', {
+    responses: {
+      '200': {
+        description: 'Institution model instance',
+        content: {'application/json': {schema: getModelSchemaRef(Institution)}},
+      },
+    },
+  })
+  async create(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(Institution, {
+            title: 'NewInstitution',
+            exclude: ['id'],
+          }),
+        },
+      },
+    })
+    institution: Omit<Institution, 'id'>,
+  ): Promise<Institution> {
+    return this.institutionRepository.create(institution);
+  }
+
+  @get('/institutions/count', {
+    responses: {
+      '200': {
+        description: 'Institution model count',
+        content: {'application/json': {schema: CountSchema}},
+      },
+    },
+  })
+  async count(
+    @param.where(Institution) where?: Where<Institution>,
+  ): Promise<Count> {
+    return this.institutionRepository.count(where);
+  }
+
+  @get('/institutions', {
+    responses: {
+      '200': {
+        description: 'Array of Institution model instances',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'array',
+              items: getModelSchemaRef(Institution, {includeRelations: true}),
+            },
+          },
+        },
+      },
+    },
+  })
+  async find(
+    @param.filter(Institution) filter?: Filter<Institution>,
+  ): Promise<Institution[]> {
+    return this.institutionRepository.find(filter);
+  }
+
+  @patch('/institutions', {
+    responses: {
+      '200': {
+        description: 'Institution PATCH success count',
+        content: {'application/json': {schema: CountSchema}},
+      },
+    },
+  })
+  async updateAll(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(Institution, {partial: true}),
+        },
+      },
+    })
+    institution: Institution,
+    @param.where(Institution) where?: Where<Institution>,
+  ): Promise<Count> {
+    return this.institutionRepository.updateAll(institution, where);
+  }
+
+  @get('/institutions/{id}', {
+    responses: {
+      '200': {
+        description: 'Institution model instance',
+        content: {
+          'application/json': {
+            schema: getModelSchemaRef(Institution, {includeRelations: true}),
+          },
+        },
+      },
+    },
+  })
+  async findById(
+    @param.path.number('id') id: number,
+    @param.filter(Institution, {exclude: 'where'}) filter?: FilterExcludingWhere<Institution>
+  ): Promise<Institution> {
+    return this.institutionRepository.findById(id, filter);
+  }
+
+  @patch('/institutions/{id}', {
+    responses: {
+      '204': {
+        description: 'Institution PATCH success',
+      },
+    },
+  })
+  async updateById(
+    @param.path.number('id') id: number,
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(Institution, {partial: true}),
+        },
+      },
+    })
+    institution: Institution,
+  ): Promise<void> {
+    await this.institutionRepository.updateById(id, institution);
+  }
+
+  @put('/institutions/{id}', {
+    responses: {
+      '204': {
+        description: 'Institution PUT success',
+      },
+    },
+  })
+  async replaceById(
+    @param.path.number('id') id: number,
+    @requestBody() institution: Institution,
+  ): Promise<void> {
+    await this.institutionRepository.replaceById(id, institution);
+  }
+
+  @del('/institutions/{id}', {
+    responses: {
+      '204': {
+        description: 'Institution DELETE success',
+      },
+    },
+  })
+  async deleteById(@param.path.number('id') id: number): Promise<void> {
+    await this.institutionRepository.deleteById(id);
+  }
+}

@@ -18,7 +18,7 @@ import {save} from "../../../../services/entity.service";
 import {useSnackbar} from "notistack";
 
 export function EntityFormDialog(props) {
-  const {open, onClose} = props;
+  const {open, setOpen} = props;
   const {enqueueSnackbar} = useSnackbar();
   const [entity, setEntity] = useContext(EntityContext);
 
@@ -28,13 +28,17 @@ export function EntityFormDialog(props) {
     setEntity(newState);
   };
 
+  function close() {
+    setOpen(false);
+  }
+
   async function handleSave() {
     await save(entity);
-    enqueueSnackbar("Entidade salva com sucesso!", {variant: "success"})
+    close();
+    enqueueSnackbar("Entidade salva com sucesso!", {variant: "success"});
   }
 
   return <Dialog
-    onClose={onClose}
     open={open}
     maxWidth={"lg"}
     fullWidth={true}
@@ -58,7 +62,7 @@ export function EntityFormDialog(props) {
       </Account>
     </DialogContent>
     <DialogActions>
-      <Button onClick={onClose} color="secondary">
+      <Button onClick={close} color="secondary">
         Cancelar
       </Button>
       <Button onClick={handleSave} color="primary" variant={"contained"}>

@@ -9,10 +9,6 @@ export function EntityFormDialogButton() {
     setOpen(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   return <>
     <Button
       color="primary"
@@ -22,7 +18,7 @@ export function EntityFormDialogButton() {
       Adicionar entidade
     </Button>
     <EntityFormDialog
-      onClose={handleClose}
+      setOpen={setOpen}
       open={open}
     />
   </>
