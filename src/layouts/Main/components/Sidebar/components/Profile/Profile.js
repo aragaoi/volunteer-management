@@ -1,9 +1,9 @@
 import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import {Link as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/styles';
-import { Avatar, Typography } from '@material-ui/core';
+import {makeStyles} from '@material-ui/styles';
+import {Avatar, Typography} from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -41,7 +41,7 @@ const Profile = props => {
         alt="Person"
         className={classes.avatar}
         component={RouterLink}
-        src={user.avatar}
+        src={user.avatarUrl}
         to="/settings"
       />
       <Typography

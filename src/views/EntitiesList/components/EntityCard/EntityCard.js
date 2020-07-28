@@ -62,7 +62,7 @@ const EntityCard = props => {
   }, []);
 
   useEffect(() => {
-    setAvatarPreview(handleImageUrl(entity.avatarUrl));
+    setAvatarPreview(entity.avatarUrl);
   }, [entity.avatarUrl]);
 
   return (

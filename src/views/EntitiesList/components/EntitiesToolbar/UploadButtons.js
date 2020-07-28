@@ -34,7 +34,7 @@ export function UploadButtons(props) {
       accept="image/*"
       className={classes.input}
       id="upload-button"
-      name="avatarUrl"
+      name="avatar"
       type="file"
       onChange={handleSelect}
     />

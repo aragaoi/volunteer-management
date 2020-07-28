@@ -16,15 +16,16 @@ import {UploadButtons} from "./UploadButtons";
 import {EntityContext} from "../../../../contexts/entity.context";
 import {save} from "../../../../services/entity.service";
 import {useSnackbar} from "notistack";
+import {handleImageUrl} from "../../../../helpers/file";
 
 export function EntityFormDialog(props) {
   const {open, setOpen} = props;
   const {enqueueSnackbar} = useSnackbar();
   const [entity, setEntity] = useContext(EntityContext);
 
-  const handleUpload = file => {
+  const handleUpload = async file => {
     const newState = {...entity};
-    newState.avatarUrl = file;
+    newState.avatarUrl = await handleImageUrl(file);
     setEntity(newState);
   };
 
@@ -50,7 +51,7 @@ export function EntityFormDialog(props) {
       <Account
         profile={<EntityCard actions={
           <Grid container justify={"center"}>
-            <UploadButtons name="avatarUrl" onChange={handleUpload}/>
+            <UploadButtons name="avatar" onChange={handleUpload}/>
           </Grid>
         }/>}>
           <StatesContextProvider>

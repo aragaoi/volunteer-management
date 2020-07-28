@@ -78,7 +78,7 @@ const AccountProfile = props => {
           </div>
           <Avatar
             className={classes.avatar}
-            src={user.avatar}
+            src={user.avatarUrl}
           />
         </div>
         <div className={classes.progress}>

@@ -37,7 +37,7 @@ export const entitiesMock = [
         {
           "user": {
             "name": "João",
-            "avatar": "https://www.w3schools.com/howto/img_avatar.png"
+            "avatarUrl": "https://www.w3schools.com/howto/img_avatar.png"
           },
           "comment": "Cum lura peregrinatione, omnes deuses amor placidus, emeritis turpises. Glos, terror, et diatria.",
           "value": 4
@@ -45,7 +45,7 @@ export const entitiesMock = [
         {
           "user": {
             "name": "João",
-            "avatar": "https://www.w3schools.com/howto/img_avatar.png"
+            "avatarUrl": "https://www.w3schools.com/howto/img_avatar.png"
           },
           "comment": "Cum lura peregrinatione, omnes deuses amor placidus, emeritis turpises. Glos, terror, et diatria.",
           "value": 4
@@ -53,7 +53,7 @@ export const entitiesMock = [
         {
           "user": {
             "name": "João",
-            "avatar": "https://www.w3schools.com/howto/img_avatar.png"
+            "avatarUrl": "https://www.w3schools.com/howto/img_avatar.png"
           },
           "comment": "Cum lura peregrinatione, omnes deuses amor placidus, emeritis turpises. Glos, terror, et diatria.",
           "value": 4
@@ -61,7 +61,7 @@ export const entitiesMock = [
         {
           "user": {
             "name": "João",
-            "avatar": "https://www.w3schools.com/howto/img_avatar.png"
+            "avatarUrl": "https://www.w3schools.com/howto/img_avatar.png"
           },
           "comment": "Cum lura peregrinatione, omnes deuses amor placidus, emeritis turpises. Glos, terror, et diatria.",
           "value": 4
