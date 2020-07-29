@@ -1,6 +1,8 @@
 import {Button} from "@material-ui/core";
 import {EntityFormDialog} from "./EntityFormDialog";
 import React, {useState} from "react";
+import {EntityStore} from "../../../../contexts/entity.context";
+import {emptyEntity} from "../../../../services/entity.service";
 
 export function EntityFormDialogButton() {
   const [open, setOpen] = useState(true);
@@ -17,9 +19,11 @@ export function EntityFormDialogButton() {
     >
       Adicionar entidade
     </Button>
-    <EntityFormDialog
-      setOpen={setOpen}
-      open={open}
-    />
+    {open && <EntityStore entity={emptyEntity()}>
+      <EntityFormDialog
+        setOpen={setOpen}
+        open={open}
+      />
+    </EntityStore>}
   </>
 }

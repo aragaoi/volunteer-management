@@ -4,7 +4,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import PropTypes from "prop-types";
-import React, {useState} from "react";
+import React, {useContext} from "react";
 import Account from "../../../Account";
 import EntityDetailsForm from "../EntityDetailsForm";
 import {StatesContextProvider} from "../../../../contexts/states.context";
@@ -13,8 +13,8 @@ import {EntityCard} from "../index";
 import EntityHours from "../EntityHours";
 import Grid from "@material-ui/core/Grid";
 import {UploadButtons} from "./UploadButtons";
-import {EntityStore} from "../../../../contexts/entity.context";
-import {emptyEntity, save} from "../../../../services/entity.service";
+import {EntityContext} from "../../../../contexts/entity.context";
+import {save} from "../../../../services/entity.service";
 import {useSnackbar} from "notistack";
 import {handleImageUrl} from "../../../../helpers/file";
 import * as yup from "yup";
@@ -24,7 +24,7 @@ import {yupResolver} from '@hookform/resolvers';
 export function EntityFormDialog(props) {
   const {open, setOpen} = props;
   const {enqueueSnackbar} = useSnackbar();
-  const [entity, setEntity] = useState(props.entity || emptyEntity());
+  const [entity, setEntity] = useContext(EntityContext);
 
   let formSchema = yup.object().shape({
     name: yup.string().required(),
@@ -65,28 +65,26 @@ export function EntityFormDialog(props) {
       Nova Entidade
     </DialogTitle>
     <DialogContent dividers>
-      <EntityStore entity={entity}>
-        <FormProvider {...methods}>
-          <form
-            autoComplete="off"
-            noValidate
-          >
-            <Account
-              profile={<EntityCard actions={
-                <Grid container justify={"center"}>
-                  <UploadButtons name="avatar" onChange={handleUpload}/>
-                </Grid>
-              }/>}>
-              <StatesContextProvider>
-                <TypesContextProvider>
-                  <EntityDetailsForm/>
-                </TypesContextProvider>
-              </StatesContextProvider>
-              <EntityHours/>
-            </Account>
-          </form>
-        </FormProvider>
-      </EntityStore>
+      <FormProvider {...methods}>
+        <form
+          autoComplete="off"
+          noValidate
+        >
+          <Account
+            profile={<EntityCard actions={
+              <Grid container justify={"center"}>
+                <UploadButtons name="avatar" onChange={handleUpload}/>
+              </Grid>
+            }/>}>
+            <StatesContextProvider>
+              <TypesContextProvider>
+                <EntityDetailsForm/>
+              </TypesContextProvider>
+            </StatesContextProvider>
+            <EntityHours/>
+          </Account>
+        </form>
+      </FormProvider>
     </DialogContent>
     <DialogActions>
       <Button onClick={close} color="secondary">
