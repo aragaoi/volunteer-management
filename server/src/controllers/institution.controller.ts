@@ -1,35 +1,26 @@
-import {
-  Count,
-  CountSchema,
-  Filter,
-  FilterExcludingWhere,
-  repository,
-  Where,
-} from '@loopback/repository';
-import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
-  put,
-  del,
-  requestBody,
-} from '@loopback/rest';
+import {Count, CountSchema, Filter, FilterExcludingWhere, repository, Where,} from '@loopback/repository';
+import {del, get, getModelSchemaRef, param, patch, post, put, requestBody,} from '@loopback/rest';
 import {Institution} from '../models';
 import {InstitutionRepository} from '../repositories';
 
 export class InstitutionController {
   constructor(
     @repository(InstitutionRepository)
-    public institutionRepository : InstitutionRepository,
-  ) {}
+    public institutionRepository: InstitutionRepository,
+  ) {
+  }
 
   @post('/institutions', {
     responses: {
       '200': {
         description: 'Institution model instance',
-        content: {'application/json': {schema: getModelSchemaRef(Institution)}},
+        content: {
+          'application/json': {
+            schema: getModelSchemaRef(Institution, {
+              exclude: ["password"]
+            })
+          }
+        },
       },
     },
   })
@@ -44,7 +35,7 @@ export class InstitutionController {
         },
       },
     })
-    institution: Omit<Institution, 'id'>,
+      institution: Omit<Institution, 'id'>,
   ): Promise<Institution> {
     return this.institutionRepository.create(institution);
   }
@@ -71,7 +62,10 @@ export class InstitutionController {
           'application/json': {
             schema: {
               type: 'array',
-              items: getModelSchemaRef(Institution, {includeRelations: true}),
+              items: getModelSchemaRef(Institution, {
+                includeRelations: true,
+                exclude: ["password"]
+              }),
             },
           },
         },
@@ -81,7 +75,7 @@ export class InstitutionController {
   async find(
     @param.filter(Institution) filter?: Filter<Institution>,
   ): Promise<Institution[]> {
-    return this.institutionRepository.find(filter);
+    return this.institutionRepository.find({...filter, ...{include: [{relation: "institutionType"}]}});
   }
 
   @patch('/institutions', {
@@ -100,7 +94,7 @@ export class InstitutionController {
         },
       },
     })
-    institution: Institution,
+      institution: Institution,
     @param.where(Institution) where?: Where<Institution>,
   ): Promise<Count> {
     return this.institutionRepository.updateAll(institution, where);
@@ -112,7 +106,10 @@ export class InstitutionController {
         description: 'Institution model instance',
         content: {
           'application/json': {
-            schema: getModelSchemaRef(Institution, {includeRelations: true}),
+            schema: getModelSchemaRef(Institution, {
+              includeRelations: true,
+              exclude: ["password"]
+            }),
           },
         },
       },
@@ -122,7 +119,7 @@ export class InstitutionController {
     @param.path.string('id') id: string,
     @param.filter(Institution, {exclude: 'where'}) filter?: FilterExcludingWhere<Institution>
   ): Promise<Institution> {
-    return this.institutionRepository.findById(id, filter);
+    return this.institutionRepository.findById(id, {...filter, ...{include: [{relation: "institutionType"}]}});
   }
 
   @patch('/institutions/{id}', {
@@ -141,7 +138,7 @@ export class InstitutionController {
         },
       },
     })
-    institution: Institution,
+      institution: Institution,
   ): Promise<void> {
     await this.institutionRepository.updateById(id, institution);
   }

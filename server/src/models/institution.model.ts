@@ -1,6 +1,12 @@
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, model, property, belongsTo} from '@loopback/repository';
+import {InstitutionType} from './institution-type.model';
 
-@model({settings: {strict: false}})
+@model({
+  settings: {
+    strict: false,
+    hiddenProperties: ['password'],
+  }
+})
 export class Institution extends Entity {
   @property({
     type: 'string',
@@ -14,11 +20,6 @@ export class Institution extends Entity {
     required: true,
   })
   name: string;
-
-  @property({
-    type: 'string',
-  })
-  typeId?: string;
 
   @property({
     type: 'string',
@@ -46,6 +47,17 @@ export class Institution extends Entity {
   avatarUrl?: string;
 
   @property({
+    type: 'boolean',
+    default: true
+  })
+  acceptsDonations?: boolean;
+
+  @property({
+    type: 'number',
+  })
+  rating?: number;
+
+  @property({
     type: 'object',
   })
   address?: object;
@@ -55,11 +67,8 @@ export class Institution extends Entity {
   })
   calendar?: object;
 
-  @property({
-    type: 'object',
-  })
-  rating?: object;
-
+  @belongsTo(() => InstitutionType)
+  institutionTypeId: string;
   // Define well-known properties here
 
   // Indexer property to allow additional data
