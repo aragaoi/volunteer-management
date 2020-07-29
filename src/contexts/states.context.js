@@ -1,9 +1,9 @@
-import React, {useState, createContext} from "react";
+import React, {createContext, useState} from "react";
 import {statesMock} from "../data";
 
 export const StatesContext = createContext();
 
-export const StatesContextProvider = props => {
+export const StatesStore = props => {
   const [states, setStates] = useState(statesMock);
 
   return (

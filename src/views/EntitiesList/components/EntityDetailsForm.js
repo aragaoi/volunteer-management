@@ -6,12 +6,15 @@ import {makeStyles} from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Divider, Grid, TextField} from '@material-ui/core';
 import {EntityContext} from "../../../contexts/entity.context";
 import {StatesContext} from "../../../contexts/states.context";
-import {TypesContext} from "../../../contexts/types.context";
+import {EntityTypesContext} from "../../../contexts/entitytypes.context";
 import {useFormContext} from "react-hook-form";
 import {ErrorMessage} from '@hookform/error-message';
+import Checkbox from "@material-ui/core/Checkbox";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormControl from "@material-ui/core/FormControl";
 
 const useStyles = makeStyles(() => ({
-  root: {}
+  root: {},
 }));
 
 const EntityDetailsForm = props => {
@@ -20,13 +23,21 @@ const EntityDetailsForm = props => {
   const {className, ...rest} = props;
   const [entity, setEntity] = useContext(EntityContext);
   const [states] = useContext(StatesContext);
-  const [types] = useContext(TypesContext);
+  const [types] = useContext(EntityTypesContext);
 
   const {register, errors} = useFormContext();
 
   const handleChange = event => {
     const newState = {...entity};
-    _.set(newState, event.target.name, event.target.value)
+
+    let value;
+    if (event.target.type === "checkbox") {
+      value = event.target.checked;
+    } else {
+      value = event.target.value;
+    }
+
+    _.set(newState, event.target.name, value);
     setEntity(newState);
   };
 
@@ -41,6 +52,7 @@ const EntityDetailsForm = props => {
         <Grid
           container
           spacing={3}
+          alignItems={"center"}
         >
           <Grid
             item
@@ -49,15 +61,15 @@ const EntityDetailsForm = props => {
           >
             <TextField
               fullWidth
-              label="Tipo"
+              label="Tipo de entidade"
               margin="dense"
-              name="type"
+              name="institutionTypeId"
               inputRef={register}
               onChange={handleChange}
               required
               select
               SelectProps={{native: true}}
-              value={entity.type}
+              value={entity.institutionTypeId}
               variant="outlined"
             >
               <option
@@ -74,7 +86,7 @@ const EntityDetailsForm = props => {
                 </option>
               ))}
             </TextField>
-            <ErrorMessage errors={errors} name="type" />
+            <ErrorMessage errors={errors} name="institutionTypeId"/>
           </Grid>
           <Grid
             item
@@ -92,7 +104,7 @@ const EntityDetailsForm = props => {
               value={entity.name}
               variant="outlined"
             />
-            <ErrorMessage errors={errors} name="name" />
+            <ErrorMessage errors={errors} name="name"/>
           </Grid>
           <Grid
             item
@@ -110,7 +122,7 @@ const EntityDetailsForm = props => {
               value={entity.document}
               variant="outlined"
             />
-            <ErrorMessage errors={errors} name="document" />
+            <ErrorMessage errors={errors} name="document"/>
           </Grid>
           <Grid
             item
@@ -128,7 +140,7 @@ const EntityDetailsForm = props => {
               value={entity.email}
               variant="outlined"
             />
-            <ErrorMessage errors={errors} name="email" />
+            <ErrorMessage errors={errors} name="email"/>
           </Grid>
           <Grid
             item
@@ -150,7 +162,7 @@ const EntityDetailsForm = props => {
           </Grid>
           <Grid
             item
-            md={6}
+            md={4}
             xs={12}
           >
             <TextField
@@ -163,11 +175,11 @@ const EntityDetailsForm = props => {
               value={entity.phone}
               variant="outlined"
             />
-            <ErrorMessage errors={errors} name="phone" />
+            <ErrorMessage errors={errors} name="phone"/>
           </Grid>
           <Grid
             item
-            md={6}
+            md={8}
             xs={12}
           >
             <TextField
@@ -182,7 +194,7 @@ const EntityDetailsForm = props => {
           </Grid>
           <Grid
             item
-            md={6}
+            md={4}
             xs={12}
           >
             <TextField
@@ -197,7 +209,7 @@ const EntityDetailsForm = props => {
           </Grid>
           <Grid
             item
-            md={6}
+            md={4}
             xs={12}
           >
             <TextField
@@ -225,6 +237,26 @@ const EntityDetailsForm = props => {
                 </option>
               ))}
             </TextField>
+          </Grid>
+          <Grid
+            item
+            md={4}
+            xs={6}
+          >
+            <FormControl fullWidth>
+              <FormControlLabel
+                style={{justifyContent: "center"}}
+                control={
+                  <Checkbox
+                    checked={entity.acceptsDonations}
+                    name={`acceptsDonations`}
+                    onChange={handleChange}
+                    margin="dense"
+                  />
+                }
+                label="Aceita doações"
+              />
+            </FormControl>
           </Grid>
         </Grid>
       </CardContent>

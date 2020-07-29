@@ -84,7 +84,6 @@ const SidebarNav = props => {
         key="Sair"
       >
         <Button
-          activeClassName={classes.active}
           className={classes.button}
         >
           <div className={classes.icon}><InputIcon/></div>

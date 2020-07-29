@@ -1,34 +1,17 @@
-import React, { Component } from 'react';
-import { Router } from 'react-router-dom';
-import { createBrowserHistory } from 'history';
-import { Chart } from 'react-chartjs-2';
-import { ThemeProvider } from '@material-ui/styles';
-import validate from 'validate.js';
-
-import { chartjs } from './helpers';
+import React, {Component} from 'react';
+import {Router} from 'react-router-dom';
+import {createBrowserHistory} from 'history';
+import {ThemeProvider} from '@material-ui/styles';
 import theme from './theme';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import './assets/scss/index.scss';
-import validators from './common/validators';
 import Routes from './Routes';
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import {MuiPickersUtilsProvider} from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
-import { setLocale } from 'yup';
+import {EntityStore} from "./contexts/entity.context";
+import {emptyEntity} from "./services/entity.service";
 
 const browserHistory = createBrowserHistory();
-
-setLocale({
-  mixed: {
-    required: 'Campo obrigatório',
-  },
-  string: {
-    matches: 'Valor inválido',
-    email: 'Informe um e-mail válido',
-  },
-  number: {
-    positive: 'Deve ser maior que 0',
-  },
-});
 
 export default class App extends Component {
   render() {
@@ -36,7 +19,9 @@ export default class App extends Component {
       <ThemeProvider theme={theme}>
         <Router history={browserHistory}>
           <MuiPickersUtilsProvider utils={MomentUtils}>
-            <Routes />
+            <EntityStore entity={emptyEntity()}>
+              <Routes/>
+            </EntityStore>
           </MuiPickersUtilsProvider>
         </Router>
       </ThemeProvider>

@@ -6,6 +6,7 @@ export const entitiesMock = [
     "name": "Orfanato Céu Azul",
     "type": "594",
     "document": "594",
+    "acceptDonations": true,
     "address": {
       "street": "Rua A",
       "city": "B",
@@ -221,18 +222,16 @@ export const usersMock = [
     "description": "Orfanato que acolhe crianças e adolecentes desde 1990.",
     "avatarUrl": "https://www.w3schools.com/howto/img_avatar.png",
     "acceptContact": true,
-    "rating": {
-      "average": "4",
-      "evaluations": [
-        {
-          "entity": {
-            "name": ""
-          },
-          "comment": "",
-          "value": "4"
-        }
-      ]
-    }
+    "rating": "4",
+    "evaluations": [
+      {
+        "entity": {
+          "name": ""
+        },
+        "comment": "",
+        "rating": "4"
+      }
+    ]
   },
   {
     "id": uuid(),

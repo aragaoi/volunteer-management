@@ -1,11 +1,10 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext} from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {makeStyles} from '@material-ui/styles';
 import {Avatar, Card, CardActions, CardContent, colors, Divider, Typography} from '@material-ui/core';
 import {EntityContext} from "../../../../contexts/entity.context";
 import {AddressLink} from "../../../../components/AddressLink";
-import {handleImageUrl} from "../../../../helpers/file";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -55,15 +54,6 @@ const EntityCard = props => {
 
   const {className, ...rest} = props;
   const [entity] = useContext(EntityContext);
-  const [avatarPreview, setAvatarPreview] = useState("");
-
-  useEffect(() => {
-    return () => URL.revokeObjectURL(avatarPreview)
-  }, []);
-
-  useEffect(() => {
-    setAvatarPreview(entity.avatarUrl);
-  }, [entity.avatarUrl]);
 
   return (
     <Card
@@ -72,7 +62,7 @@ const EntityCard = props => {
     >
       <CardContent>
         <Avatar
-          src={avatarPreview}
+          src={entity.avatarUrl}
           alt="Entidade"
           className={classes.imageContainer}
         />

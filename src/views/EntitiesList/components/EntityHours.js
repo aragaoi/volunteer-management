@@ -6,7 +6,6 @@ import {makeStyles} from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Divider, Grid, TextField, Typography} from '@material-ui/core';
 import {EntityContext} from "../../../contexts/entity.context";
 import Checkbox from "@material-ui/core/Checkbox";
-import {useFormContext} from "react-hook-form";
 
 const useStyles = makeStyles(() => ({
   root: {}
@@ -95,7 +94,7 @@ const EntityHours = props => {
                 xs={6}
               >
                 <Checkbox
-                  value={entity.calendar[weekDay.key].morning.available}
+                  checked={entity.calendar[weekDay.key].morning.available}
                   name={`calendar.${weekDay.key}.morning.available`}
                   onChange={handleChange}
                   margin="dense"
@@ -107,7 +106,7 @@ const EntityHours = props => {
                 xs={6}
               >
                 <Checkbox
-                  value={entity.calendar[weekDay.key].afternoon.available}
+                  checked={entity.calendar[weekDay.key].afternoon.available}
                   name={`calendar.${weekDay.key}.afternoon.available`}
                   onChange={handleChange}
                   margin="dense"
@@ -119,7 +118,7 @@ const EntityHours = props => {
                 xs={6}
               >
                 <Checkbox
-                  value={entity.calendar[weekDay.key].night.available}
+                  checked={entity.calendar[weekDay.key].night.available}
                   name={`calendar.${weekDay.key}.night.available`}
                   onChange={handleChange}
                   margin="dense"

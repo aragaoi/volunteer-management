@@ -35,6 +35,6 @@ export function RatingStars(props) {
 }
 
 RatingStars.propTypes = {
-  stars: PropTypes.number.isRequired,
+  stars: PropTypes.number,
   size: PropTypes.oneOf(['default', 'inherit', 'large', 'small'])
 }

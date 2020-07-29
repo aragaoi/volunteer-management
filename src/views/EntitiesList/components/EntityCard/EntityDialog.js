@@ -1,11 +1,11 @@
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
-import {colors, Divider, Typography} from "@material-ui/core";
+import {Divider, Typography} from "@material-ui/core";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import PropTypes from "prop-types";
-import React, {useContext, useState} from "react";
+import React, {useContext} from "react";
 import {makeStyles} from "@material-ui/styles";
 import {EntityContext} from "../../../../contexts/entity.context";
 import {Ratings} from "../../../../components/Rating/Ratings";
@@ -63,6 +63,7 @@ export function EntityDialog(props) {
         variant="body2"
       >
         <a target="_blank"
+           rel="noopener noreferrer"
            href={`https://www.google.com/maps/search/?api=1&query=${entity.address.street},${entity.address.city},${entity.address.state}`}>
           {`${entity.address.street} - ${entity.address.city} / ${entity.address.state}`}
         </a>

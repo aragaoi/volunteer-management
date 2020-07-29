@@ -1,5 +1,4 @@
 import React, {createContext, useEffect, useState} from "react";
-import {entitiesMock} from "../data";
 import {list} from "../services/entity.service";
 
 export const EntitiesContext = createContext([]);

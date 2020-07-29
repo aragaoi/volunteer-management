@@ -4,12 +4,8 @@ import {Redirect, Switch} from 'react-router-dom';
 import {RouteWithLayout} from './components';
 import {Main as MainLayout, Minimal as MinimalLayout} from './layouts';
 
-import {
-  Account as AccountView, EntityList,
-  NotFound as NotFoundView,
-  Settings as SettingsView,
-  UserList as UserListView
-} from './views';
+import {EntityList, NotFound as NotFoundView, Settings as SettingsView, UserList as UserListView} from './views';
+import {EntityForm} from "./views/EntitiesList/components/EntitiesToolbar/EntityForm";
 
 const Routes = () => {
   return (
@@ -50,7 +46,7 @@ const Routes = () => {
       {/*  path="/icons"*/}
       {/*/>*/}
       <RouteWithLayout
-        component={AccountView}
+        component={EntityForm}
         exact
         layout={MainLayout}
         path="/account"

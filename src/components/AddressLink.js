@@ -13,6 +13,7 @@ export function AddressLink(props) {
   >
     {address.street && address.city && address.state &&
     <a target="_blank"
+       rel="noopener noreferrer"
        href={`${googleMapsBaseUrl}${address.street},${address.city},${address.state}`}>
       {`${address.street} - ${address.city} / ${address.state}`}
     </a>

@@ -1,11 +1,10 @@
-import {entitiesMock} from "../data";
 import * as axios from "axios";
+import {API_BASE_URL} from "../constants";
 
-const BASE_URL = "http://localhost:3000";
 const ENDPOINT_PATH = "/institutions";
 
 const api = axios.create({
-  baseURL: BASE_URL,
+  baseURL: API_BASE_URL,
 });
 
 const dayPeriodDefault = () => ({
@@ -21,7 +20,10 @@ const weekDayDefaultValue = () => ({
 
 export const emptyEntity = () => (
   {
+    acceptsDonations: true,
+    rating: 0,
     address: {},
+    evaluations: [],
     calendar: {
       monday: weekDayDefaultValue(),
       tuesday: weekDayDefaultValue(),
@@ -31,7 +33,6 @@ export const emptyEntity = () => (
       saturday: weekDayDefaultValue(),
       sunday: weekDayDefaultValue(),
     },
-    rating: {}
   }
 );
 

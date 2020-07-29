@@ -5,7 +5,7 @@ import {EntityStore} from "../../../../contexts/entity.context";
 import {emptyEntity} from "../../../../services/entity.service";
 
 export function EntityFormDialogButton() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
