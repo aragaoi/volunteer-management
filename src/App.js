@@ -10,6 +10,8 @@ import {MuiPickersUtilsProvider} from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 import {EntityStore} from "./contexts/entity.context";
 import {emptyEntity} from "./services/entity.service";
+import {UserStore} from "./contexts/user.context";
+import {emptyUser} from "./services/user.service";
 
 const browserHistory = createBrowserHistory();
 
@@ -19,9 +21,11 @@ export default class App extends Component {
       <ThemeProvider theme={theme}>
         <Router history={browserHistory}>
           <MuiPickersUtilsProvider utils={MomentUtils}>
-            <EntityStore entity={emptyEntity()}>
-              <Routes/>
-            </EntityStore>
+            <UserStore user={emptyUser()}>
+              <EntityStore entity={emptyEntity()}>
+                <Routes/>
+              </EntityStore>
+            </UserStore>
           </MuiPickersUtilsProvider>
         </Router>
       </ThemeProvider>

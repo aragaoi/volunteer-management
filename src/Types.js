@@ -14,10 +14,5 @@ export const UserType = PropTypes.shape({
 export const EvaluationType = PropTypes.shape({
   user: UserType,
   comment: PropTypes.string,
-  value: PropTypes.number
-});
-
-export const RatingType = PropTypes.shape({
-  average: PropTypes.number,
-  evaluations: PropTypes.arrayOf(EvaluationType)
+  rating: PropTypes.number
 });

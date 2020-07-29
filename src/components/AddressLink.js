@@ -5,11 +5,12 @@ import {AddressType} from "../Types";
 export function AddressLink(props) {
   let googleMapsBaseUrl = `https://www.google.com/maps/search/?api=1&query=`;
 
-  const {address = {}} = props;
+  const {address = {}, ...rest} = props;
 
   return <Typography
     align="center"
     variant="body2"
+    {...rest}
   >
     {address.street && address.city && address.state &&
     <a target="_blank"

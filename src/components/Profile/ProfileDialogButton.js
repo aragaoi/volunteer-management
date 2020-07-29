@@ -1,10 +1,12 @@
 import React, {Fragment, useState} from "react";
 import Button from "@material-ui/core/Button";
 import InfoIcon from "@material-ui/icons/Info";
-import {EntityDialog} from "../../views/EntitiesList/components/EntityCard/EntityDialog";
+import {EntityDialog} from "../../views/Entities/components/EntityCard/EntityDialog";
 import PropTypes from "prop-types";
 import {colors} from "@material-ui/core";
 import makeStyles from "@material-ui/core/styles/makeStyles";
+import Tooltip from "@material-ui/core/Tooltip";
+import IconButton from "@material-ui/core/IconButton";
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -41,13 +43,13 @@ export function ProfileDialogButton(props) {
   };
 
   return <Fragment>
-    <Button
-      className={classes.button}
-      onClick={handleClickOpen}
-    >
-      <div className={classes.icon}><InfoIcon/></div>
-      Mais detalhes
-    </Button>
+    <Tooltip title="Mais detalhes">
+      <IconButton
+        onClick={handleClickOpen}
+      >
+        <InfoIcon color={"action"}/>
+      </IconButton>
+    </Tooltip>
     <EntityDialog
       entity={entity}
       onClose={handleClose}

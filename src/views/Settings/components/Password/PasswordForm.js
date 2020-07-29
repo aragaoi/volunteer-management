@@ -11,7 +11,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const PasswordForm = props => {
-  const {className, ...rest} = props;
+  const {className, onChange, ...rest} = props;
 
   const classes = useStyles();
 
@@ -21,8 +21,8 @@ const PasswordForm = props => {
   const {register, errors} = useFormContext();
 
   useEffect(() => {
-    props.onChange(password);
-  }, [password])
+    onChange(password);
+  }, [password, onChange])
 
   const handleChangePassword = event => {
     const value = event.target.value;

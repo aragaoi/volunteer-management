@@ -23,7 +23,6 @@ export async function saveAll([...entityTypes]) {
     delete type.id;
   });
 
-  console.log(`Salvando ${JSON.stringify(entityTypes, null, 2)}`);
   const result = await api.post(ENDPOINT_PATH, entityTypes);
   return result.data;
 }
@@ -35,7 +34,6 @@ export async function deleteAll([...entityTypes]) {
 
   entityTypes.forEach(type => delete type.deleted);
 
-  console.log(`Salvando ${JSON.stringify(entityTypes, null, 2)}`);
   const result = await api.patch(ENDPOINT_PATH, {
     active: false
   }, {

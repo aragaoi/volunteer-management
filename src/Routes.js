@@ -4,8 +4,8 @@ import {Redirect, Switch} from 'react-router-dom';
 import {RouteWithLayout} from './components';
 import {Main as MainLayout, Minimal as MinimalLayout} from './layouts';
 
-import {EntityList, NotFound as NotFoundView, Settings as SettingsView, UserList as UserListView} from './views';
-import {EntityForm} from "./views/EntitiesList/components/EntitiesToolbar/EntityForm";
+import {Entities, NotFound as NotFoundView, Settings as SettingsView, Users} from './views';
+import {EntityForm} from "./views/Entities/components/EntitiesToolbar/EntityForm";
 
 const Routes = () => {
   return (
@@ -13,10 +13,10 @@ const Routes = () => {
       <Redirect
         exact
         from="/"
-        to="/entities"
+        to="/users"
       />
       <RouteWithLayout
-        component={EntityList}
+        component={Entities}
         exact
         layout={MainLayout}
         path="/entities"
@@ -28,7 +28,7 @@ const Routes = () => {
       {/*  path="/dashboard"*/}
       {/*/>*/}
       <RouteWithLayout
-        component={UserListView}
+        component={Users}
         exact
         layout={MainLayout}
         path="/users"

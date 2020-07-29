@@ -3,8 +3,13 @@ import {EntityStore} from "../../../contexts/entity.context";
 import {EntityCard} from "./index";
 import {RatingStars} from "../../../components/Rating/RatingStars";
 import {ProfileDialogButton} from "../../../components/Profile/ProfileDialogButton";
-import React, {useContext} from "react";
+import React, {Fragment, useContext} from "react";
 import {EntitiesContext} from "../../../contexts/entities.context";
+import IconButton from "@material-ui/core/IconButton";
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
+import EventIcon from "@material-ui/icons/Event";
+import Tooltip from "@material-ui/core/Tooltip";
 
 export function EntitiesList() {
   const [entities] = useContext(EntitiesContext);
@@ -26,11 +31,13 @@ export function EntitiesList() {
             <Grid
               container
               justify="space-between"
+              alignItems={"center"}
             >
               <Grid
                 item
+                alignItems={"center"}
               >
-                <RatingStars stars={entity.rating.average}/>
+                <RatingStars stars={entity.rating} size={"small"}/>
               </Grid>
               <Grid
                 item
@@ -38,6 +45,21 @@ export function EntitiesList() {
                 <ProfileDialogButton
                   entity={entity}
                 />
+                <Tooltip title="Agendar visita">
+                  <IconButton color={"primary"}>
+                    <EventIcon/>
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Editar">
+                  <IconButton>
+                    <EditIcon/>
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Excluir">
+                  <IconButton>
+                    <DeleteIcon/>
+                  </IconButton>
+                </Tooltip>
               </Grid>
             </Grid>
           }/>

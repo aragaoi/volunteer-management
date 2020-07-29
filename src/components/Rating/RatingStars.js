@@ -7,7 +7,7 @@ import {makeStyles} from "@material-ui/styles";
 
 const useStyles = makeStyles(() => ({
   root: {
-    margin: 5,
+    padding: "10px 8px",
     display: "block"
   }
 }));
@@ -22,7 +22,7 @@ export function RatingStars(props) {
         display="inline"
         variant="body2"
     >
-        {stars && stars > 0 &&
+        {!!stars && (stars > 0) &&
         <>
             {stars > 0 ? <StarIcon fontSize={size}/> : <StarBorderIcon fontSize={size}/>}
             {stars > 1 ? <StarIcon fontSize={size}/> : <StarBorderIcon fontSize={size}/>}

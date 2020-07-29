@@ -218,10 +218,11 @@ export const usersMock = [
       "state": "C"
     },
     "email": "joao@email.com",
+    "password": "123",
     "phone": "88999999999",
     "description": "Orfanato que acolhe crianças e adolecentes desde 1990.",
     "avatarUrl": "https://www.w3schools.com/howto/img_avatar.png",
-    "acceptContact": true,
+    "acceptsContact": true,
     "rating": "4",
     "evaluations": [
       {

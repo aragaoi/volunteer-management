@@ -42,7 +42,6 @@ export async function list() {
 }
 
 export async function save(entity) {
-  console.log(`Salvando ${JSON.stringify(entity, null, 2)}`);
   const result = await api.post(ENDPOINT_PATH, entity);
   return result.data;
 }

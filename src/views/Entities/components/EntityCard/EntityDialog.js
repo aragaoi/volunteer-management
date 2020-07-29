@@ -9,6 +9,7 @@ import React, {useContext} from "react";
 import {makeStyles} from "@material-ui/styles";
 import {EntityContext} from "../../../../contexts/entity.context";
 import {Ratings} from "../../../../components/Rating/Ratings";
+import {BasicInfo} from "../../../../components/BasicInfo";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -25,7 +26,10 @@ const useStyles = makeStyles(theme => ({
   },
   image: {
     width: '100%'
-  }
+  },
+  divider: {
+    margin: theme.spacing(2, 0)
+  },
 }));
 
 export function EntityDialog(props) {
@@ -44,38 +48,9 @@ export function EntityDialog(props) {
       {entity.name}
     </DialogTitle>
     <DialogContent dividers>
-      <div className={classes.imageContainer}>
-        <img
-          alt="Entidade"
-          className={classes.image}
-          src={entity.avatarUrl}
-        />
-      </div>
-      <Typography
-        align="center"
-        gutterBottom
-        variant="h4"
-      >
-        {entity.name}
-      </Typography>
-      <Typography
-        align="center"
-        variant="body2"
-      >
-        <a target="_blank"
-           rel="noopener noreferrer"
-           href={`https://www.google.com/maps/search/?api=1&query=${entity.address.street},${entity.address.city},${entity.address.state}`}>
-          {`${entity.address.street} - ${entity.address.city} / ${entity.address.state}`}
-        </a>
-      </Typography>
-      <Typography
-        align="center"
-        variant="body1"
-      >
-        {entity.description}
-      </Typography>
-      <Divider variant={"middle"}/>
-      <Ratings rating={entity.rating}/>
+      <BasicInfo {...entity}/>
+      <Divider variant={"middle"} className={classes.divider}/>
+      <Ratings rating={entity.rating} evaluations={entity.evaluations}/>
     </DialogContent>
     <DialogActions>
       <Button onClick={onClose} color="secondary">

@@ -8,7 +8,7 @@ setLocale({
   string: {
     matches: 'Valor inválido',
     email: 'Informe um e-mail válido',
-    min: 'Mínimo de ${min} caracteres'
+    min: "Mínimo de ${min} caracteres"
   },
   number: {
     positive: 'Deve ser maior que 0',

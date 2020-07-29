@@ -1,4 +1,3 @@
-
 import {Grid} from "@material-ui/core";
 import {RatingStars} from "./RatingStars";
 import Button from "@material-ui/core/Button";
@@ -15,7 +14,9 @@ import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import {RatingType} from "../../Types";
+import {EvaluationType} from "../../Types";
+import PropTypes from "prop-types"
+import * as _ from "lodash";
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -36,68 +37,76 @@ const useStyles = makeStyles(theme => ({
 export function Ratings(props) {
   const classes = useStyles();
 
-  const {rating} = props;
+  const {rating, evaluations} = props;
   const [expanded, setExpanded] = useState(false);
 
   return <>
-    <Grid
-      container
-      justify="space-between"
-    >
-      <Grid item>
-        <RatingStars stars={rating.average}/>
-      </Grid>
-      <Grid item>
-        <Button
-          onClick={() => setExpanded(!expanded)}
-          aria-expanded={expanded}
-          aria-label="avaliações"
+    {_.isEmpty(evaluations) ?
+      <Typography>
+        Não há avaliações
+      </Typography>
+      :
+      <Fragment>
+        <Grid
+          container
+          justify="space-between"
         >
-          Ver avaliações
-          <ExpandMoreIcon
-            className={clsx(classes.expand, {
-              [classes.expandOpen]: expanded,
-            })}
-          />
-        </Button>
-      </Grid>
-    </Grid>
-    <Collapse in={expanded} timeout="auto" unmountOnExit>
-      <List>
-        {rating.evaluations.map((evaluation, index) =>
-          <Card key={index} className={classes.card}>
-            <CardContent>
-              <ListItem alignItems="flex-start">
-                <ListItemAvatar>
-                  <Avatar alt="Cindy Baker" src="/static/images/avatar/3.jpg"/>
-                </ListItemAvatar>
-                <ListItemText
-                  primary={
-                    <RatingStars stars={evaluation.value} size={"small"}/>
-                  }
-                  secondary={
-                    <Fragment>
-                      <Typography
-                        component="span"
-                        variant="body2"
-                        // className={classes.inline}
-                        color="textPrimary"
-                      >
-                        {evaluation.user.name}
-                      </Typography>
-                      — {evaluation.comment}
-                    </Fragment>
-                  }
-                />
-              </ListItem>
-            </CardContent>
-          </Card>
-        )}
-      </List>
-    </Collapse>
-  </>
+          <Grid item>
+            <RatingStars stars={rating}/>
+          </Grid>
+          <Grid item>
+            <Button
+              onClick={() => setExpanded(!expanded)}
+              aria-expanded={expanded}
+              aria-label="avaliações"
+            >
+              Ver avaliações
+              <ExpandMoreIcon
+                className={clsx(classes.expand, {
+                  [classes.expandOpen]: expanded,
+                })}
+              />
+            </Button>
+          </Grid>
+        </Grid>
+        <Collapse in={expanded} timeout="auto" unmountOnExit>
+          <List>
+            {evaluations.map((evaluation, index) =>
+              <Card key={index} className={classes.card}>
+                <CardContent>
+                  <ListItem alignItems="flex-start">
+                    <ListItemAvatar>
+                      <Avatar alt="Cindy Baker" src="/static/images/avatar/3.jpg"/>
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={
+                        <RatingStars stars={evaluation.rating} size={"small"}/>
+                      }
+                      secondary={
+                        <Fragment>
+                          <Typography
+                            component="span"
+                            variant="body2"
+                            // className={classes.inline}
+                            color="textPrimary"
+                          >
+                            {evaluation.user.name}
+                          </Typography>
+                          — {evaluation.comment}
+                        </Fragment>
+                      }
+                    />
+                  </ListItem>
+                </CardContent>
+              </Card>
+            )}
+          </List>
+        </Collapse>
+      </Fragment>}
+  </>;
 }
 
 Ratings.propTypes = {
-  rating: RatingType,
+  rating: PropTypes.number,
+  evaluations: PropTypes.arrayOf(EvaluationType),
 }
