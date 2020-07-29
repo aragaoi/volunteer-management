@@ -1,5 +1,4 @@
-import {Entity, model, property, belongsTo} from '@loopback/repository';
-import {InstitutionType} from './institution-type.model';
+import {Entity, model, property} from '@loopback/repository';
 
 @model({
   settings: {
@@ -7,7 +6,7 @@ import {InstitutionType} from './institution-type.model';
     hiddenProperties: ['password'],
   }
 })
-export class Institution extends Entity {
+export class User extends Entity {
   @property({
     type: 'string',
     id: true,
@@ -20,12 +19,6 @@ export class Institution extends Entity {
     required: true,
   })
   name: string;
-
-  @property({
-    type: 'string',
-    required: true,
-  })
-  document: string;
 
   @property({
     type: 'string',
@@ -55,13 +48,13 @@ export class Institution extends Entity {
 
   @property({
     type: 'boolean',
-    default: true
+    default: true,
   })
-  acceptsDonations?: boolean;
+  acceptsContact?: boolean;
 
   @property({
     type: 'number',
-    default: 0
+    default: 0,
   })
   rating?: number;
 
@@ -70,26 +63,19 @@ export class Institution extends Entity {
   })
   address?: object;
 
-  @property({
-    type: 'object',
-  })
-  calendar?: object;
-
-  @belongsTo(() => InstitutionType)
-  institutionTypeId: string;
   // Define well-known properties here
 
   // Indexer property to allow additional data
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [prop: string]: any;
 
-  constructor(data?: Partial<Institution>) {
+  constructor(data?: Partial<User>) {
     super(data);
   }
 }
 
-export interface InstitutionRelations {
+export interface UserRelations {
   // describe navigational properties here
 }
 
-export type InstitutionWithRelations = Institution & InstitutionRelations;
+export type UserWithRelations = User & UserRelations;
