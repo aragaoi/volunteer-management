@@ -17,6 +17,7 @@ import CardContent from "@material-ui/core/CardContent";
 import {EvaluationType} from "../../Types";
 import PropTypes from "prop-types"
 import * as _ from "lodash";
+import moment from "moment";
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -87,12 +88,11 @@ export function Ratings(props) {
                           <Typography
                             component="span"
                             variant="body2"
-                            // className={classes.inline}
                             color="textPrimary"
                           >
-                            {evaluation.user.name}
+                            {`${moment(evaluation.date).format("DD/MM/YY")} | ${evaluation.user.name}`}
                           </Typography>
-                          — {evaluation.comment}
+                          {evaluation.comment && `— ${evaluation.comment}`}
                         </Fragment>
                       }
                     />

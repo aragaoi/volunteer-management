@@ -16,6 +16,13 @@ export class Evaluation extends Entity {
   rating: number;
 
   @property({
+    type: "date",
+    dataType: "timestamp",
+    defaultFn: "now"
+  })
+  date?: Date;
+
+  @property({
     type: 'string',
   })
   comment?: string;

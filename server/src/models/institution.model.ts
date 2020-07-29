@@ -5,6 +5,9 @@ import {InstitutionType} from './institution-type.model';
   settings: {
     strict: false,
     hiddenProperties: ['password'],
+    scope: {
+      order: "name ASC"
+    }
   }
 })
 export class Institution extends Entity {

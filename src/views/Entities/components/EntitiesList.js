@@ -3,7 +3,7 @@ import {EntityStore} from "../../../contexts/entity.context";
 import {EntityCard} from "./index";
 import {RatingStars} from "../../../components/Rating/RatingStars";
 import {ProfileDialogButton} from "../../../components/Profile/ProfileDialogButton";
-import React, {Fragment, useContext} from "react";
+import React, {useContext} from "react";
 import {EntitiesContext} from "../../../contexts/entities.context";
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";

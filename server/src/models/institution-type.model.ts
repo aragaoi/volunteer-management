@@ -4,7 +4,8 @@ import {Entity, model, property} from '@loopback/repository';
   settings: {
     strict: false,
     scope: {
-      where: {active: true}
+      where: {active: true},
+      order: "name ASC"
     },
   }
 })

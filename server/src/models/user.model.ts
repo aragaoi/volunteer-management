@@ -4,6 +4,9 @@ import {Entity, model, property} from '@loopback/repository';
   settings: {
     strict: false,
     hiddenProperties: ['password'],
+    scope: {
+      order: "name ASC"
+    }
   }
 })
 export class User extends Entity {
