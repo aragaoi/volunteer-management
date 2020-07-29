@@ -13,17 +13,22 @@ import validators from './common/validators';
 import Routes from './Routes';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
+import { setLocale } from 'yup';
 
 const browserHistory = createBrowserHistory();
 
-Chart.helpers.extend(Chart.elements.Rectangle.prototype, {
-  draw: chartjs.draw
+setLocale({
+  mixed: {
+    required: 'Campo obrigatório',
+  },
+  string: {
+    matches: 'Valor inválido',
+    email: 'Informe um e-mail válido',
+  },
+  number: {
+    positive: 'Deve ser maior que 0',
+  },
 });
-
-validate.validators = {
-  ...validate.validators,
-  ...validators
-};
 
 export default class App extends Component {
   render() {

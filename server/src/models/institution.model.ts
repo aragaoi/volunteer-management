@@ -1,20 +1,13 @@
-import {Entity, model, property, hasOne} from '@loopback/repository';
-import {Address} from './address.model';
+import {Entity, model, property} from '@loopback/repository';
 
 @model({settings: {strict: false}})
 export class Institution extends Entity {
   @property({
-    type: 'number',
+    type: 'string',
     id: true,
     generated: true,
   })
-  id?: number;
-
-  @property({
-    type: 'string',
-    required: true,
-  })
-  uuid: string;
+  id?: string;
 
   @property({
     type: 'string',
@@ -23,32 +16,24 @@ export class Institution extends Entity {
   name: string;
 
   @property({
-    type: 'number',
-    required: true,
+    type: 'string',
   })
-  type: number;
+  typeId?: string;
 
   @property({
     type: 'string',
-    required: true,
   })
-  document: string;
+  document?: string;
 
   @property({
     type: 'string',
-    required: true,
   })
-  email: string;
+  email?: string;
 
   @property({
     type: 'string',
   })
   phone?: string;
-
-  @property({
-    type: 'object',
-  })
-  calendar?: object;
 
   @property({
     type: 'string',
@@ -63,10 +48,18 @@ export class Institution extends Entity {
   @property({
     type: 'object',
   })
+  address?: object;
+
+  @property({
+    type: 'object',
+  })
+  calendar?: object;
+
+  @property({
+    type: 'object',
+  })
   rating?: object;
 
-  @hasOne(() => Address)
-  address: Address;
   // Define well-known properties here
 
   // Indexer property to allow additional data

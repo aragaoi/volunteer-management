@@ -308,7 +308,7 @@ const SignUp = props => {
                   helperText={
                     hasError('password') ? formState.errors.password[0] : null
                   }
-                  label="Password"
+                  label="PasswordForm"
                   name="password"
                   onChange={handleChange}
                   type="password"

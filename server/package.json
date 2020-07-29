@@ -13,6 +13,7 @@
   },
   "scripts": {
     "start": "node -r source-map-support/register .",
+    "dev": "nodemon",
     "build": "lb-tsc",
     "build:watch": "lb-tsc --watch",
     "lint": "npm run prettier:check && npm run eslint",
@@ -53,11 +54,19 @@
   },
   "devDependencies": {
     "@loopback/build": "^6.1.1",
-    "source-map-support": "^0.5.19",
+    "@loopback/eslint-config": "^8.0.4",
     "@loopback/testlab": "^3.2.1",
     "@types/node": "^10.17.27",
-    "@loopback/eslint-config": "^8.0.4",
     "eslint": "^7.5.0",
+    "nodemon": "^2.0.4",
+    "source-map-support": "^0.5.19",
     "typescript": "~3.9.7"
+  },
+  "nodemonConfig": {
+    "watch": [
+      "src"
+    ],
+    "ext": "ts",
+    "exec": "npm start"
   }
 }

@@ -3,18 +3,22 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {makeStyles} from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Divider, Grid, TextField} from '@material-ui/core';
+import {useFormContext} from "react-hook-form";
+import {ErrorMessage} from "@hookform/error-message";
 
 const useStyles = makeStyles(() => ({
   root: {}
 }));
 
-const Password = props => {
+const PasswordForm = props => {
   const {className, ...rest} = props;
 
   const classes = useStyles();
 
   const [password, setPassword] = useState();
   const [confirm, setConfirm] = useState();
+
+  const {register, errors} = useFormContext();
 
   const handleChangePassword = event => {
     event.stopPropagation();
@@ -55,12 +59,15 @@ const Password = props => {
                 fullWidth
                 label="Senha"
                 name="password"
+                inputRef={register}
+                required
                 margin="dense"
                 onChange={handleChangePassword}
                 type="password"
                 value={password}
                 variant="outlined"
               />
+              <ErrorMessage errors={errors} name="password" />
             </Grid>
             <Grid
               item
@@ -71,6 +78,8 @@ const Password = props => {
                 fullWidth
                 label="Confirme a senha"
                 name="confirm"
+                inputRef={register}
+                required
                 margin="dense"
                 onChange={handleChangeConfirm}
                 // style={{ marginTop: '1rem' }}
@@ -78,6 +87,7 @@ const Password = props => {
                 value={confirm}
                 variant="outlined"
               />
+              <ErrorMessage errors={errors} name="confirm" />
             </Grid>
           </Grid>
         </CardContent>
@@ -86,8 +96,8 @@ const Password = props => {
   );
 };
 
-Password.propTypes = {
+PasswordForm.propTypes = {
   className: PropTypes.string
 };
 
-export default Password;
+export default PasswordForm;
