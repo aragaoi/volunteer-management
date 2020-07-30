@@ -6,7 +6,6 @@ import Button from "@material-ui/core/Button";
 import React from "react";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import PropTypes from "prop-types";
-import {ConfirmDialogButton} from "./ConfirmDialogButton";
 
 export function ConfirmDialog(props) {
   const {onClose, title, message} = props;

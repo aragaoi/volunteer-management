@@ -11,28 +11,45 @@ import EntityDetailsForm from "../EntityDetailsForm";
 import EntityHours from "../EntityHours";
 import {FormProvider, useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers";
-import {entitySchema} from "../../../../common/validators";
-import {list, save} from "../../../../services/entity.service";
+import {buildEntitySchema} from "../../../../common/validators";
+import {edit, insert, list} from "../../../../services/entity.service";
 import {useSnackbar} from "notistack";
 import {EntitiesContext} from "../../../../contexts/entities.context";
 
 export function EntityForm(props) {
-  const {onSubmit} = props;
+  const {onSubmit, isEdit} = props;
 
-  const [entity, setEntity] = useContext(EntityContext);
   const {enqueueSnackbar} = useSnackbar();
+  const [entity, setEntity] = useContext(EntityContext);
   const [, setEntities] = useContext(EntitiesContext);
 
   const methods = useForm({
-    resolver: yupResolver(entitySchema)
+    resolver: yupResolver(buildEntitySchema(isEdit))
   });
 
-  async function handleSave() {
-    await save(entity);
-    setEntities(await list());
-
-    onSubmit();
+  async function handleInsert(entity) {
+    await insert(entity);
     enqueueSnackbar("Entidade salva com sucesso!", {variant: "success"});
+  }
+
+  async function handleEdit(entity) {
+    await edit(entity);
+    enqueueSnackbar("Entidade editada com sucesso!", {variant: "success"});
+  }
+
+  async function handleSave() {
+    try {
+      if (isEdit) {
+        await handleEdit(entity);
+      } else {
+        await handleInsert(entity);
+      }
+    } catch (e) {
+      enqueueSnackbar("Não foi possível salvar", {variant: "error"});
+    }
+
+    setEntities(await list());
+    onSubmit();
   }
 
   const handleUpload = async file => {

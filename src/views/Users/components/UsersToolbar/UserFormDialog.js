@@ -10,27 +10,25 @@ import {useMediaQuery, useTheme} from "@material-ui/core";
 
 export function UserFormDialog(props) {
   const theme = useTheme();
-
-  const {open, setOpen} = props;
-
-  function close() {
-    setOpen(false);
-  }
+  const {onClose, isEdit} = props;
 
   return <Dialog
-    open={open}
+    open={true}
     maxWidth={"lg"}
     fullWidth={true}
     fullScreen={useMediaQuery(theme.breakpoints.down('sm'))}
   >
     <DialogTitle>
-      Novo Usuário
+      {isEdit ? "Editar Usuário" : "Novo Usuário"}
     </DialogTitle>
     <DialogContent dividers>
-      <UserForm onSubmit={close}/>
+      <UserForm
+        isEdit={isEdit}
+        onSubmit={onClose}
+      />
     </DialogContent>
     <DialogActions>
-      <Button onClick={close} color="secondary">
+      <Button onClick={onClose} color="secondary">
         Cancelar
       </Button>
       <Button type={"submit"} form="user-form" color="primary" variant={"contained"}>
@@ -42,6 +40,5 @@ export function UserFormDialog(props) {
 
 UserFormDialog.propTypes = {
   onClose: PropTypes.func,
-  open: PropTypes.bool,
   user: PropTypes.object
 }

@@ -10,26 +10,25 @@ import {useMediaQuery, useTheme} from "@material-ui/core";
 
 export function EntityFormDialog(props) {
   const theme = useTheme();
-  const {open, setOpen} = props;
-
-  function close() {
-    setOpen(false);
-  }
+  const {onClose, isEdit} = props;
 
   return <Dialog
-    open={open}
+    open={true}
     maxWidth={"lg"}
     fullWidth={true}
     fullScreen={useMediaQuery(theme.breakpoints.down('sm'))}
   >
     <DialogTitle>
-      Nova Entidade
+      {isEdit ? "Editar Entidade" : "Nova Entidade"}
     </DialogTitle>
     <DialogContent dividers>
-      <EntityForm onSubmit={close}/>
+      <EntityForm
+        isEdit={isEdit}
+        onSubmit={onClose}
+      />
     </DialogContent>
     <DialogActions>
-      <Button onClick={close} color="secondary">
+      <Button onClick={onClose} color="secondary">
         Cancelar
       </Button>
       <Button type={"submit"} form="entity-form" color="primary" variant={"contained"}>
@@ -41,6 +40,5 @@ export function EntityFormDialog(props) {
 
 EntityFormDialog.propTypes = {
   onClose: PropTypes.func,
-  open: PropTypes.bool,
   entity: PropTypes.object
 }

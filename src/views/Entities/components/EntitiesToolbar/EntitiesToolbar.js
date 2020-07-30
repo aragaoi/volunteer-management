@@ -5,7 +5,6 @@ import {makeStyles} from '@material-ui/styles';
 
 import {SearchInput} from 'components';
 import {EntityFormDialogButton} from "./EntityFormDialogButton";
-import {Button} from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
   root: {},

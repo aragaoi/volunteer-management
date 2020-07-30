@@ -140,6 +140,7 @@ export class InstitutionController {
     })
       institution: Institution,
   ): Promise<void> {
+    delete institution.institutionType;
     await this.institutionRepository.updateById(id, institution);
   }
 

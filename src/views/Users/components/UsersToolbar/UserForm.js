@@ -7,30 +7,47 @@ import {UploadButtons} from "../../../../components/UploadButtons";
 import {StatesStore} from "../../../../contexts/states.context";
 import {FormProvider, useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers";
-import {userSchema} from "../../../../common/validators";
-import {list, save} from "../../../../services/user.service";
+import {buildUserSchema} from "../../../../common/validators";
+import {edit, insert, list} from "../../../../services/user.service";
 import {useSnackbar} from "notistack";
 import {UsersContext} from "../../../../contexts/users.context";
 import UserDetailsForm from "../UserDetailsForm";
 import UserCard from "../UserCard";
 
 export function UserForm(props) {
-  const {onSubmit} = props;
+  const {onSubmit, isEdit} = props;
 
   const [user, setUser] = useContext(UserContext);
   const {enqueueSnackbar} = useSnackbar();
   const [, setUsers] = useContext(UsersContext);
 
   const methods = useForm({
-    resolver: yupResolver(userSchema)
+    resolver: yupResolver(buildUserSchema(isEdit))
   });
 
-  async function handleSave() {
-    await save(user);
-    setUsers(await list());
+  async function handleInsert(user) {
+    await insert(user);
+    enqueueSnackbar("Usuário salvo com sucesso!", {variant: "success"});
+  }
 
+  async function handleEdit(user) {
+    await edit(user);
+    enqueueSnackbar("Usuário editado com sucesso!", {variant: "success"});
+  }
+
+  async function handleSave() {
+    try {
+      if (isEdit) {
+        await handleEdit(user);
+      } else {
+        await handleInsert(user);
+      }
+    } catch (e) {
+      enqueueSnackbar("Não foi possível salvar", {variant: "error"});
+    }
+
+    setUsers(await list());
     onSubmit();
-    enqueueSnackbar("Entidade salva com sucesso!", {variant: "success"});
   }
 
   const handleUpload = async file => {

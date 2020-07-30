@@ -15,20 +15,20 @@ setLocale({
   },
 });
 
-export const entitySchema = yup.object().shape({
+export const buildEntitySchema = (isEdit) => yup.object().shape({
   name: yup.string().required(),
   email: yup.string().email().required(),
   phone: yup.string().matches(/^[0-9\-+()]*$/),
   document: yup.string().required(),
   institutionTypeId: yup.string().required(),
-  password: yup.string().min(6).required(),
+  password: isEdit ? yup.string() : yup.string().required().min(6),
   confirm: yup.string().oneOf([yup.ref('password'), null], 'As senhas devem ser iguais'),
 });
 
-export const userSchema = yup.object().shape({
+export const buildUserSchema = (isEdit) => yup.object().shape({
   name: yup.string().required(),
   email: yup.string().email().required(),
   phone: yup.string().matches(/^[0-9\-+()]*$/),
-  password: yup.string().min(6).required(),
+  password: isEdit ? yup.string() : yup.string().min(6).required(),
   confirm: yup.string().oneOf([yup.ref('password'), null], 'As senhas devem ser iguais'),
 });

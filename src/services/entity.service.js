@@ -41,8 +41,15 @@ export async function list() {
   return result.data;
 }
 
-export async function save(entity) {
+export async function insert(entity) {
   const result = await api.post(ENDPOINT_PATH, entity);
+  return result.data;
+}
+
+export async function edit(entity) {
+  const url = `${ENDPOINT_PATH}/${entity.id}`;
+
+  const result = await api.patch(url, entity);
   return result.data;
 }
 

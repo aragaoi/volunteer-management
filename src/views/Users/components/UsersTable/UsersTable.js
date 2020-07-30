@@ -21,9 +21,12 @@ import CheckIcon from '@material-ui/icons/Check';
 import ClearIcon from '@material-ui/icons/Clear';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-import IconButton from "@material-ui/core/IconButton";
 import Hidden from "@material-ui/core/Hidden";
 import Tooltip from "@material-ui/core/Tooltip";
+import {UserFormDialogButton} from "../UsersToolbar/UserFormDialogButton";
+import {ConfirmDialogButton} from "../../../../components/ConfirmDialogButton";
+import {list, remove} from "../../../../services/user.service";
+import {useSnackbar} from "notistack";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -51,9 +54,10 @@ const useStyles = makeStyles(theme => ({
 const UsersTable = props => {
   const classes = useStyles();
 
-  const [users] = useContext(UsersContext);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const {enqueueSnackbar} = useSnackbar();
+  const [users, setUsers] = useContext(UsersContext);
   const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [offset, setOffset] = useState(0);
 
   useEffect(() => updateOffset(page, rowsPerPage), [page, rowsPerPage]);
@@ -70,6 +74,12 @@ const UsersTable = props => {
   function updateOffset(page, rowsPerPage) {
     const newOffset = page * rowsPerPage;
     setOffset(newOffset > 0 ? newOffset : 0);
+  }
+
+  async function handleDelete(user) {
+    await remove(user);
+    setUsers(await list());
+    enqueueSnackbar("Usuário removido com sucesso!", {variant: "success"});
   }
 
   return (
@@ -93,7 +103,7 @@ const UsersTable = props => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users.slice(offset, (page+1) * rowsPerPage).map(user => (
+                {users.slice(offset, (page + 1) * rowsPerPage).map(user => (
                   <TableRow
                     className={classes.tableRow}
                     hover
@@ -108,10 +118,10 @@ const UsersTable = props => {
                           />
                         </Hidden>
                         <div className={classes.nameContainer}>
-                        <Typography variant="body1">{user.name}</Typography>
-                        <Hidden smUp>
-                          {user.email}
-                        </Hidden>
+                          <Typography variant="body1">{user.name}</Typography>
+                          <Hidden smUp>
+                            {user.email}
+                          </Hidden>
                         </div>
                       </div>
                     </TableCell>
@@ -129,16 +139,24 @@ const UsersTable = props => {
                     </Hidden>
                     <TableCell align={"center"}>
                       <div className={classes.rowActions}>
-                        <Tooltip title="Editar">
-                          <IconButton>
-                            <EditIcon/>
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Excluir">
-                          <IconButton>
-                            <DeleteIcon/>
-                          </IconButton>
-                        </Tooltip>
+                        <UserFormDialogButton
+                          user={user}
+                          actionIcon={
+                            <Tooltip title="Editar">
+                              <EditIcon/>
+                            </Tooltip>
+                          }
+                        />
+                        <ConfirmDialogButton
+                          title={"Excluir usuário"}
+                          message={`Essa ação não poderá ser desfeita. Deseja realmente excluir o usuário ${user.name}?`}
+                          onConfirm={() => handleDelete(user)}
+                          actionIcon={
+                            <Tooltip title="Excluir">
+                              <DeleteIcon/>
+                            </Tooltip>
+                          }
+                        />
                       </div>
                     </TableCell>
                   </TableRow>

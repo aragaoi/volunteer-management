@@ -3,7 +3,6 @@ import {EntityFormDialog} from "./EntityFormDialog";
 import React, {useState} from "react";
 import {EntityStore} from "../../../../contexts/entity.context";
 import {emptyEntity} from "../../../../services/entity.service";
-import EditIcon from "@material-ui/icons/Edit";
 import IconButton from "@material-ui/core/IconButton";
 
 export function EntityFormDialogButton(props) {
@@ -33,8 +32,8 @@ export function EntityFormDialogButton(props) {
     }
     {open && <EntityStore entity={entity || emptyEntity()}>
       <EntityFormDialog
-        setOpen={setOpen}
-        open={open}
+        isEdit={!!entity}
+        onClose={() => setOpen(false)}
       />
     </EntityStore>}
   </>

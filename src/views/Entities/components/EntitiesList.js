@@ -44,15 +44,10 @@ export function EntitiesList() {
               justify="space-between"
               alignItems={"center"}
             >
-              <Grid
-                item
-                alignItems={"center"}
-              >
+              <Grid item>
                 <RatingStars stars={entity.rating} size={"small"}/>
               </Grid>
-              <Grid
-                item
-              >
+              <Grid item>
                 <ProfileDialogButton
                   entity={entity}
                 />
@@ -63,6 +58,7 @@ export function EntitiesList() {
                 </Tooltip>
 
                 <EntityFormDialogButton
+                  entity={entity}
                   actionIcon={
                     <Tooltip title="Editar">
                       <EditIcon/>

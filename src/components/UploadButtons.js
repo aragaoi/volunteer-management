@@ -26,7 +26,7 @@ export function UploadButtons(props) {
   }
 
   function handleRemove() {
-    onChange(undefined);
+    onChange("");
   }
 
   return <>

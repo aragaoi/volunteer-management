@@ -21,7 +21,17 @@ export async function list() {
   return result.data;
 }
 
-export async function save(user) {
+export async function insert(user) {
   const result = await api.post(ENDPOINT_PATH, user);
+  return result.data;
+}
+
+export async function edit(user) {
+  const result = await api.patch(`${ENDPOINT_PATH}/${user.id}`, user);
+  return result.data;
+}
+
+export async function remove(user) {
+  const result = await api.delete(`${ENDPOINT_PATH}/${user.id}`);
   return result.data;
 }
