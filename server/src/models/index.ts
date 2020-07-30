@@ -4,3 +4,4 @@ export * from './evaluation.model';
 export * from './user.model';
 export * from './user-evaluation.model';
 export * from './institution-evaluation.model';
+export * from './visit.model';

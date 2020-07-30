@@ -28,6 +28,12 @@ export function VisitForm(props) {
   });
 
   useEffect(() => {
+    setVisit({...visit, date: new Date()});
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
     resolvePeriods(visit.date);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -51,7 +57,7 @@ export function VisitForm(props) {
       enqueueSnackbar("Não foi possível agendar", {variant: "error"});
     }
 
-    setVisits(await list());
+    setVisits && setVisits(await list());
     onSubmit();
   }
 

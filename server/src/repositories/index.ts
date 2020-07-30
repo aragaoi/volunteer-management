@@ -3,3 +3,4 @@ export * from './institution-type.repository';
 export * from './institution-evaluation.repository';
 export * from './user-evaluation.repository';
 export * from './user.repository';
+export * from './visit.repository';
