@@ -1,9 +1,8 @@
 import React from 'react';
 import {makeStyles} from '@material-ui/styles';
 
-import {EntitiesToolbar} from './components';
-import {EntitiesStore} from "../../contexts/entities.context";
-import {EntitiesList} from "./components/EntitiesList/EntitiesList";
+import {UsersTable, UsersToolbar} from './components';
+import {UsersStore} from "../../contexts/users.context";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -14,19 +13,19 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Entities = () => {
+const Visits = () => {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
-      <EntitiesStore>
-        <EntitiesToolbar/>
+      <UsersStore>
+        <UsersToolbar/>
         <div className={classes.content}>
-          <EntitiesList/>
+          <UsersTable/>
         </div>
-      </EntitiesStore>
+      </UsersStore>
     </div>
   );
 };
 
-export default Entities;
+export default Visits;

@@ -5,7 +5,7 @@ import {RouteWithLayout} from './components';
 import {Main as MainLayout, Minimal as MinimalLayout} from './layouts';
 
 import {Entities, NotFound as NotFoundView, Settings as SettingsView, Users} from './views';
-import {EntityForm} from "./views/Entities/components/EntitiesToolbar/EntityForm";
+import {EntityForm} from "./views/Entities/components/EntityForm/EntityForm";
 
 const Routes = () => {
   return (

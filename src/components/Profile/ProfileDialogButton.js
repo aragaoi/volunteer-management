@@ -1,13 +1,11 @@
 import React, {Fragment, useState} from "react";
 import InfoIcon from "@material-ui/icons/Info";
 import {EntityDialog} from "../../views/Entities/components/EntityCard/EntityDialog";
-import PropTypes from "prop-types";
 import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 
-export function ProfileDialogButton(props) {
+export function ProfileDialogButton() {
 
-  const {entity} = props;
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -27,13 +25,8 @@ export function ProfileDialogButton(props) {
       </IconButton>
     </Tooltip>
     <EntityDialog
-      entity={entity}
       onClose={handleClose}
       open={open}
     />
   </Fragment>
-}
-
-ProfileDialogButton.propTypes = {
-  entity: PropTypes.any,
 }

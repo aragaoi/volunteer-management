@@ -8,6 +8,7 @@ setLocale({
   string: {
     matches: 'Valor inválido',
     email: 'Informe um e-mail válido',
+    // eslint-disable-next-line no-template-curly-in-string
     min: "Mínimo de ${min} caracteres"
   },
   number: {
@@ -31,4 +32,9 @@ export const buildUserSchema = (isEdit) => yup.object().shape({
   phone: yup.string().matches(/^[0-9\-+()]*$/),
   password: isEdit ? yup.string() : yup.string().min(6).required(),
   confirm: yup.string().oneOf([yup.ref('password'), null], 'As senhas devem ser iguais'),
+});
+
+export const buildVisitSchema = () => yup.object().shape({
+  date: yup.string().required(),
+  period: yup.string().required(),
 });

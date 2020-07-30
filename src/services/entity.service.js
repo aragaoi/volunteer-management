@@ -8,14 +8,14 @@ const api = axios.create({
 });
 
 const dayPeriodDefault = () => ({
-  "available": false,
-  "maxVolunteers": 0
+  available: false,
+  maxVolunteers: undefined
 });
 
 const weekDayDefaultValue = () => ({
-  "morning": dayPeriodDefault(),
-  "afternoon": dayPeriodDefault(),
-  "night": dayPeriodDefault(),
+  morning: dayPeriodDefault(),
+  afternoon: dayPeriodDefault(),
+  night: dayPeriodDefault(),
 });
 
 export const emptyEntity = () => (

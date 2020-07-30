@@ -1,19 +1,19 @@
 import {Grid} from "@material-ui/core";
-import {EntityStore} from "../../../contexts/entity.context";
-import {EntityCard} from "./index";
-import {RatingStars} from "../../../components/Rating/RatingStars";
-import {ProfileDialogButton} from "../../../components/Profile/ProfileDialogButton";
+import {EntityStore} from "../../../../contexts/entity.context";
+import {EntityCard} from "../index";
+import {RatingStars} from "../../../../components/Rating/RatingStars";
+import {ProfileDialogButton} from "../../../../components/Profile/ProfileDialogButton";
 import React, {useContext} from "react";
-import {EntitiesContext} from "../../../contexts/entities.context";
-import IconButton from "@material-ui/core/IconButton";
+import {EntitiesContext} from "../../../../contexts/entities.context";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EventIcon from "@material-ui/icons/Event";
 import Tooltip from "@material-ui/core/Tooltip";
-import {EntityFormDialogButton} from "./EntitiesToolbar/EntityFormDialogButton";
-import {ConfirmDialogButton} from "../../../components/ConfirmDialogButton";
-import {list, remove} from "../../../services/entity.service";
+import {EntityFormDialogButton} from "../EntityForm/EntityFormDialogButton";
+import {ConfirmDialogButton} from "../../../../components/ConfirmDialogButton";
+import {list, remove} from "../../../../services/entity.service";
 import {useSnackbar} from "notistack";
+import {VisitFormDialogButton} from "../../../Visits/components/VisitForm/VisitFormDialogButton";
 
 export function EntitiesList() {
   const {enqueueSnackbar} = useSnackbar();
@@ -48,15 +48,15 @@ export function EntitiesList() {
                 <RatingStars stars={entity.rating} size={"small"}/>
               </Grid>
               <Grid item>
-                <ProfileDialogButton
-                  entity={entity}
+                <ProfileDialogButton/>
+                <VisitFormDialogButton
+                  color={"primary"}
+                  actionIcon={
+                    <Tooltip title="Agendar visita">
+                      <EventIcon/>
+                    </Tooltip>
+                  }
                 />
-                <Tooltip title="Agendar visita">
-                  <IconButton color={"primary"}>
-                    <EventIcon/>
-                  </IconButton>
-                </Tooltip>
-
                 <EntityFormDialogButton
                   entity={entity}
                   actionIcon={

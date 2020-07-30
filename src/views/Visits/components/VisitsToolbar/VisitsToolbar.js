@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import {makeStyles} from '@material-ui/styles';
 
 import {SearchInput} from 'components';
-import {EntityFormDialogButton} from "../EntityForm/EntityFormDialogButton";
+import {UserFormDialogButton} from "./UserFormDialogButton";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -26,8 +26,8 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const EntitiesToolbar = props => {
-  const {className, ...rest} = props;
+const UsersToolbar = props => {
+  const { className, ...rest } = props;
 
   const classes = useStyles();
 
@@ -37,25 +37,21 @@ const EntitiesToolbar = props => {
       className={clsx(classes.root, className)}
     >
       <div className={classes.actions}>
-        <span className={classes.spacer}/>
-        <EntityFormDialogButton
-          actionText={"Adicionar entidade"}
-          color="primary"
-          variant="contained"
-        />
+        <span className={classes.spacer} />
+        <UserFormDialogButton/>
       </div>
       <div className={classes.row}>
         <SearchInput
           className={classes.searchInput}
-          placeholder="Buscar entidades"
+          placeholder="Buscar usuários"
         />
       </div>
     </div>
   );
 };
 
-EntitiesToolbar.propTypes = {
+UsersToolbar.propTypes = {
   className: PropTypes.string
 };
 
-export default EntitiesToolbar;
+export default UsersToolbar;
