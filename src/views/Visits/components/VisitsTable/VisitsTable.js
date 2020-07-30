@@ -23,7 +23,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Hidden from "@material-ui/core/Hidden";
 import Tooltip from "@material-ui/core/Tooltip";
-import {UserFormDialogButton} from "../UsersToolbar/UserFormDialogButton";
+import {UserFormDialogButton} from "../VisitsToolbar/UserFormDialogButton";
 import {ConfirmDialogButton} from "../../../../components/ConfirmDialogButton";
 import {list, remove} from "../../../../services/user.service";
 import {useSnackbar} from "notistack";
@@ -51,7 +51,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const UsersTable = props => {
+const VisitsTable = props => {
   const classes = useStyles();
 
   const {enqueueSnackbar} = useSnackbar();
@@ -181,9 +181,9 @@ const UsersTable = props => {
   );
 };
 
-UsersTable.propTypes = {
+VisitsTable.propTypes = {
   className: PropTypes.string,
   users: PropTypes.array
 };
 
-export default UsersTable;
+export default VisitsTable;

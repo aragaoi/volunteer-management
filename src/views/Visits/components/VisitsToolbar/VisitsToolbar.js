@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const UsersToolbar = props => {
+const VisitsToolbar = props => {
   const { className, ...rest } = props;
 
   const classes = useStyles();
@@ -50,8 +50,8 @@ const UsersToolbar = props => {
   );
 };
 
-UsersToolbar.propTypes = {
+VisitsToolbar.propTypes = {
   className: PropTypes.string
 };
 
-export default UsersToolbar;
+export default VisitsToolbar;

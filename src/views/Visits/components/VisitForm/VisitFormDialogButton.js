@@ -1,12 +1,12 @@
 import {Button} from "@material-ui/core";
-import {EntityFormDialog} from "./EntityFormDialog";
+import {VisitFormDialog} from "./VisitFormDialog";
 import React, {useState} from "react";
-import {EntityStore} from "../../../../contexts/entity.context";
-import {emptyEntity} from "../../../../services/entity.service";
 import IconButton from "@material-ui/core/IconButton";
+import {VisitStore} from "../../../../contexts/visit.context";
+import {emptyVisit} from "../../../../services/visit.service";
 
-export function EntityFormDialogButton(props) {
-  const {entity, actionText, actionIcon, ...rest} = props;
+export function VisitFormDialogButton(props) {
+  const {actionText, actionIcon, ...rest} = props;
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -30,11 +30,10 @@ export function EntityFormDialogButton(props) {
         {actionIcon}
       </IconButton>
     }
-    {open && <EntityStore entity={entity || emptyEntity()}>
-      <EntityFormDialog
-        isEdit={!!entity}
+    {open && <VisitStore visit={emptyVisit()}>
+      <VisitFormDialog
         onClose={() => setOpen(false)}
       />
-    </EntityStore>}
+    </VisitStore>}
   </>
 }

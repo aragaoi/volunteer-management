@@ -1,88 +1,152 @@
-import React, {useContext} from "react";
-import {EntityContext} from "../../../../contexts/entity.context";
-import {handleImageUrl} from "../../../../helpers/file";
-import Account from "../../../Account";
-import {EntityCard} from "../index";
+import React, {useContext, useEffect, useState} from "react";
+import {VisitContext} from "../../../../contexts/visit.context";
 import Grid from "@material-ui/core/Grid";
-import {UploadButtons} from "../../../../components/UploadButtons";
-import {StatesStore} from "../../../../contexts/states.context";
-import {EntityTypesStore} from "../../../../contexts/entitytypes.context";
-import EntityDetailsForm from "../EntityDetailsForm";
-import EntityHours from "../EntityHours";
-import {FormProvider, useForm} from "react-hook-form";
+import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers";
-import {buildEntitySchema} from "../../../../common/validators";
-import {edit, insert, list} from "../../../../services/entity.service";
+import {buildVisitSchema} from "../../../../common/validators";
+import {getPeriods, insert, list} from "../../../../services/visit.service";
 import {useSnackbar} from "notistack";
-import {EntitiesContext} from "../../../../contexts/entities.context";
+import {VisitsContext} from "../../../../contexts/visits.context";
+import {TextField} from "@material-ui/core";
+import {ErrorMessage} from "@hookform/error-message";
+import * as _ from "lodash";
+import {KeyboardDatePicker} from "@material-ui/pickers";
+import moment from "moment";
+import {EntityContext} from "../../../../contexts/entity.context";
 
-export function EntityForm(props) {
-  const {onSubmit, isEdit} = props;
+export function VisitForm(props) {
+  const {onSubmit} = props;
 
   const {enqueueSnackbar} = useSnackbar();
-  const [entity, setEntity] = useContext(EntityContext);
-  const [, setEntities] = useContext(EntitiesContext);
+  const [entity] = useContext(EntityContext);
+  const [visit, setVisit] = useContext(VisitContext);
+  const [periods, setPeriods] = useState([]);
+  const [, setVisits] = useContext(VisitsContext);
 
-  const methods = useForm({
-    resolver: yupResolver(buildEntitySchema(isEdit))
+  const {register, errors, handleSubmit} = useForm({
+    resolver: yupResolver(buildVisitSchema())
   });
 
-  async function handleInsert(entity) {
-    await insert(entity);
-    enqueueSnackbar("Entidade salva com sucesso!", {variant: "success"});
-  }
+  useEffect(() => {
+    resolvePeriods(visit.date);
 
-  async function handleEdit(entity) {
-    await edit(entity);
-    enqueueSnackbar("Entidade editada com sucesso!", {variant: "success"});
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visit.date])
+
+  const handleChange = event => {
+    const newState = {...visit};
+    _.set(newState, event.target.name, event.target.value);
+    setVisit(newState);
+  };
+
+  const handleDateChange = newDate => {
+    setVisit({...visit, date: newDate && newDate.isValid() ? newDate.toDate() : undefined});
+  };
 
   async function handleSave() {
     try {
-      if (isEdit) {
-        await handleEdit(entity);
-      } else {
-        await handleInsert(entity);
-      }
+      await insert(visit);
+      enqueueSnackbar("Visita agendada com sucesso!", {variant: "success"});
     } catch (e) {
-      enqueueSnackbar("Não foi possível salvar", {variant: "error"});
+      enqueueSnackbar("Não foi possível agendar", {variant: "error"});
     }
 
-    setEntities(await list());
+    setVisits(await list());
     onSubmit();
   }
 
-  const handleUpload = async file => {
-    const newState = {...entity};
-    newState.avatarUrl = await handleImageUrl(file);
-    setEntity(newState);
-  };
+  function resolvePeriods(date) {
+    const weekDayNumber = moment(date).day();
+    const weekDay = [
+      "sunday",
+      "monday",
+      "tuesday",
+      "wednesday",
+      "thursday",
+      "friday",
+      "saturday",
+    ][weekDayNumber];
 
-  function handlePasswordChange(password) {
-    setEntity({...entity, password});
+    const entityPeriods = Object.entries(_.get(entity, `calendar.${weekDay}`))
+      .filter(([, info]) => info.available && (!info.maxVolunteers || Number(info.maxVolunteers) > 0))
+      .map(([period]) => period);
+
+    const availablePeriods = getPeriods()
+      .filter(period => entityPeriods.includes(period.key));
+
+    setPeriods(availablePeriods);
   }
 
-  return <FormProvider {...methods}>
-    <form
-      id="entity-form"
-      autoComplete="off"
-      noValidate
-      onSubmit={methods.handleSubmit(handleSave)}
+  return <form
+    id="visit-form"
+    autoComplete="off"
+    noValidate
+    onSubmit={handleSubmit(handleSave)}
+  >
+    <Grid
+      container
+      spacing={3}
+      alignItems={"center"}
+      justify={"center"}
     >
-      <Account
-        onChangePassword={handlePasswordChange}
-        profile={<EntityCard actions={
-          <Grid container justify={"center"}>
-            <UploadButtons name="avatar" onChange={handleUpload}/>
-          </Grid>
-        }/>}>
-        <StatesStore>
-          <EntityTypesStore>
-            <EntityDetailsForm/>
-          </EntityTypesStore>
-        </StatesStore>
-        <EntityHours/>
-      </Account>
-    </form>
-  </FormProvider>
+      <Grid
+        item
+        xs={8}
+      >
+        <KeyboardDatePicker
+          autoOk
+          fullWidth
+          disableToolbar
+          disablePast={true}
+          inputVariant="outlined"
+          format="DD/MM/yyyy"
+          margin="dense"
+          name="date"
+          label="Data da visita"
+          value={visit.date}
+          inputRef={register}
+          onChange={handleDateChange}
+          required
+          KeyboardButtonProps={{
+            'aria-label': 'change date',
+          }}
+        />
+        <ErrorMessage errors={errors} name="date"/>
+      </Grid>
+      <Grid
+        item
+        xs={8}
+      >
+        <TextField
+          fullWidth
+          label={_.isEmpty(periods) ? "Não há horário disponível nessa data" : "Período"}
+          margin="dense"
+          name="period"
+          inputRef={register}
+          onChange={handleChange}
+          required
+          select
+          SelectProps={{native: true}}
+          value={visit.period}
+          variant="outlined"
+          disabled={_.isEmpty(periods)}
+        >
+          <option
+            key=""
+            value=""
+          >
+          </option>
+          {periods.map(option => (
+            <option
+              key={option.key}
+              value={option.key}
+            >
+              {option.label}
+            </option>
+          ))}
+        </TextField>
+        <ErrorMessage errors={errors} name="period"/>
+      </Grid>
+    </Grid>
+  </form>
 }
