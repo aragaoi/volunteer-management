@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {Card, CardActions, CardContent, Divider} from '@material-ui/core';
 import {EntityContext} from "../../../../contexts/entity.context";
 import {BasicInfo} from "../../../../components/BasicInfo";
+import ApartmentIcon from "@material-ui/icons/Apartment";
 
 const EntityCard = props => {
   const {className, ...rest} = props;
@@ -11,7 +12,12 @@ const EntityCard = props => {
   return (
     <Card {...rest}>
       <CardContent>
-        <BasicInfo {...entity}/>
+        <BasicInfo
+          {...entity}
+          defaultAvatar={
+            <ApartmentIcon fontSize={"large"}/>
+          }
+        />
       </CardContent>
       <Divider/>
       <CardActions>

@@ -1,65 +1,60 @@
 import React, {useContext} from "react";
-import {EntityContext} from "../../../../contexts/entity.context";
+import {UserContext} from "../../../../contexts/user.context";
 import {handleImageUrl} from "../../../../helpers/file";
 import Account from "../../../Account";
-import {EntityCard} from "../index";
 import Grid from "@material-ui/core/Grid";
 import {UploadButtons} from "../../../../components/UploadButtons";
 import {StatesStore} from "../../../../contexts/states.context";
-import {EntityTypesStore} from "../../../../contexts/entitytypes.context";
-import EntityDetailsForm from "../EntityDetailsForm";
-import EntityHours from "../EntityHours";
 import {FormProvider, useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers";
-import {entitySchema} from "../../../../common/validators";
-import {list, save} from "../../../../services/entity.service";
+import {userSchema} from "../../../../common/validators";
+import {list, save} from "../../../../services/user.service";
 import {useSnackbar} from "notistack";
-import {EntitiesContext} from "../../../../contexts/entities.context";
+import {UsersContext} from "../../../../contexts/users.context";
+import UserDetailsForm from "../UserDetailsForm";
+import UserCard from "../UserCard";
 
-export function EntityForm(props) {
+export function UserForm(props) {
   const {onSubmit} = props;
 
-  const [entity, setEntity] = useContext(EntityContext);
+  const [user, setUser] = useContext(UserContext);
   const {enqueueSnackbar} = useSnackbar();
-  const [, setEntities] = useContext(EntitiesContext);
+  const [, setUsers] = useContext(UsersContext);
 
   const methods = useForm({
-    resolver: yupResolver(entitySchema)
+    resolver: yupResolver(userSchema)
   });
 
   async function handleSave() {
-    await save(entity);
-    setEntities(await list());
+    await save(user);
+    setUsers(await list());
 
     onSubmit();
     enqueueSnackbar("Entidade salva com sucesso!", {variant: "success"});
   }
 
   const handleUpload = async file => {
-    const newState = {...entity};
+    const newState = {...user};
     newState.avatarUrl = await handleImageUrl(file);
-    setEntity(newState);
+    setUser(newState);
   };
 
   return <FormProvider {...methods}>
     <form
-      id="entity-form"
+      id="user-form"
       autoComplete="off"
       noValidate
       onSubmit={methods.handleSubmit(handleSave)}
     >
       <Account
-        profile={<EntityCard actions={
+        profile={<UserCard actions={
           <Grid container justify={"center"}>
             <UploadButtons name="avatar" onChange={handleUpload}/>
           </Grid>
         }/>}>
         <StatesStore>
-          <EntityTypesStore>
-            <EntityDetailsForm/>
-          </EntityTypesStore>
+          <UserDetailsForm/>
         </StatesStore>
-        <EntityHours/>
       </Account>
     </form>
   </FormProvider>

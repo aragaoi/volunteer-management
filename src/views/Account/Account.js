@@ -3,6 +3,7 @@ import {makeStyles} from '@material-ui/styles';
 import {Grid} from '@material-ui/core';
 import {Password} from "../Settings/components";
 import {EntityContext} from "../../contexts/entity.context";
+import * as _ from "lodash";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -13,6 +14,7 @@ const useStyles = makeStyles(theme => ({
 const Account = (props) => {
   const classes = useStyles();
 
+  const {profile, children} = props;
   const [entity, setEntity] = useContext(EntityContext);
 
   function handlePasswordChange(password) {
@@ -32,7 +34,7 @@ const Account = (props) => {
           xl={4}
           xs={12}
         >
-          {props.profile}
+          {profile}
         </Grid>
         <Grid
           lg={8}
@@ -43,7 +45,7 @@ const Account = (props) => {
           container
           spacing={4}
         >
-          {props.children && props.children.map((child, index) =>
+          {(_.isArray(children) ? children : [children]).map((child, index) =>
             <Grid
               key={index}
               item

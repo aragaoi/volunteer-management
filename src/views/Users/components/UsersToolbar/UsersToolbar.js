@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/styles';
 import { Button } from '@material-ui/core';
 
 import { SearchInput } from 'components';
+import {UserFormDialogButton} from "./UserFormDialogButton";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -16,12 +17,6 @@ const useStyles = makeStyles(theme => ({
   },
   spacer: {
     flexGrow: 1
-  },
-  importButton: {
-    marginRight: theme.spacing(1)
-  },
-  exportButton: {
-    marginRight: theme.spacing(1)
   },
   searchInput: {
     marginRight: theme.spacing(1)
@@ -40,19 +35,12 @@ const UsersToolbar = props => {
     >
       <div className={classes.row}>
         <span className={classes.spacer} />
-        <Button className={classes.importButton}>Import</Button>
-        <Button className={classes.exportButton}>Export</Button>
-        <Button
-          color="primary"
-          variant="contained"
-        >
-          Add user
-        </Button>
+        <UserFormDialogButton/>
       </div>
       <div className={classes.row}>
         <SearchInput
           className={classes.searchInput}
-          placeholder="Search user"
+          placeholder="Buscar usuários"
         />
       </div>
     </div>

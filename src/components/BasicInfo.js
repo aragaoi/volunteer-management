@@ -29,7 +29,7 @@ export function BasicInfo(props) {
     <Avatar
       src={avatarUrl}
       className={classes.imageContainer}>
-      <ApartmentIcon fontSize={"large"}/>
+      {props.defaultAvatar}
     </Avatar>
     <Typography
       align="center"
@@ -50,5 +50,6 @@ export function BasicInfo(props) {
 
 BasicInfo.propTypes = {
   entity: PropTypes.any,
+  defaultAvatar: PropTypes.node,
   classes: PropTypes.any
 }

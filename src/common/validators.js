@@ -18,9 +18,17 @@ setLocale({
 export const entitySchema = yup.object().shape({
   name: yup.string().required(),
   email: yup.string().email().required(),
-  password: yup.string().min(6).required(),
-  confirm: yup.string().oneOf([yup.ref('password'), null], 'As senhas devem ser iguais'),
   phone: yup.string().matches(/^[0-9\-+()]*$/),
   document: yup.string().required(),
   institutionTypeId: yup.string().required(),
+  password: yup.string().min(6).required(),
+  confirm: yup.string().oneOf([yup.ref('password'), null], 'As senhas devem ser iguais'),
+});
+
+export const userSchema = yup.object().shape({
+  name: yup.string().required(),
+  email: yup.string().email().required(),
+  phone: yup.string().matches(/^[0-9\-+()]*$/),
+  password: yup.string().min(6).required(),
+  confirm: yup.string().oneOf([yup.ref('password'), null], 'As senhas devem ser iguais'),
 });

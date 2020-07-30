@@ -7,10 +7,9 @@ import Button from "@material-ui/core/Button";
 import PropTypes from "prop-types";
 import React, {useContext} from "react";
 import {makeStyles} from "@material-ui/styles";
-import {EntityContext} from "../../../../contexts/entity.context";
-import {Ratings} from "../../../../components/Rating/Ratings";
-import {BasicInfo} from "../../../../components/BasicInfo";
-import ApartmentIcon from "@material-ui/icons/Apartment";
+import {UserContext} from "../../../contexts/user.context";
+import {BasicInfo} from "../../../components/BasicInfo";
+import {Ratings} from "../../../components/Rating/Ratings";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -33,11 +32,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export function EntityDialog(props) {
+export function UserDialog(props) {
   const classes = useStyles();
 
   const {open, onClose} = props;
-  const [entity] = useContext(EntityContext);
+  const [user] = useContext(UserContext);
 
   return <Dialog
     onClose={onClose}
@@ -46,17 +45,12 @@ export function EntityDialog(props) {
     fullWidth={true}
   >
     <DialogTitle>
-      {entity.name}
+      {user.name}
     </DialogTitle>
     <DialogContent dividers>
-      <BasicInfo
-        {...entity}
-        defaultAvatar={
-          <ApartmentIcon fontSize={"large"}/>
-        }
-      />
+      <BasicInfo {...user}/>
       <Divider variant={"middle"} className={classes.divider}/>
-      <Ratings rating={entity.rating} evaluations={entity.evaluations}/>
+      <Ratings rating={user.rating} evaluations={user.evaluations}/>
     </DialogContent>
     <DialogActions>
       <Button onClick={onClose} color="secondary">
@@ -69,7 +63,7 @@ export function EntityDialog(props) {
   </Dialog>
 }
 
-EntityDialog.propTypes = {
+UserDialog.propTypes = {
   onClose: PropTypes.func,
   open: PropTypes.bool
 }
