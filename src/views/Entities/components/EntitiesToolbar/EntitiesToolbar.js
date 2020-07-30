@@ -8,11 +8,15 @@ import {EntityFormDialogButton} from "./EntityFormDialogButton";
 
 const useStyles = makeStyles(theme => ({
   root: {},
+  actions: {
+    display: 'flex',
+    alignItems: 'center'
+  },
   row: {
     height: '42px',
     display: 'flex',
     alignItems: 'center',
-    marginTop: theme.spacing(1)
+    marginTop: theme.spacing(2)
   },
   spacer: {
     flexGrow: 1
@@ -32,7 +36,7 @@ const EntitiesToolbar = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-      <div className={classes.row}>
+      <div className={classes.actions}>
         <span className={classes.spacer}/>
         <EntityFormDialogButton/>
       </div>

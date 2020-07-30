@@ -39,6 +39,10 @@ export function UserForm(props) {
     setUser(newState);
   };
 
+  function handlePasswordChange(password) {
+    setUser({...user, password});
+  }
+
   return <FormProvider {...methods}>
     <form
       id="user-form"
@@ -47,6 +51,7 @@ export function UserForm(props) {
       onSubmit={methods.handleSubmit(handleSave)}
     >
       <Account
+        onChangePassword={handlePasswordChange}
         profile={<UserCard actions={
           <Grid container justify={"center"}>
             <UploadButtons name="avatar" onChange={handleUpload}/>

@@ -41,6 +41,10 @@ export function EntityForm(props) {
     setEntity(newState);
   };
 
+  function handlePasswordChange(password) {
+    setEntity({...entity, password});
+  }
+
   return <FormProvider {...methods}>
     <form
       id="entity-form"
@@ -49,6 +53,7 @@ export function EntityForm(props) {
       onSubmit={methods.handleSubmit(handleSave)}
     >
       <Account
+        onChangePassword={handlePasswordChange}
         profile={<EntityCard actions={
           <Grid container justify={"center"}>
             <UploadButtons name="avatar" onChange={handleUpload}/>

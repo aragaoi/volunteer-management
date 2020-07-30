@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {makeStyles} from '@material-ui/styles';
@@ -31,6 +31,9 @@ const useStyles = makeStyles(theme => ({
     padding: 0
   },
   nameContainer: {
+    display: 'block'
+  },
+  avatarContainer: {
     display: 'flex',
     alignItems: 'center'
   },
@@ -39,6 +42,9 @@ const useStyles = makeStyles(theme => ({
   },
   actions: {
     justifyContent: 'flex-end'
+  },
+  rowActions: {
+    display: 'flex'
   }
 }));
 
@@ -48,6 +54,9 @@ const UsersTable = props => {
   const [users] = useContext(UsersContext);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(0);
+  const [offset, setOffset] = useState(0);
+
+  useEffect(() => updateOffset(page, rowsPerPage), [page, rowsPerPage]);
 
   const handlePageChange = (event, page) => {
     setPage(page);
@@ -55,7 +64,13 @@ const UsersTable = props => {
 
   const handleRowsPerPageChange = event => {
     setRowsPerPage(event.target.value);
+    setPage(0);
   };
+
+  function updateOffset(page, rowsPerPage) {
+    const newOffset = page * rowsPerPage;
+    setOffset(newOffset > 0 ? newOffset : 0);
+  }
 
   return (
     <Card>
@@ -66,7 +81,9 @@ const UsersTable = props => {
               <TableHead>
                 <TableRow>
                   <TableCell>Nome</TableCell>
-                  <TableCell>Email</TableCell>
+                  <Hidden xsDown>
+                    <TableCell>Email</TableCell>
+                  </Hidden>
                   <Hidden smDown>
                     <TableCell>Endereço</TableCell>
                     <TableCell>Telefone</TableCell>
@@ -76,22 +93,31 @@ const UsersTable = props => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users.slice(0, rowsPerPage).map(user => (
+                {users.slice(offset, (page+1) * rowsPerPage).map(user => (
                   <TableRow
                     className={classes.tableRow}
                     hover
                     key={user.id}
                   >
                     <TableCell>
-                      <div className={classes.nameContainer}>
-                        <Avatar
-                          className={classes.avatar}
-                          src={user.avatarUrl}
-                        />
+                      <div className={classes.avatarContainer}>
+                        <Hidden xsDown>
+                          <Avatar
+                            className={classes.avatar}
+                            src={user.avatarUrl}
+                          />
+                        </Hidden>
+                        <div className={classes.nameContainer}>
                         <Typography variant="body1">{user.name}</Typography>
+                        <Hidden smUp>
+                          {user.email}
+                        </Hidden>
+                        </div>
                       </div>
                     </TableCell>
-                    <TableCell>{user.email}</TableCell>
+                    <Hidden xsDown>
+                      <TableCell>{user.email}</TableCell>
+                    </Hidden>
                     <Hidden smDown>
                       <TableCell>
                         <AddressLink address={user.address} align="left"/>
@@ -102,16 +128,18 @@ const UsersTable = props => {
                       </TableCell>
                     </Hidden>
                     <TableCell align={"center"}>
-                      <Tooltip title="Editar">
-                        <IconButton>
-                          <EditIcon/>
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Excluir">
-                        <IconButton>
-                          <DeleteIcon/>
-                        </IconButton>
-                      </Tooltip>
+                      <div className={classes.rowActions}>
+                        <Tooltip title="Editar">
+                          <IconButton>
+                            <EditIcon/>
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Excluir">
+                          <IconButton>
+                            <DeleteIcon/>
+                          </IconButton>
+                        </Tooltip>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}

@@ -1,7 +1,7 @@
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
-import {Divider} from "@material-ui/core";
+import {Divider, useMediaQuery, useTheme} from "@material-ui/core";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import PropTypes from "prop-types";
@@ -14,26 +14,13 @@ import ApartmentIcon from "@material-ui/icons/Apartment";
 
 const useStyles = makeStyles(theme => ({
   root: {},
-  imageContainer: {
-    height: 64,
-    width: 64,
-    margin: '0 auto',
-    border: `1px solid ${theme.palette.divider}`,
-    borderRadius: '5px',
-    overflow: 'hidden',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  image: {
-    width: '100%'
-  },
   divider: {
     margin: theme.spacing(2, 0)
   },
 }));
 
 export function EntityDialog(props) {
+  const theme = useTheme();
   const classes = useStyles();
 
   const {open, onClose} = props;
@@ -44,6 +31,7 @@ export function EntityDialog(props) {
     open={open}
     maxWidth={"sm"}
     fullWidth={true}
+    fullScreen={useMediaQuery(theme.breakpoints.down('xs'))}
   >
     <DialogTitle>
       {entity.name}

@@ -1,8 +1,7 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {makeStyles} from '@material-ui/styles';
 import {Grid} from '@material-ui/core';
 import {Password} from "../Settings/components";
-import {EntityContext} from "../../contexts/entity.context";
 import * as _ from "lodash";
 
 const useStyles = makeStyles(theme => ({
@@ -14,12 +13,7 @@ const useStyles = makeStyles(theme => ({
 const Account = (props) => {
   const classes = useStyles();
 
-  const {profile, children} = props;
-  const [entity, setEntity] = useContext(EntityContext);
-
-  function handlePasswordChange(password) {
-    setEntity({...entity, password});
-  }
+  const {profile, children, onChangePassword} = props;
 
   return (
     <div className={classes.root}>
@@ -58,7 +52,7 @@ const Account = (props) => {
             item
             xs={12}
           >
-            <Password onChange={handlePasswordChange}/>
+            <Password onChange={onChangePassword}/>
           </Grid>
         </Grid>
       </Grid>

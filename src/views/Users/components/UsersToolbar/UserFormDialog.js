@@ -6,8 +6,11 @@ import Button from "@material-ui/core/Button";
 import PropTypes from "prop-types";
 import React from "react";
 import {UserForm} from "./UserForm";
+import {useMediaQuery, useTheme} from "@material-ui/core";
 
 export function UserFormDialog(props) {
+  const theme = useTheme();
+
   const {open, setOpen} = props;
 
   function close() {
@@ -18,6 +21,7 @@ export function UserFormDialog(props) {
     open={open}
     maxWidth={"lg"}
     fullWidth={true}
+    fullScreen={useMediaQuery(theme.breakpoints.down('sm'))}
   >
     <DialogTitle>
       Novo Usuário

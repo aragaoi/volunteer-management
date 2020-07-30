@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {makeStyles} from '@material-ui/styles';
@@ -15,23 +15,20 @@ const PasswordForm = props => {
 
   const classes = useStyles();
 
-  const [password, setPassword] = useState();
-  const [confirm, setConfirm] = useState();
+  const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
 
   const {register, errors} = useFormContext();
 
-  useEffect(() => {
-    onChange(password);
-  }, [password, onChange])
-
   const handleChangePassword = event => {
     const value = event.target.value;
-    setPassword(() => value);
+    setPassword(value);
+    onChange(value);
   };
 
   const handleChangeConfirm = event => {
     const value = event.target.value;
-    setConfirm(() => value);
+    setConfirm(value);
   };
 
   return (
@@ -80,7 +77,6 @@ const PasswordForm = props => {
               required
               margin="dense"
               onChange={handleChangeConfirm}
-              // style={{ marginTop: '1rem' }}
               type="password"
               value={confirm}
               variant="outlined"

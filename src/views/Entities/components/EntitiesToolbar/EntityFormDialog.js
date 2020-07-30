@@ -6,8 +6,10 @@ import Button from "@material-ui/core/Button";
 import PropTypes from "prop-types";
 import React from "react";
 import {EntityForm} from "./EntityForm";
+import {useMediaQuery, useTheme} from "@material-ui/core";
 
 export function EntityFormDialog(props) {
+  const theme = useTheme();
   const {open, setOpen} = props;
 
   function close() {
@@ -18,6 +20,7 @@ export function EntityFormDialog(props) {
     open={open}
     maxWidth={"lg"}
     fullWidth={true}
+    fullScreen={useMediaQuery(theme.breakpoints.down('sm'))}
   >
     <DialogTitle>
       Nova Entidade

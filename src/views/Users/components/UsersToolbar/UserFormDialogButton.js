@@ -5,7 +5,7 @@ import {emptyUser} from "../../../../services/user.service";
 import {UserFormDialog} from "./UserFormDialog";
 
 export function UserFormDialogButton() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);

@@ -1,6 +1,5 @@
 import {makeStyles} from "@material-ui/styles";
 import {Avatar, Typography} from "@material-ui/core";
-import ApartmentIcon from "@material-ui/icons/Apartment";
 import {AddressLink} from "./AddressLink";
 import PropTypes from "prop-types";
 import React from "react";
@@ -10,7 +9,7 @@ const useStyles = makeStyles(theme => ({
   imageContainer: {
     height: 64,
     width: 64,
-    margin: '0 auto',
+    margin: '0 auto 16px',
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: '5px',
     overflow: 'hidden',
