@@ -3,8 +3,11 @@ import {EntityFormDialog} from "./EntityFormDialog";
 import React, {useState} from "react";
 import {EntityStore} from "../../../../contexts/entity.context";
 import {emptyEntity} from "../../../../services/entity.service";
+import EditIcon from "@material-ui/icons/Edit";
+import IconButton from "@material-ui/core/IconButton";
 
-export function EntityFormDialogButton() {
+export function EntityFormDialogButton(props) {
+  const {entity, actionText, actionIcon, ...rest} = props;
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -12,14 +15,23 @@ export function EntityFormDialogButton() {
   };
 
   return <>
-    <Button
-      color="primary"
-      variant="contained"
-      onClick={handleClickOpen}
-    >
-      Adicionar entidade
-    </Button>
-    {open && <EntityStore entity={emptyEntity()}>
+    {actionText ?
+      <Button
+        {...rest}
+        onClick={handleClickOpen}
+      >
+        {actionIcon}
+        {actionText}
+      </Button>
+      :
+      <IconButton
+        {...rest}
+        onClick={handleClickOpen}
+      >
+        {actionIcon}
+      </IconButton>
+    }
+    {open && <EntityStore entity={entity || emptyEntity()}>
       <EntityFormDialog
         setOpen={setOpen}
         open={open}

@@ -45,3 +45,8 @@ export async function save(entity) {
   const result = await api.post(ENDPOINT_PATH, entity);
   return result.data;
 }
+
+export async function remove(entity) {
+  const result = await api.delete(`${ENDPOINT_PATH}/${entity.id}`);
+  return result.data;
+}

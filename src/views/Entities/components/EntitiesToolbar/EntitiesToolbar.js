@@ -5,6 +5,7 @@ import {makeStyles} from '@material-ui/styles';
 
 import {SearchInput} from 'components';
 import {EntityFormDialogButton} from "./EntityFormDialogButton";
+import {Button} from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -38,7 +39,11 @@ const EntitiesToolbar = props => {
     >
       <div className={classes.actions}>
         <span className={classes.spacer}/>
-        <EntityFormDialogButton/>
+        <EntityFormDialogButton
+          actionText={"Adicionar entidade"}
+          color="primary"
+          variant="contained"
+        />
       </div>
       <div className={classes.row}>
         <SearchInput

@@ -10,9 +10,20 @@ import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EventIcon from "@material-ui/icons/Event";
 import Tooltip from "@material-ui/core/Tooltip";
+import {EntityFormDialogButton} from "./EntitiesToolbar/EntityFormDialogButton";
+import {ConfirmDialogButton} from "../../../components/ConfirmDialogButton";
+import {list, remove} from "../../../services/entity.service";
+import {useSnackbar} from "notistack";
 
 export function EntitiesList() {
-  const [entities] = useContext(EntitiesContext);
+  const {enqueueSnackbar} = useSnackbar();
+  const [entities, setEntities] = useContext(EntitiesContext);
+
+  async function handleDelete(entity) {
+    await remove(entity);
+    setEntities(await list());
+    enqueueSnackbar("Entidade removida com sucesso!", {variant: "success"});
+  }
 
   return <Grid
     container
@@ -50,16 +61,24 @@ export function EntitiesList() {
                     <EventIcon/>
                   </IconButton>
                 </Tooltip>
-                <Tooltip title="Editar">
-                  <IconButton>
-                    <EditIcon/>
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="Excluir">
-                  <IconButton>
-                    <DeleteIcon/>
-                  </IconButton>
-                </Tooltip>
+
+                <EntityFormDialogButton
+                  actionIcon={
+                    <Tooltip title="Editar">
+                      <EditIcon/>
+                    </Tooltip>
+                  }
+                />
+                <ConfirmDialogButton
+                  title={"Excluir entidade"}
+                  message={`Essa ação não poderá ser desfeita. Deseja realmente excluir a entidade ${entity.name}?`}
+                  onConfirm={() => handleDelete(entity)}
+                  actionIcon={
+                    <Tooltip title="Excluir">
+                      <DeleteIcon/>
+                    </Tooltip>
+                  }
+                />
               </Grid>
             </Grid>
           }/>
