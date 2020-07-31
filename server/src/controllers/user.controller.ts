@@ -75,6 +75,9 @@ export class UserController {
               scope: {
                 fields: {
                   id: true,
+                  userId: true,
+                  entityId: true,
+                  visitId: true,
                   date: true,
                   rating: true,
                   comment: true
@@ -94,6 +97,7 @@ export class UserController {
                     fields: {
                       id: true,
                       date: true,
+                      period: true,
                     }
                   }
                 }]

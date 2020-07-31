@@ -1,4 +1,4 @@
-import {Entity, model, property, belongsTo} from '@loopback/repository';
+import {belongsTo, Entity, model, property} from '@loopback/repository';
 import {Visit} from './visit.model';
 import {User} from './user.model';
 import {Institution} from './institution.model';
@@ -6,7 +6,6 @@ import {Institution} from './institution.model';
 @model({
   settings: {
     strict: false,
-    hiddenProperties: ['userId'],
     scope: {
       order: "date DESC"
     },
@@ -59,5 +58,3 @@ export class UserEvaluation extends Entity {
 export interface UserEvaluationRelations {
   // describe navigational properties here
 }
-
-export type UserEvaluationWithRelations = UserEvaluation & UserEvaluationRelations;

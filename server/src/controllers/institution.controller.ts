@@ -85,6 +85,9 @@ export class InstitutionController {
               scope: {
                 fields: {
                   id: true,
+                  userId: true,
+                  entityId: true,
+                  visitId: true,
                   date: true,
                   rating: true,
                   comment: true
@@ -104,6 +107,7 @@ export class InstitutionController {
                     fields: {
                       id: true,
                       date: true,
+                      period: true,
                     }
                   }
                 }]

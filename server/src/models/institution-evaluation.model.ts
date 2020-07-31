@@ -6,7 +6,6 @@ import {User} from './user.model';
 @model({
   settings: {
     strict: false,
-    hiddenProperties: ['entityId'],
     scope: {
       order: "date DESC"
     },
@@ -59,5 +58,3 @@ export class InstitutionEvaluation extends Entity {
 export interface InstitutionEvaluationRelations {
   // describe navigational properties here
 }
-
-export type InstitutionEvaluationWithRelations = InstitutionEvaluation & InstitutionEvaluationRelations;

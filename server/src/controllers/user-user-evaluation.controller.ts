@@ -67,7 +67,6 @@ export class UserUserEvaluationController {
       },
     }) userEvaluation: Omit<UserEvaluation, 'id'>,
   ): Promise<UserEvaluation> {
-    delete userEvaluation.userId;
     return this.userRepository.evaluations(id).create(userEvaluation);
   }
 
