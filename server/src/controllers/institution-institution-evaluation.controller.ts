@@ -67,6 +67,7 @@ export class InstitutionInstitutionEvaluationController {
       },
     }) institutionEvaluation: Omit<InstitutionEvaluation, 'id'>,
   ): Promise<InstitutionEvaluation> {
+    delete institutionEvaluation.entityId;
     return this.institutionRepository.evaluations(id).create(institutionEvaluation);
   }
 

@@ -1,6 +1,14 @@
 import {Entity, model, property} from '@loopback/repository';
 
-@model({settings: {strict: false}})
+@model({
+  settings: {
+    strict: false,
+    hiddenProperties: ['userId'],
+    scope: {
+      order: "date DESC"
+    },
+  }
+})
 export class UserEvaluation extends Entity {
   @property({
     type: 'string',
