@@ -21,12 +21,14 @@ import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 import Hidden from "@material-ui/core/Hidden";
 import Tooltip from "@material-ui/core/Tooltip";
 import {ConfirmDialogButton} from "../../../components/ConfirmDialogButton";
-import {cancel, confirm, list, VISIT_STATUS} from "../../../services/visit.service";
+import {cancel, confirm, list, reject, VISIT_STATUS} from "../../../services/visit.service";
 import {useSnackbar} from "notistack";
 import * as _ from "lodash";
 import {VisitStore} from "../../../contexts/visit.context";
 import {FinishVisitFormDialogButton} from "./FinishVisitFormDialogButton";
 import {formatDateAndPeriod} from "../../../helpers/date";
+import {LoginContext} from "../../../contexts/login.context";
+import Chip from "@material-ui/core/Chip";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -45,6 +47,7 @@ const VisitsTable = props => {
   const classes = useStyles();
 
   const {enqueueSnackbar} = useSnackbar();
+  const [login] = useContext(LoginContext);
   const [visits, setVisits] = useContext(VisitsContext);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -67,9 +70,15 @@ const VisitsTable = props => {
   }
 
   async function handleCancel(visit) {
-    await cancel(visit);
+    let message = "Visita cancelada com sucesso!";
+    if (login.userId) {
+      await cancel(visit);
+    } else {
+      await reject(visit);
+      message = "Visita rejeitada com sucesso!";
+    }
     setVisits(await list());
-    enqueueSnackbar("Visita cancelada com sucesso!", {variant: "success"});
+    enqueueSnackbar(message, {variant: "success"});
   }
 
   async function handleConfirm(visit) {
@@ -81,15 +90,21 @@ const VisitsTable = props => {
   function resolveStatus(visit) {
     switch (visit.status) {
       case VISIT_STATUS.SCHEDULED:
-        return "Agendada";
+        return <Chip variant="outlined" label="Aguardando confirmação"/>;
       case VISIT_STATUS.CANCELED:
-        return "Cancelada";
+        return <Chip color="secondary" label="Cancelada"/>;
+      case VISIT_STATUS.REJECTED:
+        return <Chip color="secondary" label="Rejeitada"/>;
       case VISIT_STATUS.CONFIRMED:
-        return "Confirmada";
+        return <Chip color="primary" label="Agendada"/>;
       case VISIT_STATUS.EVALUATION:
-        return (visit.evaluatedByUser && visit.evaluatedByEntity) ? "Realizada" : "Aguardando avaliações";
+        if (visit.evaluatedByUser && visit.evaluatedByEntity) {
+          return <Chip label="Realizada"/>;
+        } else {
+          return <Chip variant="outlined" color="secondary" label="Aguardando avaliações"/>;
+        }
       case VISIT_STATUS.DONE:
-        return "Realizada";
+        return <Chip label="Realizada"/>;
       default:
         return "";
     }
@@ -145,7 +160,7 @@ const VisitsTable = props => {
                               message={`Essa ação não poderá ser desfeita. Deseja realmente cancelar a visita?`}
                               onConfirm={() => handleCancel(visit)}
                               actionIcon={
-                                <Tooltip title="Cancelar">
+                                <Tooltip title={login.userId ? "Cancelar" : "Rejeitar"}>
                                   <ClearIcon/>
                                 </Tooltip>
                               }

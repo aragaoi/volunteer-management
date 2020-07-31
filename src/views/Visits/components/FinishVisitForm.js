@@ -93,8 +93,8 @@ export function FinishVisitForm(props) {
       >
         <TextField
           multiline
-          rows={3}
-          rowsMax={8}
+          rows={5}
+          rowsMax={5}
           fullWidth
           label="Comentário"
           margin="dense"

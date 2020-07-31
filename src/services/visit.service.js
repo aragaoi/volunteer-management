@@ -11,6 +11,7 @@ export const VISIT_STATUS = {
   SCHEDULED: "SCHEDULED",
   CONFIRMED: "CONFIRMED",
   CANCELED: "CANCELED",
+  REJECTED: "REJECTED",
   EVALUATION: "EVALUATION",
   DONE: "DONE",
 };
@@ -49,6 +50,10 @@ export async function insert(visit) {
 
 export async function cancel(visit) {
   return await update(visit, {status: VISIT_STATUS.CANCELED});
+}
+
+export async function reject(visit) {
+  return await update(visit, {status: VISIT_STATUS.REJECTED});
 }
 
 export async function confirm(visit) {
