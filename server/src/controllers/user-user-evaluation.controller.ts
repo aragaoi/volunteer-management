@@ -1,29 +1,14 @@
-import {
-  Count,
-  CountSchema,
-  Filter,
-  repository,
-  Where,
-} from '@loopback/repository';
-import {
-  del,
-  get,
-  getModelSchemaRef,
-  getWhereSchemaFor,
-  param,
-  patch,
-  post,
-  requestBody,
-} from '@loopback/rest';
-import {
-  User,
-  UserEvaluation,
-} from '../models';
+import {Count, CountSchema, Filter, repository, Where,} from '@loopback/repository';
+import {del, get, getModelSchemaRef, getWhereSchemaFor, param, patch, post, requestBody,} from '@loopback/rest';
+import {User, UserEvaluation,} from '../models';
 import {UserRepository} from '../repositories';
+import {service} from "@loopback/core";
+import {EvaluationService} from "../services";
 
 export class UserUserEvaluationController {
   constructor(
     @repository(UserRepository) protected userRepository: UserRepository,
+    @service(EvaluationService) protected evaluationService: EvaluationService,
   ) { }
 
   @get('/users/{id}/evaluations', {
@@ -67,6 +52,13 @@ export class UserUserEvaluationController {
       },
     }) userEvaluation: Omit<UserEvaluation, 'id'>,
   ): Promise<UserEvaluation> {
+    const userEvaluations = await this.userRepository.evaluations(id).find({
+      fields: {rating: true}
+    });
+
+    const averageRating = this.evaluationService.calculateAverageRating(userEvaluations);
+
+    await this.userRepository.updateById(id, {rating: averageRating});
     return this.userRepository.evaluations(id).create(userEvaluation);
   }
 

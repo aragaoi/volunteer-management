@@ -20,10 +20,13 @@ import {
   InstitutionEvaluation,
 } from '../models';
 import {InstitutionRepository} from '../repositories';
+import {service} from "@loopback/core";
+import {EvaluationService} from "../services";
 
 export class InstitutionInstitutionEvaluationController {
   constructor(
     @repository(InstitutionRepository) protected institutionRepository: InstitutionRepository,
+    @service(EvaluationService) protected evaluationService: EvaluationService,
   ) { }
 
   @get('/institutions/{id}/evaluations', {
@@ -67,6 +70,13 @@ export class InstitutionInstitutionEvaluationController {
       },
     }) institutionEvaluation: Omit<InstitutionEvaluation, 'id'>,
   ): Promise<InstitutionEvaluation> {
+    const institutionEvaluations = await this.institutionRepository.evaluations(id).find({
+      fields: {rating: true}
+    });
+
+    const averageRating = this.evaluationService.calculateAverageRating(institutionEvaluations);
+
+    await this.institutionRepository.updateById(id, {rating: averageRating});
     return this.institutionRepository.evaluations(id).create(institutionEvaluation);
   }
 
