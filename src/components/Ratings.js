@@ -81,16 +81,18 @@ export function Ratings(props) {
                     </ListItemAvatar>
                     <ListItemText
                       primary={
-                        <Fragment>
-                          <Typography
-                            component="span"
-                            variant="body2"
-                            color="textPrimary"
+                          <Grid
+                            container
+                            spacing={2}
+                            justify={"flex-start"}
                           >
-                            <Rating defaultValue={evaluation.rating} readOnly size={"small"}/>
-                            {`${evaluation.user.name} | ${moment(evaluation.date).format("DD/MM/YY")}`}
-                          </Typography>
-                        </Fragment>
+                            <Grid item>
+                              <Rating defaultValue={evaluation.rating} readOnly size={"small"}/>
+                            </Grid>
+                            <Grid item>
+                              {`${evaluation.user.name} | ${moment(evaluation.date).format("DD/MM/YY")}`}
+                            </Grid>
+                        </Grid>
                       }
                       secondary={evaluation.comment && `— ${evaluation.comment}`}
                     />
