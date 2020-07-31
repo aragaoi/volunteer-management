@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {makeStyles} from '@material-ui/styles';
 import {
-  Avatar,
   Card,
   CardActions,
   CardContent,
@@ -15,18 +14,19 @@ import {
   TableRow,
   Typography
 } from '@material-ui/core';
-import {UsersContext} from "../../../../contexts/users.context";
-import {AddressLink} from "../../../../components/AddressLink";
-import CheckIcon from '@material-ui/icons/Check';
+import {VisitsContext} from "../../../../contexts/visits.context";
+import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import ClearIcon from '@material-ui/icons/Clear';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
+import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 import Hidden from "@material-ui/core/Hidden";
 import Tooltip from "@material-ui/core/Tooltip";
-import {UserFormDialogButton} from "../VisitsToolbar/UserFormDialogButton";
 import {ConfirmDialogButton} from "../../../../components/ConfirmDialogButton";
-import {list, remove} from "../../../../services/user.service";
+import {cancel, confirm, list, VISIT_STATUS} from "../../../../services/visit.service";
 import {useSnackbar} from "notistack";
+import * as _ from "lodash";
+import moment from "moment";
+import {VisitStore} from "../../../../contexts/visit.context";
+import {FinishVisitFormDialogButton} from "../FinishVisitForm/FinishVisitFormDialogButton";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -36,26 +36,16 @@ const useStyles = makeStyles(theme => ({
   nameContainer: {
     display: 'block'
   },
-  avatarContainer: {
-    display: 'flex',
-    alignItems: 'center'
-  },
-  avatar: {
-    marginRight: theme.spacing(2)
-  },
   actions: {
     justifyContent: 'flex-end'
   },
-  rowActions: {
-    display: 'flex'
-  }
 }));
 
 const VisitsTable = props => {
   const classes = useStyles();
 
   const {enqueueSnackbar} = useSnackbar();
-  const [users, setUsers] = useContext(UsersContext);
+  const [visits, setVisits] = useContext(VisitsContext);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [offset, setOffset] = useState(0);
@@ -76,10 +66,35 @@ const VisitsTable = props => {
     setOffset(newOffset > 0 ? newOffset : 0);
   }
 
-  async function handleDelete(user) {
-    await remove(user);
-    setUsers(await list());
-    enqueueSnackbar("Usuário removido com sucesso!", {variant: "success"});
+  async function handleCancel(visit) {
+    await cancel(visit);
+    setVisits(await list());
+    enqueueSnackbar("Visita cancelada com sucesso!", {variant: "success"});
+  }
+
+  async function handleConfirm(visit) {
+    await confirm(visit);
+    setVisits(await list());
+    enqueueSnackbar("Visita confirmada com sucesso!", {variant: "success"});
+  }
+
+  function resolveStatus(status) {
+    switch (status) {
+      case VISIT_STATUS.SCHEDULED:
+        return "Agendada";
+      case VISIT_STATUS.CANCELED:
+        return "Cancelada";
+      case VISIT_STATUS.CONFIRMED:
+        return "Confirmada";
+      case VISIT_STATUS.DONE:
+        return "Realizada";
+      default:
+        return "";
+    }
+  }
+
+  function formatDate(date) {
+    return date ? moment(date).format("DD/MM/YY") : "";
   }
 
   return (
@@ -90,76 +105,80 @@ const VisitsTable = props => {
             <Table style={{tableLayout: 'auto'}}>
               <TableHead>
                 <TableRow>
-                  <TableCell>Nome</TableCell>
+                  <TableCell>Data</TableCell>
                   <Hidden xsDown>
-                    <TableCell>Email</TableCell>
+                    <TableCell>Voluntário</TableCell>
+                    <TableCell>Entidade</TableCell>
                   </Hidden>
-                  <Hidden smDown>
-                    <TableCell>Endereço</TableCell>
-                    <TableCell>Telefone</TableCell>
-                    <TableCell align={"center"}>Aceita contato</TableCell>
-                  </Hidden>
+                  <TableCell>Status</TableCell>
                   <TableCell align={"center"}>Ações</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users.slice(offset, (page + 1) * rowsPerPage).map(user => (
-                  <TableRow
-                    className={classes.tableRow}
-                    hover
-                    key={user.id}
-                  >
-                    <TableCell>
-                      <div className={classes.avatarContainer}>
-                        <Hidden xsDown>
-                          <Avatar
-                            className={classes.avatar}
-                            src={user.avatarUrl}
-                          />
-                        </Hidden>
-                        <div className={classes.nameContainer}>
-                          <Typography variant="body1">{user.name}</Typography>
-                          <Hidden smUp>
-                            {user.email}
-                          </Hidden>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <Hidden xsDown>
-                      <TableCell>{user.email}</TableCell>
-                    </Hidden>
-                    <Hidden smDown>
+                {visits.slice(offset, (page + 1) * rowsPerPage).map(visit => (
+                  <VisitStore visit={visit}>
+                    <TableRow
+                      className={classes.tableRow}
+                      hover
+                      key={visit.id}
+                    >
                       <TableCell>
-                        <AddressLink address={user.address} align="left"/>
+                        <div className={classes.avatarContainer}>
+                          <div className={classes.nameContainer}>
+                            <Typography variant="body1">{formatDate(visit.date)}</Typography>
+                            <Hidden smUp>
+                              {_.get(visit, 'user.name')}
+                              {_.get(visit, 'entity.name')}
+                            </Hidden>
+                          </div>
+                        </div>
                       </TableCell>
-                      <TableCell>{user.phone}</TableCell>
+                      <Hidden xsDown>
+                        <TableCell>{_.get(visit, 'user.name')}</TableCell>
+                        <TableCell>{_.get(visit, 'entity.name')}</TableCell>
+                      </Hidden>
+                      <TableCell>{resolveStatus(visit.status)}</TableCell>
                       <TableCell align={"center"}>
-                        {user.acceptsContact ? <CheckIcon/> : <ClearIcon/>}
+                        <div className={classes.rowActions}>
+                          {[VISIT_STATUS.SCHEDULED, VISIT_STATUS.CONFIRMED].includes(visit.status) &&
+                          <ConfirmDialogButton
+                            title={"Cancelar visita"}
+                            message={`Essa ação não poderá ser desfeita. Deseja realmente cancelar a visita?`}
+                            onConfirm={() => handleCancel(visit)}
+                            actionIcon={
+                              <Tooltip title="Cancelar">
+                                <ClearIcon/>
+                              </Tooltip>
+                            }
+                          />
+                          }
+                          {visit.status === VISIT_STATUS.SCHEDULED &&
+                          <ConfirmDialogButton
+                            color="primary"
+                            title={"Aceitar visita"}
+                            message={`Deseja realmente confirmar a visita agendada?`}
+                            onConfirm={() => handleConfirm(visit)}
+                            actionIcon={
+                              <Tooltip title="Aceitar">
+                                <DoneOutlineIcon/>
+                              </Tooltip>
+                            }
+                          />
+                          }
+                          {visit.status === VISIT_STATUS.SCHEDULED &&
+                          <FinishVisitFormDialogButton
+                            color={"primary"}
+                            actionIcon={
+                              <Tooltip title="Finalizar visita">
+                                <EventAvailableIcon/>
+                              </Tooltip>
+                            }
+                          />
+                          }
+                        </div>
                       </TableCell>
-                    </Hidden>
-                    <TableCell align={"center"}>
-                      <div className={classes.rowActions}>
-                        <UserFormDialogButton
-                          user={user}
-                          actionIcon={
-                            <Tooltip title="Editar">
-                              <EditIcon/>
-                            </Tooltip>
-                          }
-                        />
-                        <ConfirmDialogButton
-                          title={"Excluir usuário"}
-                          message={`Essa ação não poderá ser desfeita. Deseja realmente excluir o usuário ${user.name}?`}
-                          onConfirm={() => handleDelete(user)}
-                          actionIcon={
-                            <Tooltip title="Excluir">
-                              <DeleteIcon/>
-                            </Tooltip>
-                          }
-                        />
-                      </div>
-                    </TableCell>
-                  </TableRow>
+                    </TableRow>
+                  </VisitStore>
                 ))}
               </TableBody>
             </Table>
@@ -169,7 +188,7 @@ const VisitsTable = props => {
       <CardActions className={classes.actions}>
         <TablePagination
           component="div"
-          count={users.length}
+          count={visits.length}
           onChangePage={handlePageChange}
           onChangeRowsPerPage={handleRowsPerPageChange}
           page={page}
@@ -183,7 +202,7 @@ const VisitsTable = props => {
 
 VisitsTable.propTypes = {
   className: PropTypes.string,
-  users: PropTypes.array
+  visits: PropTypes.array
 };
 
 export default VisitsTable;

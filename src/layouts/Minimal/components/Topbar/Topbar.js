@@ -1,9 +1,10 @@
 import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import {Link as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/styles';
-import { AppBar, Toolbar } from '@material-ui/core';
+import {makeStyles} from '@material-ui/styles';
+import {AppBar, Toolbar} from '@material-ui/core';
+import {Brand} from "../../../Brand";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -12,7 +13,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const Topbar = props => {
-  const { className, ...rest } = props;
+  const {className, ...rest} = props;
 
   const classes = useStyles();
 
@@ -25,10 +26,7 @@ const Topbar = props => {
     >
       <Toolbar>
         <RouterLink to="/">
-          <img
-            alt="Logo"
-            src="/images/logos/logo--white.svg"
-          />
+          <Brand/>
         </RouterLink>
       </Toolbar>
     </AppBar>

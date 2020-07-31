@@ -6,6 +6,7 @@ import {Main as MainLayout, Minimal as MinimalLayout} from './layouts';
 
 import {Entities, NotFound as NotFoundView, Settings as SettingsView, Users} from './views';
 import {EntityForm} from "./views/Entities/components/EntityForm/EntityForm";
+import Visits from "./views/Visits";
 
 const Routes = () => {
   return (
@@ -13,7 +14,7 @@ const Routes = () => {
       <Redirect
         exact
         from="/"
-        to="/users"
+        to="/entities"
       />
       <RouteWithLayout
         component={Entities}
@@ -21,30 +22,18 @@ const Routes = () => {
         layout={MainLayout}
         path="/entities"
       />
-      {/*<RouteWithLayout*/}
-      {/*  component={DashboardView}*/}
-      {/*  exact*/}
-      {/*  layout={MainLayout}*/}
-      {/*  path="/dashboard"*/}
-      {/*/>*/}
       <RouteWithLayout
         component={Users}
         exact
         layout={MainLayout}
         path="/users"
       />
-      {/*<RouteWithLayout*/}
-      {/*  component={TypographyView}*/}
-      {/*  exact*/}
-      {/*  layout={MainLayout}*/}
-      {/*  path="/typography"*/}
-      {/*/>*/}
-      {/*<RouteWithLayout*/}
-      {/*  component={IconsView}*/}
-      {/*  exact*/}
-      {/*  layout={MainLayout}*/}
-      {/*  path="/icons"*/}
-      {/*/>*/}
+      <RouteWithLayout
+        component={Visits}
+        exact
+        layout={MainLayout}
+        path="/visits"
+      />
       <RouteWithLayout
         component={EntityForm}
         exact

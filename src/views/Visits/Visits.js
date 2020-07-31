@@ -1,8 +1,8 @@
 import React from 'react';
 import {makeStyles} from '@material-ui/styles';
-
-import {UsersTable, UsersToolbar} from './components';
-import {UsersStore} from "../../contexts/users.context";
+import {VisitsStore} from "../../contexts/visits.context";
+import VisitsToolbar from "./components/VisitsToolbar";
+import VisitsTable from "./components/VisitsTable";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -18,12 +18,12 @@ const Visits = () => {
 
   return (
     <div className={classes.root}>
-      <UsersStore>
-        <UsersToolbar/>
+      <VisitsStore>
+        <VisitsToolbar/>
         <div className={classes.content}>
-          <UsersTable/>
+          <VisitsTable/>
         </div>
-      </UsersStore>
+      </VisitsStore>
     </div>
   );
 };

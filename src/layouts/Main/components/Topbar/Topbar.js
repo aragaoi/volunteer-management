@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import {makeStyles} from '@material-ui/styles';
 import {AppBar, Hidden, IconButton, Toolbar} from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
-import Typography from "@material-ui/core/Typography";
+import {Brand} from "../../../Brand";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -17,13 +17,10 @@ const useStyles = makeStyles(theme => ({
   signOutButton: {
     marginLeft: theme.spacing(1)
   },
-  logo: {
-    color: theme.palette.white
-  }
 }));
 
 const Topbar = props => {
-  const { className, onSidebarOpen, ...rest } = props;
+  const {className, onSidebarOpen, ...rest} = props;
 
   const classes = useStyles();
 
@@ -34,37 +31,15 @@ const Topbar = props => {
     >
       <Toolbar>
         <RouterLink to="/">
-          <Typography
-            variant="h3"
-            className={classes.logo}
-          >
-            Plataforma de Voluntariado
-          </Typography>
+          <Brand/>
         </RouterLink>
-        <div className={classes.flexGrow} />
-        {/*<Hidden mdDown>*/}
-        {/*  <IconButton color="inherit">*/}
-        {/*    <Badge*/}
-        {/*      badgeContent={notifications.length}*/}
-        {/*      color="primary"*/}
-        {/*      variant="dot"*/}
-        {/*    >*/}
-        {/*      <NotificationsIcon />*/}
-        {/*    </Badge>*/}
-        {/*  </IconButton>*/}
-        {/*  <IconButton*/}
-        {/*    className={classes.signOutButton}*/}
-        {/*    color="inherit"*/}
-        {/*  >*/}
-        {/*    <InputIcon />*/}
-        {/*  </IconButton>*/}
-        {/*</Hidden>*/}
+        <div className={classes.flexGrow}/>
         <Hidden lgUp>
           <IconButton
             color="inherit"
             onClick={onSidebarOpen}
           >
-            <MenuIcon />
+            <MenuIcon/>
           </IconButton>
         </Hidden>
       </Toolbar>

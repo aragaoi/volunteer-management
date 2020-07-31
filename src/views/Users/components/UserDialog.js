@@ -9,7 +9,7 @@ import React, {useContext} from "react";
 import {makeStyles} from "@material-ui/styles";
 import {UserContext} from "../../../contexts/user.context";
 import {BasicInfo} from "../../../components/BasicInfo";
-import {Ratings} from "../../../components/Rating/Ratings";
+import {Ratings} from "../../../components/Ratings";
 
 const useStyles = makeStyles(theme => ({
   root: {},

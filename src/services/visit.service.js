@@ -46,14 +46,16 @@ export async function insert(visit) {
   return result.data;
 }
 
-export async function edit(visit) {
+export async function cancel(visit) {
   const url = `${ENDPOINT_PATH}/${visit.id}`;
 
-  const result = await api.patch(url, visit);
+  const result = await api.patch(url, {status: VISIT_STATUS.CANCELED});
   return result.data;
 }
 
-export async function remove(visit) {
-  const result = await api.delete(`${ENDPOINT_PATH}/${visit.id}`);
+export async function confirm(visit) {
+  const url = `${ENDPOINT_PATH}/${visit.id}`;
+
+  const result = await api.patch(url, {status: VISIT_STATUS.CONFIRMED});
   return result.data;
 }

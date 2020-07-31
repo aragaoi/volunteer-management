@@ -1,17 +1,16 @@
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
-import {Divider, useMediaQuery, useTheme} from "@material-ui/core";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import PropTypes from "prop-types";
 import React, {useContext} from "react";
-import {makeStyles} from "@material-ui/styles";
-import {EntityContext} from "../../../../contexts/entity.context";
-import {Ratings} from "../../../../components/Ratings";
-import {BasicInfo} from "../../../../components/BasicInfo";
+import {FinishVisitForm} from "./FinishVisitForm";
+import {Divider, useMediaQuery, useTheme} from "@material-ui/core";
 import ApartmentIcon from "@material-ui/icons/Apartment";
-import {VisitFormDialogButton} from "../../../Visits/components/VisitForm/VisitFormDialogButton";
+import {BasicInfo} from "../../../../components/BasicInfo";
+import {makeStyles} from "@material-ui/styles";
+import {VisitContext} from "../../../../contexts/visit.context";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -20,47 +19,48 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export function EntityDialog(props) {
+export function FinishVisitFormDialog(props) {
   const theme = useTheme();
   const classes = useStyles();
+  const {onClose} = props;
 
-  const {open, onClose} = props;
-  const [entity] = useContext(EntityContext);
+  const [visit] = useContext(VisitContext);
 
   return <Dialog
-    onClose={onClose}
-    open={open}
+    open={true}
     maxWidth={"sm"}
     fullWidth={true}
     fullScreen={useMediaQuery(theme.breakpoints.down('xs'))}
   >
     <DialogTitle>
-      {entity.name}
+      Finalizar Visita
     </DialogTitle>
     <DialogContent dividers>
       <BasicInfo
-        {...entity}
+        {...visit.entity}
         defaultAvatar={
           <ApartmentIcon fontSize={"large"}/>
         }
       />
+      <BasicInfo
+        {...visit.user}
+      />
       <Divider variant={"middle"} className={classes.divider}/>
-      <Ratings rating={entity.rating} evaluations={entity.evaluations}/>
+      <FinishVisitForm
+        onSubmit={onClose}
+      />
     </DialogContent>
     <DialogActions>
       <Button onClick={onClose} color="secondary">
-        Fechar
+        Cancelar
       </Button>
-      <VisitFormDialogButton
-        color="primary"
-        variant="contained"
-        actionText="Agendar visita"
-      />
+      <Button type={"submit"} form="visit-form" color="primary" variant={"contained"}>
+        Agendar
+      </Button>
     </DialogActions>
   </Dialog>
 }
 
-EntityDialog.propTypes = {
+FinishVisitFormDialog.propTypes = {
   onClose: PropTypes.func,
-  open: PropTypes.bool
 }

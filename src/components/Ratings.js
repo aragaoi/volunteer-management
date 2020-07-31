@@ -1,5 +1,4 @@
 import {Grid} from "@material-ui/core";
-import {RatingStars} from "./RatingStars";
 import Button from "@material-ui/core/Button";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import clsx from "clsx";
@@ -14,10 +13,11 @@ import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import {EvaluationType} from "../../Types";
+import {EvaluationType} from "../Types";
 import PropTypes from "prop-types"
 import * as _ from "lodash";
 import moment from "moment";
+import Rating from "@material-ui/lab/Rating";
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -53,7 +53,7 @@ export function Ratings(props) {
           justify="space-between"
         >
           <Grid item>
-            <RatingStars stars={rating}/>
+            <Rating defaultValue={rating} readOnly size={"small"}/>
           </Grid>
           <Grid item>
             <Button
@@ -81,7 +81,7 @@ export function Ratings(props) {
                     </ListItemAvatar>
                     <ListItemText
                       primary={
-                        <RatingStars stars={evaluation.rating} size={"small"}/>
+                        <Rating defaultValue={evaluation.rating} readOnly size={"small"}/>
                       }
                       secondary={
                         <Fragment>

@@ -9,6 +9,7 @@ import BusinessIcon from '@material-ui/icons/Business';
 import SettingsIcon from '@material-ui/icons/Settings';
 
 import {Profile, SidebarNav} from './components';
+import EventIcon from "@material-ui/icons/Event";
 
 const useStyles = makeStyles(theme => ({
   drawer: {
@@ -48,6 +49,11 @@ const Sidebar = props => {
       title: 'Usuários',
       href: '/users',
       icon: <PeopleIcon />
+    },
+    {
+      title: 'Visitas',
+      href: '/visits',
+      icon: <EventIcon/>
     },
     {
       title: 'Perfil',

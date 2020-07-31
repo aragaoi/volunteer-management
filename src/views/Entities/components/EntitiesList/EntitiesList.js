@@ -1,8 +1,7 @@
 import {Grid} from "@material-ui/core";
 import {EntityStore} from "../../../../contexts/entity.context";
 import {EntityCard} from "../index";
-import {RatingStars} from "../../../../components/Rating/RatingStars";
-import {ProfileDialogButton} from "../../../../components/Profile/ProfileDialogButton";
+import {ProfileDialogButton} from "../../../../components/ProfileDialogButton";
 import React, {useContext} from "react";
 import {EntitiesContext} from "../../../../contexts/entities.context";
 import EditIcon from "@material-ui/icons/Edit";
@@ -14,6 +13,7 @@ import {ConfirmDialogButton} from "../../../../components/ConfirmDialogButton";
 import {list, remove} from "../../../../services/entity.service";
 import {useSnackbar} from "notistack";
 import {VisitFormDialogButton} from "../../../Visits/components/VisitForm/VisitFormDialogButton";
+import Rating from "@material-ui/lab/Rating";
 
 export function EntitiesList() {
   const {enqueueSnackbar} = useSnackbar();
@@ -45,7 +45,7 @@ export function EntitiesList() {
               alignItems={"center"}
             >
               <Grid item>
-                <RatingStars stars={entity.rating} size={"small"}/>
+                <Rating defaultValue={entity.rating} readOnly size={"small"}/>
               </Grid>
               <Grid item>
                 <ProfileDialogButton/>

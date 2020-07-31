@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import {makeStyles} from '@material-ui/styles';
 
 import {SearchInput} from 'components';
-import {UserFormDialogButton} from "./UserFormDialogButton";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -38,12 +37,11 @@ const VisitsToolbar = props => {
     >
       <div className={classes.actions}>
         <span className={classes.spacer} />
-        <UserFormDialogButton/>
       </div>
       <div className={classes.row}>
         <SearchInput
           className={classes.searchInput}
-          placeholder="Buscar usuários"
+          placeholder="Buscar visitas"
         />
       </div>
     </div>
