@@ -1,7 +1,7 @@
 import * as axios from "axios";
 import {API_BASE_URL} from "../constants";
 
-const ENTITY_ENDPOINT_PATH = "/entities";
+const ENTITY_ENDPOINT_PATH = "/institutions";
 const USER_ENDPOINT_PATH = "/users";
 const EVALUATION_PATH = "/evaluations";
 

@@ -24,9 +24,9 @@ import {ConfirmDialogButton} from "../../../components/ConfirmDialogButton";
 import {cancel, confirm, list, VISIT_STATUS} from "../../../services/visit.service";
 import {useSnackbar} from "notistack";
 import * as _ from "lodash";
-import moment from "moment";
 import {VisitStore} from "../../../contexts/visit.context";
 import {FinishVisitFormDialogButton} from "./FinishVisitFormDialogButton";
+import {formatDateAndPeriod} from "../../../helpers/date";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -95,10 +95,6 @@ const VisitsTable = props => {
     }
   }
 
-  function formatDate(date) {
-    return date ? moment(date).format("DD/MM/YY") : "";
-  }
-
   return (
     <Card>
       <CardContent className={classes.content}>
@@ -128,7 +124,7 @@ const VisitsTable = props => {
                         <TableCell>
                           <div className={classes.avatarContainer}>
                             <div className={classes.nameContainer}>
-                              <Typography variant="body1">{formatDate(visit.date)}</Typography>
+                              <Typography variant="body1">{formatDateAndPeriod(visit.date, visit.period)}</Typography>
                               <Hidden smUp>
                                 {_.get(visit, 'user.name')}
                                 {_.get(visit, 'entity.name')}

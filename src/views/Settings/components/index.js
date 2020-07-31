@@ -1,1 +1,1 @@
-export { default } from './EntitiesConfig';
+export { default as EntitiesConfig } from './EntitiesConfig';

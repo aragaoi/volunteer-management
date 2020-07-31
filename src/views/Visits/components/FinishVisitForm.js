@@ -30,7 +30,8 @@ export function FinishVisitForm(props) {
 
   const handleChange = event => {
     const newState = {...evaluation};
-    _.set(newState, event.target.name, event.target.value);
+    const value = event.target.value;
+    _.set(newState, event.target.name, event.target.type === "radio" ? Number(value) : value);
     setEvaluation(newState);
   };
 

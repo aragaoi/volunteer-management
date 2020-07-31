@@ -12,12 +12,18 @@ import {BasicInfo} from "../../../components/BasicInfo";
 import {makeStyles} from "@material-ui/styles";
 import {VisitContext} from "../../../contexts/visit.context";
 import {EvaluationStore} from "../../../contexts/evaluation.context";
+import {LoginContext} from "../../../contexts/login.context";
+import Typography from "@material-ui/core/Typography";
+import {formatDateAndPeriod} from "../../../helpers/date";
 
 const useStyles = makeStyles(theme => ({
   root: {},
   divider: {
     margin: theme.spacing(2, 0)
   },
+  date: {
+    textAlign: "center"
+  }
 }));
 
 export function FinishVisitFormDialog(props) {
@@ -25,6 +31,7 @@ export function FinishVisitFormDialog(props) {
   const classes = useStyles();
   const {onClose} = props;
 
+  const [login] = useContext(LoginContext);
   const [visit] = useContext(VisitContext);
 
   return <Dialog
@@ -37,15 +44,21 @@ export function FinishVisitFormDialog(props) {
       Finalizar Visita
     </DialogTitle>
     <DialogContent dividers>
-      <BasicInfo
-        {...visit.entity}
-        defaultAvatar={
-          <ApartmentIcon fontSize={"large"}/>
-        }
-      />
-      <BasicInfo
-        {...visit.user}
-      />
+      {login.userId ?
+        <BasicInfo
+          {...visit.entity}
+          defaultAvatar={
+            <ApartmentIcon fontSize={"large"}/>
+          }
+        />
+        :
+        <BasicInfo
+          {...visit.user}
+        />
+      }
+      <Typography className={classes.date} variant={"h5"}>
+        {formatDateAndPeriod(visit.date, visit.period)}
+      </Typography>
       <Divider variant={"middle"} className={classes.divider}/>
       <EvaluationStore>
         <FinishVisitForm

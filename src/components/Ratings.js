@@ -81,20 +81,18 @@ export function Ratings(props) {
                     </ListItemAvatar>
                     <ListItemText
                       primary={
-                        <Rating defaultValue={evaluation.rating} readOnly size={"small"}/>
-                      }
-                      secondary={
                         <Fragment>
                           <Typography
                             component="span"
                             variant="body2"
                             color="textPrimary"
                           >
-                            {`${moment(evaluation.date).format("DD/MM/YY")} | ${evaluation.user.name}`}
+                            <Rating defaultValue={evaluation.rating} readOnly size={"small"}/>
+                            {`${evaluation.user.name} | ${moment(evaluation.date).format("DD/MM/YY")}`}
                           </Typography>
-                          {evaluation.comment && `— ${evaluation.comment}`}
                         </Fragment>
                       }
+                      secondary={evaluation.comment && `— ${evaluation.comment}`}
                     />
                   </ListItem>
                 </CardContent>
