@@ -1,8 +1,41 @@
-import {model, property} from '@loopback/repository';
-import {Evaluation} from '.';
+import {Entity, model, property} from '@loopback/repository';
 
 @model({settings: {strict: false}})
-export class UserEvaluation extends Evaluation {
+export class UserEvaluation extends Entity {
+  @property({
+    type: 'string',
+    id: true,
+    generated: true,
+  })
+  id?: string;
+
+  @property({
+    type: 'number',
+    required: true,
+  })
+  rating: number;
+
+  @property({
+    type: "date",
+    dataType: "timestamp",
+    defaultFn: "now"
+  })
+  date?: Date;
+
+  @property({
+    type: 'string',
+  })
+  comment?: string;
+
+  @property({
+    type: 'string',
+  })
+  userId?: string;
+
+  @property({
+    type: 'string',
+  })
+  entityId?: string;
   // Define well-known properties here
 
   // Indexer property to allow additional data

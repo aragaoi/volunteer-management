@@ -1,4 +1,6 @@
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, model, property, hasMany} from '@loopback/repository';
+import {UserEvaluation} from './user-evaluation.model';
+import {InstitutionEvaluation} from './institution-evaluation.model';
 
 @model({
   settings: {
@@ -66,6 +68,11 @@ export class User extends Entity {
   })
   address?: object;
 
+  @hasMany(() => UserEvaluation)
+  evaluations: UserEvaluation[];
+
+  @hasMany(() => InstitutionEvaluation)
+  institutionEvaluations: InstitutionEvaluation[];
   // Define well-known properties here
 
   // Indexer property to allow additional data

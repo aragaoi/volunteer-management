@@ -1,5 +1,7 @@
-import {Entity, model, property, belongsTo} from '@loopback/repository';
+import {Entity, model, property, belongsTo, hasMany} from '@loopback/repository';
 import {InstitutionType} from './institution-type.model';
+import {UserEvaluation} from './user-evaluation.model';
+import {InstitutionEvaluation} from './institution-evaluation.model';
 
 @model({
   settings: {
@@ -80,6 +82,12 @@ export class Institution extends Entity {
 
   @belongsTo(() => InstitutionType)
   institutionTypeId: string;
+
+  @hasMany(() => UserEvaluation, {keyTo: 'entityId'})
+  userEvaluations: UserEvaluation[];
+
+  @hasMany(() => InstitutionEvaluation, {keyTo: 'entityId'})
+  evaluations: InstitutionEvaluation[];
   // Define well-known properties here
 
   // Indexer property to allow additional data
