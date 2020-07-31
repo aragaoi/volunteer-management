@@ -1,17 +1,16 @@
 import React, {useContext} from "react";
 import {EvaluationContext} from "../../../contexts/evaluation.context";
 import Grid from "@material-ui/core/Grid";
-import {insertEntityEvaluation} from "../../../services/evaluation.service";
+import {insertEntityEvaluation, insertUserEvaluation} from "../../../services/evaluation.service";
 import {useSnackbar} from "notistack";
 import {TextField} from "@material-ui/core";
 import * as _ from "lodash";
-import {EntityContext} from "../../../contexts/entity.context";
 import Rating from "@material-ui/lab/Rating";
 import {makeStyles} from "@material-ui/styles";
-import {UserContext} from "../../../contexts/user.context";
 import {VisitContext} from "../../../contexts/visit.context";
 import {VisitsContext} from "../../../contexts/visits.context";
 import {finishByEntity, finishByUser, list} from "../../../services/visit.service";
+import {LoginContext} from "../../../contexts/login.context";
 
 const useStyles = makeStyles(theme => ({
   rating: {
@@ -24,9 +23,8 @@ export function FinishVisitForm(props) {
   const {onSubmit} = props;
 
   const {enqueueSnackbar} = useSnackbar();
-  const [entity] = useContext(EntityContext);
-  const [user] = useContext(UserContext);
-  const [visit, setVisit] = useContext(VisitContext);
+  const [login] = useContext(LoginContext);
+  const [visit] = useContext(VisitContext);
   const [, setVisits] = useContext(VisitsContext);
   const [evaluation, setEvaluation] = useContext(EvaluationContext);
 
@@ -36,19 +34,30 @@ export function FinishVisitForm(props) {
     setEvaluation(newState);
   };
 
-  async function saveEvaluation(evaluation) {
+  async function saveEvaluation(evaluation, visit) {
     const parts = {
-      userId: user.id,
-      entityId: entity.id,
+      userId: visit.userId,
+      entityId: visit.entityId,
+      visitId: visit.id
     }
-    await insertEntityEvaluation({...evaluation, ...parts});
+    if (login.userId) {
+      await insertEntityEvaluation({...evaluation, ...parts});
+    } else {
+      await insertUserEvaluation({...evaluation, ...parts});
+    }
   }
 
-  async function handleSave() {
+  async function handleSave(event) {
+    event.preventDefault();
+
     try {
-      await finishByUser(visit);
-      await finishByEntity(visit);
-      await saveEvaluation(evaluation);
+      if (login.userId) {
+        await finishByUser(visit);
+      } else {
+        await finishByEntity(visit);
+      }
+
+      await saveEvaluation(evaluation, visit);
       enqueueSnackbar("Visita finalizada com sucesso!", {variant: "success"});
     } catch (e) {
       enqueueSnackbar("Não foi possível finalizar", {variant: "error"});
@@ -56,10 +65,6 @@ export function FinishVisitForm(props) {
 
     setVisits && setVisits(await list());
     onSubmit();
-  }
-
-  function handleRatingChange(rating) {
-    setEvaluation({...evaluation, rating});
   }
 
   return <form
@@ -79,7 +84,7 @@ export function FinishVisitForm(props) {
         xs={12}
         className={classes.rating}
       >
-        <Rating onChange={handleRatingChange} size={"large"}/>
+        <Rating name="rating" onChange={handleChange} size={"large"}/>
       </Grid>
       <Grid
         item

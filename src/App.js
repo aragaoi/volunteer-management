@@ -12,6 +12,7 @@ import {EntityStore} from "./contexts/entity.context";
 import {emptyEntity} from "./services/entity.service";
 import {UserStore} from "./contexts/user.context";
 import {emptyUser} from "./services/user.service";
+import {LoginStore} from "./contexts/login.context";
 
 const browserHistory = createBrowserHistory();
 
@@ -19,15 +20,17 @@ export default class App extends Component {
   render() {
     return (
       <ThemeProvider theme={theme}>
-        <Router history={browserHistory}>
-          <MuiPickersUtilsProvider utils={MomentUtils}>
-            <UserStore user={emptyUser()}>
-              <EntityStore entity={emptyEntity()}>
-                <Routes/>
-              </EntityStore>
-            </UserStore>
-          </MuiPickersUtilsProvider>
-        </Router>
+        <LoginStore>
+          <Router history={browserHistory}>
+            <MuiPickersUtilsProvider utils={MomentUtils}>
+              <UserStore user={emptyUser()}>
+                <EntityStore entity={emptyEntity()}>
+                  <Routes/>
+                </EntityStore>
+              </UserStore>
+            </MuiPickersUtilsProvider>
+          </Router>
+        </LoginStore>
       </ThemeProvider>
     );
   }

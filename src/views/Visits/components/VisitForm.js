@@ -13,11 +13,13 @@ import * as _ from "lodash";
 import {KeyboardDatePicker} from "@material-ui/pickers";
 import moment from "moment";
 import {EntityContext} from "../../../contexts/entity.context";
+import {LoginContext} from "../../../contexts/login.context";
 
 export function VisitForm(props) {
   const {onSubmit} = props;
 
   const {enqueueSnackbar} = useSnackbar();
+  const [login] = useContext(LoginContext);
   const [entity] = useContext(EntityContext);
   const [visit, setVisit] = useContext(VisitContext);
   const [periods, setPeriods] = useState([]);
@@ -51,7 +53,11 @@ export function VisitForm(props) {
 
   async function handleSave() {
     try {
-      await insert(visit);
+      const parts = {
+        entityId: entity.id,
+        userId: login.userId
+      };
+      await insert({...visit, ...parts});
       enqueueSnackbar("Visita agendada com sucesso!", {variant: "success"});
     } catch (e) {
       enqueueSnackbar("Não foi possível agendar", {variant: "error"});

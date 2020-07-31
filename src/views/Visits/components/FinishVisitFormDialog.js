@@ -57,7 +57,7 @@ export function FinishVisitFormDialog(props) {
       <Button onClick={onClose} color="secondary">
         Cancelar
       </Button>
-      <Button type={"submit"} form="visit-form" color="primary" variant={"contained"}>
+      <Button type={"submit"} form="evaluation-form" color="primary" variant={"contained"}>
         Agendar
       </Button>
     </DialogActions>
