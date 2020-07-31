@@ -75,7 +75,43 @@ export class InstitutionController {
   async find(
     @param.filter(Institution) filter?: Filter<Institution>,
   ): Promise<Institution[]> {
-    return this.institutionRepository.find({...filter, ...{include: [{relation: "institutionType"}]}});
+    return this.institutionRepository.find({
+      ...filter, ...{
+        include:
+          [
+            {relation: "institutionType"},
+            {
+              relation: "evaluations",
+              scope: {
+                fields: {
+                  id: true,
+                  date: true,
+                  rating: true,
+                  comment: true
+                },
+                include: [{
+                  relation: "user",
+                  scope: {
+                    fields: {
+                      id: true,
+                      name: true,
+                      avatarUrl: true
+                    }
+                  }
+                }, {
+                  relation: "visit",
+                  scope: {
+                    fields: {
+                      id: true,
+                      date: true,
+                    }
+                  }
+                }]
+              }
+            },
+          ]
+      }
+    });
   }
 
   @patch('/institutions', {

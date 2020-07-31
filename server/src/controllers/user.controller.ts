@@ -1,29 +1,14 @@
-import {
-  Count,
-  CountSchema,
-  Filter,
-  FilterExcludingWhere,
-  repository,
-  Where,
-} from '@loopback/repository';
-import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
-  put,
-  del,
-  requestBody,
-} from '@loopback/rest';
+import {Count, CountSchema, Filter, FilterExcludingWhere, repository, Where,} from '@loopback/repository';
+import {del, get, getModelSchemaRef, param, patch, post, put, requestBody,} from '@loopback/rest';
 import {User} from '../models';
 import {UserRepository} from '../repositories';
 
 export class UserController {
   constructor(
     @repository(UserRepository)
-    public userRepository : UserRepository,
-  ) {}
+    public userRepository: UserRepository,
+  ) {
+  }
 
   @post('/users', {
     responses: {
@@ -44,7 +29,7 @@ export class UserController {
         },
       },
     })
-    user: Omit<User, 'id'>,
+      user: Omit<User, 'id'>,
   ): Promise<User> {
     return this.userRepository.create(user);
   }
@@ -81,7 +66,42 @@ export class UserController {
   async find(
     @param.filter(User) filter?: Filter<User>,
   ): Promise<User[]> {
-    return this.userRepository.find(filter);
+    return this.userRepository.find({
+      ...filter, ...{
+        include:
+          [
+            {
+              relation: "evaluations",
+              scope: {
+                fields: {
+                  id: true,
+                  date: true,
+                  rating: true,
+                  comment: true
+                },
+                include: [{
+                  relation: "entity",
+                  scope: {
+                    fields: {
+                      id: true,
+                      name: true,
+                      avatarUrl: true
+                    }
+                  }
+                }, {
+                  relation: "visit",
+                  scope: {
+                    fields: {
+                      id: true,
+                      date: true,
+                    }
+                  }
+                }]
+              }
+            },
+          ]
+      }
+    });
   }
 
   @patch('/users', {
@@ -100,7 +120,7 @@ export class UserController {
         },
       },
     })
-    user: User,
+      user: User,
     @param.where(User) where?: Where<User>,
   ): Promise<Count> {
     return this.userRepository.updateAll(user, where);
@@ -141,7 +161,7 @@ export class UserController {
         },
       },
     })
-    user: User,
+      user: User,
   ): Promise<void> {
     await this.userRepository.updateById(id, user);
   }

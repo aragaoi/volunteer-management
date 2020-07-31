@@ -22,8 +22,9 @@ import {VisitRepository} from '../repositories';
 export class VisitController {
   constructor(
     @repository(VisitRepository)
-    public visitRepository : VisitRepository,
-  ) {}
+    public visitRepository: VisitRepository,
+  ) {
+  }
 
   @post('/visits', {
     responses: {
@@ -44,7 +45,7 @@ export class VisitController {
         },
       },
     })
-    visit: Omit<Visit, 'id'>,
+      visit: Omit<Visit, 'id'>,
   ): Promise<Visit> {
     return this.visitRepository.create(visit);
   }
@@ -81,7 +82,31 @@ export class VisitController {
   async find(
     @param.filter(Visit) filter?: Filter<Visit>,
   ): Promise<Visit[]> {
-    return this.visitRepository.find(filter);
+    return this.visitRepository.find({
+      ...filter, ...{
+        include: [
+          {
+            relation: "user",
+            scope: {
+              fields: {
+                id: true,
+                name: true,
+                avatarUrl: true
+              }
+            }
+          }, {
+            relation: "entity",
+            scope: {
+              fields: {
+                id: true,
+                name: true,
+                avatarUrl: true
+              }
+            }
+          }
+        ]
+      }
+    });
   }
 
   @patch('/visits', {
@@ -100,7 +125,7 @@ export class VisitController {
         },
       },
     })
-    visit: Visit,
+      visit: Visit,
     @param.where(Visit) where?: Where<Visit>,
   ): Promise<Count> {
     return this.visitRepository.updateAll(visit, where);
@@ -141,7 +166,7 @@ export class VisitController {
         },
       },
     })
-    visit: Visit,
+      visit: Visit,
   ): Promise<void> {
     await this.visitRepository.updateById(id, visit);
   }

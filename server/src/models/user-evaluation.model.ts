@@ -1,4 +1,7 @@
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, model, property, belongsTo} from '@loopback/repository';
+import {Visit} from './visit.model';
+import {User} from './user.model';
+import {Institution} from './institution.model';
 
 @model({
   settings: {
@@ -34,16 +37,14 @@ export class UserEvaluation extends Entity {
     type: 'string',
   })
   comment?: string;
+  @belongsTo(() => Visit)
+  visitId: string;
 
-  @property({
-    type: 'string',
-  })
-  userId?: string;
+  @belongsTo(() => User)
+  userId: string;
 
-  @property({
-    type: 'string',
-  })
-  entityId?: string;
+  @belongsTo(() => Institution)
+  entityId: string;
   // Define well-known properties here
 
   // Indexer property to allow additional data
