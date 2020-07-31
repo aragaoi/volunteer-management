@@ -1,2 +1,2 @@
-export { default as UsersTable } from './VisitsTable';
-export { default as UsersToolbar } from './VisitsToolbar';
+export { default } from './VisitsTable';
+export { default } from './VisitsToolbar';

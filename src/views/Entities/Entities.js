@@ -3,7 +3,7 @@ import {makeStyles} from '@material-ui/styles';
 
 import {EntitiesToolbar} from './components';
 import {EntitiesStore} from "../../contexts/entities.context";
-import {EntitiesList} from "./components/EntitiesList/EntitiesList";
+import {EntitiesList} from "./components/EntitiesList";
 
 const useStyles = makeStyles(theme => ({
   root: {

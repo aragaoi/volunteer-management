@@ -53,7 +53,7 @@ export function Ratings(props) {
           justify="space-between"
         >
           <Grid item>
-            <Rating defaultValue={rating} readOnly size={"small"}/>
+            <Rating defaultValue={rating} readOnly/>
           </Grid>
           <Grid item>
             <Button

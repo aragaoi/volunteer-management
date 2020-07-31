@@ -11,6 +11,7 @@ export const VISIT_STATUS = {
   SCHEDULED: "SCHEDULED",
   CONFIRMED: "CONFIRMED",
   CANCELED: "CANCELED",
+  EVALUATION: "EVALUATION",
   DONE: "DONE",
 };
 
@@ -47,15 +48,32 @@ export async function insert(visit) {
 }
 
 export async function cancel(visit) {
-  const url = `${ENDPOINT_PATH}/${visit.id}`;
-
-  const result = await api.patch(url, {status: VISIT_STATUS.CANCELED});
-  return result.data;
+  return await update(visit, {status: VISIT_STATUS.CANCELED});
 }
 
 export async function confirm(visit) {
+  return await update(visit, {status: VISIT_STATUS.CONFIRMED});
+}
+
+export async function finishByUser(visit) {
+  const patch = {
+    evaluatedByUser: true,
+    status: VISIT_STATUS.EVALUATION
+  }
+  return await update(visit, patch);
+}
+
+export async function finishByEntity(visit) {
+  const patch = {
+    evaluatedByEntity: true,
+    status: VISIT_STATUS.EVALUATION
+  }
+  return await update(visit, patch);
+}
+
+async function update(visit, patch) {
   const url = `${ENDPOINT_PATH}/${visit.id}`;
 
-  const result = await api.patch(url, {status: VISIT_STATUS.CONFIRMED});
+  const result = await api.patch(url, patch);
   return result.data;
 }

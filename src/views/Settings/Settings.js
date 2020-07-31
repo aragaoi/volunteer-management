@@ -2,8 +2,8 @@ import React from 'react';
 import {makeStyles} from '@material-ui/styles';
 import {Grid} from '@material-ui/core';
 
-import {EntitiesConfigs} from './components';
 import {EntityTypesStore} from "../../contexts/entitytypes.context";
+import EntitiesConfig from "./components";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -26,7 +26,7 @@ const Settings = () => {
           xs={12}
         >
           <EntityTypesStore>
-            <EntitiesConfigs/>
+            <EntitiesConfig/>
           </EntityTypesStore>
         </Grid>
       </Grid>

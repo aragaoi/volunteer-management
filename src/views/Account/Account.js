@@ -1,8 +1,8 @@
 import React from 'react';
 import {makeStyles} from '@material-ui/styles';
 import {Grid} from '@material-ui/core';
-import {Password} from "../Settings/components";
 import * as _ from "lodash";
+import PasswordForm from "../Settings/components";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -52,7 +52,7 @@ const Account = (props) => {
             item
             xs={12}
           >
-            <Password onChange={onChangePassword}/>
+            <PasswordForm onChange={onChangePassword}/>
           </Grid>
         </Grid>
       </Grid>

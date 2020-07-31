@@ -22,6 +22,18 @@ export class Visit extends Entity {
   period: string;
 
   @property({
+    type: 'boolean',
+    default: false,
+  })
+  evaluatedByEntity: boolean;
+
+  @property({
+    type: 'boolean',
+    default: false,
+  })
+  evaluatedByUser: boolean;
+
+  @property({
     type: 'string',
     required: true,
   })
