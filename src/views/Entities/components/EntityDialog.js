@@ -11,7 +11,8 @@ import {EntityContext} from "../../../contexts/entity.context";
 import {Ratings} from "../../../components/Ratings";
 import {BasicInfo} from "../../../components/BasicInfo";
 import ApartmentIcon from "@material-ui/icons/Apartment";
-import {VisitFormDialogButton} from "../../Visits/components/VisitFormDialogButton";
+import {DialogButtonHandler} from "../../../components/DialogButtonHandler";
+import {VisitFormDialog} from "../../Visits/components/VisitFormDialog";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -51,10 +52,11 @@ export function EntityDialog(props) {
       <Button onClick={onClose} color="secondary">
         Fechar
       </Button>
-      <VisitFormDialogButton
+      <DialogButtonHandler
         color="primary"
         variant="contained"
         actionText="Agendar visita"
+        dialog={<VisitFormDialog/>}
       />
     </DialogActions>
   </Dialog>

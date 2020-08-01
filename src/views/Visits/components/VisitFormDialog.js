@@ -11,6 +11,8 @@ import ApartmentIcon from "@material-ui/icons/Apartment";
 import {BasicInfo} from "../../../components/BasicInfo";
 import {makeStyles} from "@material-ui/styles";
 import {EntityContext} from "../../../contexts/entity.context";
+import {emptyVisit} from "../../../services/visit.service";
+import {VisitStore} from "../../../contexts/visit.context";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -26,36 +28,38 @@ export function VisitFormDialog(props) {
 
   const [entity] = useContext(EntityContext);
 
-  return <Dialog
-    open={true}
-    maxWidth={"sm"}
-    fullWidth={true}
-    fullScreen={useMediaQuery(theme.breakpoints.down('xs'))}
-  >
-    <DialogTitle>
-      Agendar Visita
-    </DialogTitle>
-    <DialogContent dividers>
-      <BasicInfo
-        {...entity}
-        defaultAvatar={
-          <ApartmentIcon fontSize={"large"}/>
-        }
-      />
-      <Divider variant={"middle"} className={classes.divider}/>
-      <VisitForm
-        onSubmit={onClose}
-      />
-    </DialogContent>
-    <DialogActions>
-      <Button onClick={onClose} color="secondary">
-        Cancelar
-      </Button>
-      <Button type={"submit"} form="visit-form" color="primary" variant={"contained"}>
-        Agendar
-      </Button>
-    </DialogActions>
-  </Dialog>
+  return <VisitStore>
+    <Dialog
+      open={true}
+      maxWidth={"sm"}
+      fullWidth={true}
+      fullScreen={useMediaQuery(theme.breakpoints.down('xs'))}
+    >
+      <DialogTitle>
+        Agendar Visita
+      </DialogTitle>
+      <DialogContent dividers>
+        <BasicInfo
+          {...entity}
+          defaultAvatar={
+            <ApartmentIcon fontSize={"large"}/>
+          }
+        />
+        <Divider variant={"middle"} className={classes.divider}/>
+        <VisitForm
+          onSubmit={onClose}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose} color="secondary">
+          Cancelar
+        </Button>
+        <Button type={"submit"} form="visit-form" color="primary" variant={"contained"}>
+          Agendar
+        </Button>
+      </DialogActions>
+    </Dialog>
+  </VisitStore>
 }
 
 VisitFormDialog.propTypes = {

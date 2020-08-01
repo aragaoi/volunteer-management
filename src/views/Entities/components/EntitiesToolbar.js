@@ -4,7 +4,8 @@ import clsx from 'clsx';
 import {makeStyles} from '@material-ui/styles';
 
 import {SearchInput} from 'components';
-import {EntityFormDialogButton} from "./EntityFormDialogButton";
+import {DialogButtonHandler} from "../../../components/DialogButtonHandler";
+import {EntityFormDialog} from "./EntityFormDialog";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -38,10 +39,13 @@ const EntitiesToolbar = props => {
     >
       <div className={classes.actions}>
         <span className={classes.spacer}/>
-        <EntityFormDialogButton
-          actionText={"Adicionar entidade"}
+        <DialogButtonHandler
           color="primary"
           variant="contained"
+          actionText={"Adicionar entidade"}
+          dialog={
+            <EntityFormDialog/>
+          }
         />
       </div>
       <div className={classes.row}>

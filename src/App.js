@@ -11,7 +11,6 @@ import MomentUtils from '@date-io/moment';
 import {EntityStore} from "./contexts/entity.context";
 import {emptyEntity} from "./services/entity.service";
 import {UserStore} from "./contexts/user.context";
-import {emptyUser} from "./services/user.service";
 import {LoginStore} from "./contexts/login.context";
 
 const browserHistory = createBrowserHistory();
@@ -23,8 +22,8 @@ export default class App extends Component {
         <LoginStore>
           <Router history={browserHistory}>
             <MuiPickersUtilsProvider utils={MomentUtils}>
-              <UserStore user={emptyUser()}>
-                <EntityStore entity={emptyEntity()}>
+              <UserStore>
+                <EntityStore>
                   <Routes/>
                 </EntityStore>
               </UserStore>

@@ -21,9 +21,8 @@ const weekDayDefaultValue = () => ({
 export const emptyEntity = () => (
   {
     acceptsDonations: true,
-    rating: 0,
+    rating: undefined,
     address: {},
-    evaluations: [],
     calendar: {
       monday: weekDayDefaultValue(),
       tuesday: weekDayDefaultValue(),

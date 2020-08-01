@@ -10,9 +10,8 @@ const api = axios.create({
 export const emptyUser = () => (
   {
     acceptsContact: true,
-    rating: 0,
+    rating: undefined,
     address: {},
-    evaluations: []
   }
 );
 

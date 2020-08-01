@@ -4,7 +4,8 @@ import clsx from 'clsx';
 import {makeStyles} from '@material-ui/styles';
 
 import {SearchInput} from 'components';
-import {UserFormDialogButton} from "./UserFormDialogButton";
+import {DialogButtonHandler} from "../../../components/DialogButtonHandler";
+import {UserFormDialog} from "./UserFormDialog";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -27,7 +28,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const UsersToolbar = props => {
-  const { className, ...rest } = props;
+  const {className, ...rest} = props;
 
   const classes = useStyles();
 
@@ -37,8 +38,15 @@ const UsersToolbar = props => {
       className={clsx(classes.root, className)}
     >
       <div className={classes.actions}>
-        <span className={classes.spacer} />
-        <UserFormDialogButton/>
+        <span className={classes.spacer}/>
+        <DialogButtonHandler
+          color="primary"
+          variant="contained"
+          actionText={"Adicionar usuário"}
+          dialog={
+            <UserFormDialog/>
+          }
+        />
       </div>
       <div className={classes.row}>
         <SearchInput

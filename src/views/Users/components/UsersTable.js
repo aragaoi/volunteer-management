@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {makeStyles} from '@material-ui/styles';
@@ -23,10 +23,12 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Hidden from "@material-ui/core/Hidden";
 import Tooltip from "@material-ui/core/Tooltip";
-import {UserFormDialogButton} from "./UserFormDialogButton";
-import {ConfirmDialogButton} from "../../../components/ConfirmDialogButton";
 import {list, remove} from "../../../services/user.service";
 import {useSnackbar} from "notistack";
+import {ConfirmDialog} from "../../../components/ConfirmDialog";
+import {DialogButtonHandler} from "../../../components/DialogButtonHandler";
+import {UserFormDialog} from "./UserFormDialog";
+import {UserStore} from "../../../contexts/user.context";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -104,62 +106,74 @@ const UsersTable = props => {
               </TableHead>
               <TableBody>
                 {users.slice(offset, (page + 1) * rowsPerPage).map(user => (
-                  <TableRow
-                    className={classes.tableRow}
-                    hover
-                    key={user.id}
-                  >
-                    <TableCell>
-                      <div className={classes.avatarContainer}>
+                  <Fragment key={user.id}>
+                    <UserStore user={user}>
+                      <TableRow
+                        className={classes.tableRow}
+                        hover
+                        key={user.id}
+                      >
+                        <TableCell>
+                          <div className={classes.avatarContainer}>
+                            <Hidden xsDown>
+                              <Avatar
+                                className={classes.avatar}
+                                src={user.avatarUrl}
+                              />
+                            </Hidden>
+                            <div className={classes.nameContainer}>
+                              <Typography variant="body1">{user.name}</Typography>
+                              <Hidden smUp>
+                                {user.email}
+                              </Hidden>
+                            </div>
+                          </div>
+                        </TableCell>
                         <Hidden xsDown>
-                          <Avatar
-                            className={classes.avatar}
-                            src={user.avatarUrl}
-                          />
+                          <TableCell>{user.email}</TableCell>
                         </Hidden>
-                        <div className={classes.nameContainer}>
-                          <Typography variant="body1">{user.name}</Typography>
-                          <Hidden smUp>
-                            {user.email}
-                          </Hidden>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <Hidden xsDown>
-                      <TableCell>{user.email}</TableCell>
-                    </Hidden>
-                    <Hidden smDown>
-                      <TableCell>
-                        <AddressLink address={user.address} align="left"/>
-                      </TableCell>
-                      <TableCell>{user.phone}</TableCell>
-                      <TableCell align={"center"}>
-                        {user.acceptsContact ? <CheckIcon/> : <ClearIcon/>}
-                      </TableCell>
-                    </Hidden>
-                    <TableCell align={"center"}>
-                      <div className={classes.rowActions}>
-                        <UserFormDialogButton
-                          user={user}
-                          actionIcon={
-                            <Tooltip title="Editar">
-                              <EditIcon/>
-                            </Tooltip>
-                          }
-                        />
-                        <ConfirmDialogButton
-                          title={"Excluir usuário"}
-                          message={`Essa ação não poderá ser desfeita. Deseja realmente excluir o usuário ${user.name}?`}
-                          onConfirm={() => handleDelete(user)}
-                          actionIcon={
-                            <Tooltip title="Excluir">
-                              <DeleteIcon/>
-                            </Tooltip>
-                          }
-                        />
-                      </div>
-                    </TableCell>
-                  </TableRow>
+                        <Hidden smDown>
+                          <TableCell>
+                            <AddressLink address={user.address} align="left"/>
+                          </TableCell>
+                          <TableCell>{user.phone}</TableCell>
+                          <TableCell align={"center"}>
+                            {user.acceptsContact ? <CheckIcon/> : <ClearIcon/>}
+                          </TableCell>
+                        </Hidden>
+                        <TableCell align={"center"}>
+                          <div className={classes.rowActions}>
+                            <DialogButtonHandler
+                              actionIcon={
+                                <Tooltip title="Editar">
+                                  <EditIcon/>
+                                </Tooltip>
+                              }
+                              dialog={
+                                <UserFormDialog
+                                  isEdit={true}
+                                />
+                              }
+                            />
+                            <DialogButtonHandler
+                              actionIcon={
+                                <Tooltip title="Excluir">
+                                  <DeleteIcon/>
+                                </Tooltip>
+                              }
+                              dialog={
+                                <ConfirmDialog
+                                  title={"Excluir usuário"}
+                                  message={`Essa ação não poderá ser desfeita. Deseja realmente excluir o usuário ${user.name}?`}
+                                  onClose={(confirmed) => confirmed && handleDelete(user)}
+                                />
+                              }
+                            />
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    </UserStore>
+                  </Fragment>
                 ))}
               </TableBody>
             </Table>

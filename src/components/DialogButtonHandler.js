@@ -1,19 +1,18 @@
-import {Button} from "@material-ui/core";
 import React, {useState} from "react";
 import IconButton from "@material-ui/core/IconButton";
-import {ConfirmDialog} from "./ConfirmDialog";
+import {Button} from "@material-ui/core";
 import PropTypes from "prop-types";
 
-export function ConfirmDialogButton(props) {
-  const {actionText, actionIcon, onConfirm, ...rest} = props;
+export function DialogButtonHandler(props) {
+  const {dialog, actionText, actionIcon, ...rest} = props;
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
   };
 
-  const handleResult = (confirm) => {
-    confirm && onConfirm();
+  const handleClose = (...params) => {
+    dialog.props.onClose && dialog.props.onClose(...params);
     setOpen(false);
   };
 
@@ -35,18 +34,13 @@ export function ConfirmDialogButton(props) {
       </IconButton>
     }
     {open &&
-    <ConfirmDialog
-      {...rest}
-      onClose={handleResult}
-    />
+      React.cloneElement(dialog, {onClose: handleClose, open: open})
     }
-  </>
+  </>;
 }
 
-ConfirmDialogButton.propTypes = {
-  title: PropTypes.string,
-  message: PropTypes.string.isRequired,
+DialogButtonHandler.propTypes = {
+  dialog: PropTypes.node.isRequired,
   actionText: PropTypes.node,
   actionIcon: PropTypes.node,
-  onConfirm: PropTypes.func.isRequired,
 }

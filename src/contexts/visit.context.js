@@ -1,4 +1,5 @@
 import React, {createContext, useEffect, useState} from "react";
+import {emptyVisit} from "../services/visit.service";
 
 export const VisitContext = createContext(null);
 
@@ -8,7 +9,7 @@ export const VisitStore = props => {
   useEffect(() => setVisit(props.visit), [props.visit])
 
   return (
-    <VisitContext.Provider value={[visit, setVisit]}>
+    <VisitContext.Provider value={[visit || emptyVisit(), setVisit]}>
       {props.children}
     </VisitContext.Provider>
   );

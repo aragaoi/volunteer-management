@@ -1,19 +1,21 @@
 import {Grid} from "@material-ui/core";
 import {EntityStore} from "../../../contexts/entity.context";
 import {EntityCard} from "./index";
-import {ProfileDialogButton} from "../../../components/ProfileDialogButton";
+import {DialogButtonHandler} from "../../../components/DialogButtonHandler";
 import React, {useContext} from "react";
 import {EntitiesContext} from "../../../contexts/entities.context";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EventIcon from "@material-ui/icons/Event";
 import Tooltip from "@material-ui/core/Tooltip";
-import {EntityFormDialogButton} from "./EntityFormDialogButton";
-import {ConfirmDialogButton} from "../../../components/ConfirmDialogButton";
 import {list, remove} from "../../../services/entity.service";
 import {useSnackbar} from "notistack";
-import {VisitFormDialogButton} from "../../Visits/components/VisitFormDialogButton";
 import Rating from "@material-ui/lab/Rating";
+import InfoIcon from "@material-ui/icons/Info";
+import {EntityDialog} from "./EntityDialog";
+import {ConfirmDialog} from "../../../components/ConfirmDialog";
+import {EntityFormDialog} from "./EntityFormDialog";
+import {VisitFormDialog} from "../../Visits/components/VisitFormDialog";
 
 export function EntitiesList() {
   const {enqueueSnackbar} = useSnackbar();
@@ -31,8 +33,8 @@ export function EntitiesList() {
   >
     {entities.map(entity => (
       <Grid
-        item
         key={entity.id}
+        item
         lg={4}
         md={6}
         xs={12}
@@ -45,34 +47,50 @@ export function EntitiesList() {
               alignItems={"center"}
             >
               <Grid item>
-                <Rating defaultValue={entity.rating} readOnly/>
+                {!!entity.rating && <Rating defaultValue={entity.rating} readOnly/>}
               </Grid>
               <Grid item>
-                <ProfileDialogButton/>
-                <VisitFormDialogButton
+                <DialogButtonHandler
+                  actionIcon={
+                    <Tooltip title={"Mais detalhes"}>
+                      <InfoIcon color={"action"}/>
+                    </Tooltip>
+                  }
+                  dialog={<EntityDialog/>}
+                />
+                <DialogButtonHandler
                   color={"primary"}
                   actionIcon={
                     <Tooltip title="Agendar visita">
                       <EventIcon/>
                     </Tooltip>
                   }
+                  dialog={<VisitFormDialog/>}
                 />
-                <EntityFormDialogButton
-                  entity={entity}
+                <DialogButtonHandler
                   actionIcon={
                     <Tooltip title="Editar">
                       <EditIcon/>
                     </Tooltip>
                   }
+                  dialog={
+                    <EntityFormDialog
+                      isEdit={true}
+                    />
+                  }
                 />
-                <ConfirmDialogButton
-                  title={"Excluir entidade"}
-                  message={`Essa ação não poderá ser desfeita. Deseja realmente excluir a entidade ${entity.name}?`}
-                  onConfirm={() => handleDelete(entity)}
+                <DialogButtonHandler
                   actionIcon={
                     <Tooltip title="Excluir">
                       <DeleteIcon/>
                     </Tooltip>
+                  }
+                  dialog={
+                    <ConfirmDialog
+                      title={"Excluir entidade"}
+                      message={`Essa ação não poderá ser desfeita. Deseja realmente excluir a entidade ${entity.name}?`}
+                      onClose={(confirmed) => confirmed && handleDelete(entity)}
+                    />
                   }
                 />
               </Grid>

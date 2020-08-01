@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {makeStyles} from '@material-ui/styles';
 import {
+  Avatar,
   Card,
   CardActions,
   CardContent,
@@ -20,20 +21,28 @@ import ClearIcon from '@material-ui/icons/Clear';
 import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 import Hidden from "@material-ui/core/Hidden";
 import Tooltip from "@material-ui/core/Tooltip";
-import {ConfirmDialogButton} from "../../../components/ConfirmDialogButton";
 import {cancel, confirm, list, reject, VISIT_STATUS} from "../../../services/visit.service";
 import {useSnackbar} from "notistack";
 import * as _ from "lodash";
 import {VisitStore} from "../../../contexts/visit.context";
-import {FinishVisitFormDialogButton} from "./FinishVisitFormDialogButton";
 import {formatDateAndPeriod} from "../../../helpers/date";
 import {LoginContext} from "../../../contexts/login.context";
 import Chip from "@material-ui/core/Chip";
+import {DialogButtonHandler} from "../../../components/DialogButtonHandler";
+import {ConfirmDialog} from "../../../components/ConfirmDialog";
+import {FinishVisitFormDialog} from "./FinishVisitFormDialog";
 
 const useStyles = makeStyles(theme => ({
   root: {},
   content: {
     padding: 0
+  },
+  avatarContainer: {
+    display: 'flex',
+    alignItems: 'center'
+  },
+  avatar: {
+    marginRight: theme.spacing(2)
   },
   nameContainer: {
     display: 'block'
@@ -137,55 +146,84 @@ const VisitsTable = props => {
                         key={visit.id}
                       >
                         <TableCell>
-                          <div className={classes.avatarContainer}>
-                            <div className={classes.nameContainer}>
-                              <Typography variant="body1">{formatDateAndPeriod(visit.date, visit.period)}</Typography>
-                              <Hidden smUp>
-                                {_.get(visit, 'user.name')}
-                                {_.get(visit, 'entity.name')}
-                              </Hidden>
-                            </div>
+                          <div className={classes.nameContainer}>
+                            <Typography variant="body1">{formatDateAndPeriod(visit.date, visit.period)}</Typography>
+                            <Hidden smUp>
+                              {_.get(visit, 'user.name')}
+                              {_.get(visit, 'entity.name')}
+                            </Hidden>
                           </div>
                         </TableCell>
                         <Hidden xsDown>
-                          <TableCell>{_.get(visit, 'user.name')}</TableCell>
-                          <TableCell>{_.get(visit, 'entity.name')}</TableCell>
+                          <TableCell>
+                            <div className={classes.avatarContainer}>
+                              <Hidden xsDown>
+                                <Avatar
+                                  className={classes.avatar}
+                                  src={_.get(visit, 'user.avatarUrl')}
+                                />
+                              </Hidden>
+                              {_.get(visit, 'user.name')}
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <div className={classes.avatarContainer}>
+                              <Hidden xsDown>
+                                <Avatar
+                                  className={classes.avatar}
+                                  src={_.get(visit, 'entity.avatarUrl')}
+                                />
+                              </Hidden>
+                              {_.get(visit, 'entity.name')}
+                            </div>
+                          </TableCell>
                         </Hidden>
                         <TableCell>{resolveStatus(visit)}</TableCell>
                         <TableCell align={"center"}>
                           <div className={classes.rowActions}>
                             {[VISIT_STATUS.SCHEDULED, VISIT_STATUS.CONFIRMED].includes(visit.status) &&
-                            <ConfirmDialogButton
-                              title={"Cancelar visita"}
-                              message={`Essa ação não poderá ser desfeita. Deseja realmente cancelar a visita?`}
-                              onConfirm={() => handleCancel(visit)}
+                            <DialogButtonHandler
                               actionIcon={
                                 <Tooltip title={login.userId ? "Cancelar" : "Rejeitar"}>
                                   <ClearIcon/>
                                 </Tooltip>
                               }
+                              dialog={
+                                <ConfirmDialog
+                                  title={"Cancelar visita"}
+                                  message={`Essa ação não poderá ser desfeita. Deseja realmente cancelar a visita?`}
+                                  onClose={(confirmed) => confirmed && handleCancel(visit)}
+                                />
+                              }
                             />
                             }
                             {visit.status === VISIT_STATUS.SCHEDULED &&
-                            <ConfirmDialogButton
-                              color="primary"
-                              title={"Aceitar visita"}
-                              message={`Deseja realmente confirmar a visita agendada?`}
-                              onConfirm={() => handleConfirm(visit)}
+                            <DialogButtonHandler
                               actionIcon={
                                 <Tooltip title="Aceitar">
                                   <DoneOutlineIcon/>
                                 </Tooltip>
                               }
+                              dialog={
+                                <ConfirmDialog
+                                  color="primary"
+                                  title={"Aceitar visita"}
+                                  message={`Deseja realmente confirmar a visita agendada?`}
+                                  onClose={(confirmed) => confirmed && handleConfirm(visit)}
+                                />
+                              }
                             />
                             }
                             {[VISIT_STATUS.CONFIRMED, VISIT_STATUS.EVALUATION].includes(visit.status) &&
-                            <FinishVisitFormDialogButton
+                            <DialogButtonHandler
                               color={"primary"}
                               actionIcon={
                                 <Tooltip title="Finalizar visita">
                                   <EventAvailableIcon/>
                                 </Tooltip>
+                              }
+                              dialog={
+                                <FinishVisitFormDialog/>
                               }
                             />
                             }
