@@ -59,7 +59,6 @@ export class User extends Entity {
 
   @property({
     type: 'number',
-    default: 0,
   })
   rating?: number;
 

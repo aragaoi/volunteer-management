@@ -70,14 +70,15 @@ export class InstitutionInstitutionEvaluationController {
       },
     }) institutionEvaluation: Omit<InstitutionEvaluation, 'id'>,
   ): Promise<InstitutionEvaluation> {
+    const result = await this.institutionRepository.evaluations(id).create(institutionEvaluation);
+
     const institutionEvaluations = await this.institutionRepository.evaluations(id).find({
       fields: {rating: true}
     });
 
     const averageRating = this.evaluationService.calculateAverageRating(institutionEvaluations);
-
     await this.institutionRepository.updateById(id, {rating: averageRating});
-    return this.institutionRepository.evaluations(id).create(institutionEvaluation);
+    return result;
   }
 
   @patch('/institutions/{id}/evaluations', {

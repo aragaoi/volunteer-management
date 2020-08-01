@@ -31,6 +31,7 @@ export class UserController {
     })
       user: Omit<User, 'id'>,
   ): Promise<User> {
+    delete user.evaluations;
     return this.userRepository.create(user);
   }
 
@@ -167,6 +168,7 @@ export class UserController {
     })
       user: User,
   ): Promise<void> {
+    delete user.evaluations;
     await this.userRepository.updateById(id, user);
   }
 

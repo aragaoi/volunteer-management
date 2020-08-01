@@ -37,6 +37,7 @@ export class InstitutionController {
     })
       institution: Omit<Institution, 'id'>,
   ): Promise<Institution> {
+    delete institution.evaluations;
     return this.institutionRepository.create(institution);
   }
 
@@ -181,6 +182,7 @@ export class InstitutionController {
       institution: Institution,
   ): Promise<void> {
     delete institution.institutionType;
+    delete institution.evaluations;
     await this.institutionRepository.updateById(id, institution);
   }
 
