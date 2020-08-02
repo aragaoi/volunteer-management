@@ -31,6 +31,13 @@ import Chip from "@material-ui/core/Chip";
 import {DialogButtonHandler} from "../../../components/DialogButtonHandler";
 import {ConfirmDialog} from "../../../components/ConfirmDialog";
 import {FinishVisitFormDialog} from "./FinishVisitFormDialog";
+import InfoIcon from "@material-ui/icons/Info";
+import {EntityDialog} from "../../Entities/components/EntityDialog";
+import {UserDialog} from "../../Users/components/UserDialog";
+import {UserStore} from "../../../contexts/user.context";
+import {EntityStore} from "../../../contexts/entity.context";
+import {UsersContext} from "../../../contexts/users.context";
+import {EntitiesContext, EntitiesStore} from "../../../contexts/entities.context";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -42,7 +49,9 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center'
   },
   avatar: {
-    marginRight: theme.spacing(2)
+    marginRight: theme.spacing(2),
+    width: theme.spacing(3),
+    height: theme.spacing(3),
   },
   nameContainer: {
     display: 'block'
@@ -58,6 +67,8 @@ const VisitsTable = props => {
   const {enqueueSnackbar} = useSnackbar();
   const [login] = useContext(LoginContext);
   const [visits, setVisits] = useContext(VisitsContext);
+  const [users] = useContext(UsersContext);
+  const [entities] = useContext(EntitiesContext);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [offset, setOffset] = useState(0);
@@ -119,6 +130,14 @@ const VisitsTable = props => {
     }
   }
 
+  function getFullEntity(entity) {
+    return entity ? _.find(entities, {id: entity.id}) : null;
+  }
+
+  function getFullUser(user) {
+    return user ? _.find(users, {id: user.id}) : null;
+  }
+
   return (
     <Card>
       <CardContent className={classes.content}>
@@ -157,24 +176,44 @@ const VisitsTable = props => {
                         <Hidden xsDown>
                           <TableCell>
                             <div className={classes.avatarContainer}>
-                              <Hidden xsDown>
-                                <Avatar
-                                  className={classes.avatar}
-                                  src={_.get(visit, 'user.avatarUrl')}
+                              <UserStore user={getFullUser(visit.user)}>
+                                <DialogButtonHandler
+                                  variant="outlined"
+                                  actionText={
+                                    <Fragment>
+                                      <Hidden xsDown>
+                                        <Avatar
+                                          className={classes.avatar}
+                                          src={_.get(visit, 'user.avatarUrl')}
+                                        />
+                                      </Hidden>
+                                      {_.get(visit, 'user.name')}
+                                    </Fragment>
+                                  }
+                                  dialog={<UserDialog/>}
                                 />
-                              </Hidden>
-                              {_.get(visit, 'user.name')}
+                              </UserStore>
                             </div>
                           </TableCell>
                           <TableCell>
                             <div className={classes.avatarContainer}>
-                              <Hidden xsDown>
-                                <Avatar
-                                  className={classes.avatar}
-                                  src={_.get(visit, 'entity.avatarUrl')}
+                              <EntityStore entity={getFullEntity(visit.entity)}>
+                                <DialogButtonHandler
+                                  variant="outlined"
+                                  actionText={
+                                    <Fragment>
+                                      <Hidden xsDown>
+                                        <Avatar
+                                          className={classes.avatar}
+                                          src={_.get(visit, 'entity.avatarUrl')}
+                                        />
+                                      </Hidden>
+                                      {_.get(visit, 'entity.name')}
+                                    </Fragment>
+                                  }
+                                  dialog={<EntityDialog/>}
                                 />
-                              </Hidden>
-                              {_.get(visit, 'entity.name')}
+                              </EntityStore>
                             </div>
                           </TableCell>
                         </Hidden>

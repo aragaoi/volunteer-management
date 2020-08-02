@@ -3,6 +3,7 @@ import {makeStyles} from '@material-ui/styles';
 import {VisitsStore} from "../../contexts/visits.context";
 import VisitsToolbar from "./components/VisitsToolbar";
 import VisitsTable from "./components/VisitsTable";
+import {EntitiesStore} from "../../contexts/entities.context";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -19,10 +20,12 @@ const Visits = () => {
   return (
     <div className={classes.root}>
       <VisitsStore>
-        <VisitsToolbar/>
-        <div className={classes.content}>
-          <VisitsTable/>
-        </div>
+        <EntitiesStore>
+          <VisitsToolbar/>
+          <div className={classes.content}>
+            <VisitsTable/>
+          </div>
+        </EntitiesStore>
       </VisitsStore>
     </div>
   );
