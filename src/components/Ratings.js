@@ -52,8 +52,13 @@ export function Ratings(props) {
           container
           justify="space-between"
         >
-          <Grid item>
+          <Grid
+            item
+          >
             <Rating defaultValue={rating} readOnly/>
+            <Typography variant="subtitle2">
+              {`${evaluations.length} ${evaluations.length === 1 ? "avaliação" : "avaliações"}`}
+            </Typography>
           </Grid>
           <Grid item>
             <Button
@@ -61,7 +66,7 @@ export function Ratings(props) {
               aria-expanded={expanded}
               aria-label="avaliações"
             >
-              Ver avaliações
+              {`Ver ${evaluations.length === 1 ? "avaliação" : "avaliações"}`}
               <ExpandMoreIcon
                 className={clsx(classes.expand, {
                   [classes.expandOpen]: expanded,

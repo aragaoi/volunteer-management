@@ -53,8 +53,17 @@ const useStyles = makeStyles(theme => ({
     width: theme.spacing(3),
     height: theme.spacing(3),
   },
+  avatarButtonLabel: {
+    fontWeight: "400",
+    lineHeight: "21px",
+    textTransform: "none",
+  },
   nameContainer: {
-    display: 'block'
+    display: 'block',
+    textAlign: "center",
+  },
+  nameItems: {
+    margin: "3px"
   },
   actions: {
     justifyContent: 'flex-end'
@@ -107,24 +116,24 @@ const VisitsTable = props => {
     enqueueSnackbar("Visita confirmada com sucesso!", {variant: "success"});
   }
 
-  function resolveStatus(visit) {
+  function resolveStatus(visit, size) {
     switch (visit.status) {
       case VISIT_STATUS.SCHEDULED:
-        return <Chip variant="outlined" label="Aguardando confirmação"/>;
+        return <Chip variant="outlined" label="Aguardando confirmação" size={size}/>;
       case VISIT_STATUS.CANCELED:
-        return <Chip color="secondary" label="Cancelada"/>;
+        return <Chip color="secondary" label="Cancelada" size={size}/>;
       case VISIT_STATUS.REJECTED:
-        return <Chip color="secondary" label="Rejeitada"/>;
+        return <Chip color="secondary" label="Rejeitada" size={size}/>;
       case VISIT_STATUS.CONFIRMED:
-        return <Chip color="primary" label="Agendada"/>;
+        return <Chip color="primary" label="Agendada" size={size}/>;
       case VISIT_STATUS.EVALUATION:
         if (visit.evaluatedByUser && visit.evaluatedByEntity) {
-          return <Chip label="Realizada"/>;
+          return <Chip label="Realizada" size={size}/>;
         } else {
-          return <Chip variant="outlined" color="secondary" label="Aguardando avaliações"/>;
+          return <Chip variant="outlined" color="secondary" label="Aguardando avaliações" size={size}/>;
         }
       case VISIT_STATUS.DONE:
-        return <Chip label="Realizada"/>;
+        return <Chip label="Realizada" size={size}/>;
       default:
         return "";
     }
@@ -164,60 +173,97 @@ const VisitsTable = props => {
                         hover
                         key={visit.id}
                       >
-                        <TableCell>
-                          <div className={classes.nameContainer}>
-                            <Typography variant="body1">{formatDateAndPeriod(visit.date, visit.period)}</Typography>
-                            <Hidden smUp>
-                              {_.get(visit, 'user.name')}
-                              {_.get(visit, 'entity.name')}
+                        <EntityStore entity={getFullEntity(visit.entity)}>
+                          <UserStore user={getFullUser(visit.user)}>
+                            <TableCell>
+                              <div className={classes.nameContainer}>
+                                <Typography variant="body1" className={classes.nameItems}>
+                                  {formatDateAndPeriod(visit.date, visit.period)}
+                                </Typography>
+                                <Hidden smUp>
+                                  <DialogButtonHandler
+                                    variant="outlined"
+                                    size="small"
+                                    classes={{
+                                      root: classes.nameItems,
+                                      label: classes.avatarButtonLabel
+                                    }}
+                                    actionText={
+                                        _.get(visit, 'user.name')
+                                    }
+                                    dialog={<UserDialog/>}
+                                  />
+                                  <DialogButtonHandler
+                                    variant="outlined"
+                                    size="small"
+                                    classes={{
+                                      root: classes.nameItems,
+                                      label: classes.avatarButtonLabel
+                                    }}
+                                    actionText={
+                                      _.get(visit, 'entity.name')
+                                    }
+                                    dialog={<EntityDialog/>}
+                                  />
+                                </Hidden>
+                              </div>
+                            </TableCell>
+                            <Hidden xsDown>
+                              <TableCell>
+                                <div className={classes.avatarContainer}>
+                                  <DialogButtonHandler
+                                    variant="outlined"
+                                    classes={{
+                                      label: classes.avatarButtonLabel
+                                    }}
+                                    actionText={
+                                      <Fragment>
+                                        <Hidden xsDown>
+                                          <Avatar
+                                            className={classes.avatar}
+                                            src={_.get(visit, 'user.avatarUrl')}
+                                          />
+                                        </Hidden>
+                                        {_.get(visit, 'user.name')}
+                                      </Fragment>
+                                    }
+                                    dialog={<UserDialog/>}
+                                  />
+                                </div>
+                              </TableCell>
+                              <TableCell>
+                                <div className={classes.avatarContainer}>
+                                  <DialogButtonHandler
+                                    variant="outlined"
+                                    classes={{
+                                      label: classes.avatarButtonLabel
+                                    }}
+                                    actionText={
+                                      <Fragment>
+                                        <Hidden xsDown>
+                                          <Avatar
+                                            className={classes.avatar}
+                                            src={_.get(visit, 'entity.avatarUrl')}
+                                          />
+                                        </Hidden>
+                                        {_.get(visit, 'entity.name')}
+                                      </Fragment>
+                                    }
+                                    dialog={<EntityDialog/>}
+                                  />
+                                </div>
+                              </TableCell>
                             </Hidden>
-                          </div>
+                          </UserStore>
+                        </EntityStore>
+                        <TableCell>
+                          <Hidden mdUp>
+                            {resolveStatus(visit, "small")}
+                          </Hidden>
+                          <Hidden xsDown>
+                            {resolveStatus(visit)}
+                          </Hidden>
                         </TableCell>
-                        <Hidden xsDown>
-                          <TableCell>
-                            <div className={classes.avatarContainer}>
-                              <UserStore user={getFullUser(visit.user)}>
-                                <DialogButtonHandler
-                                  variant="outlined"
-                                  actionText={
-                                    <Fragment>
-                                      <Hidden xsDown>
-                                        <Avatar
-                                          className={classes.avatar}
-                                          src={_.get(visit, 'user.avatarUrl')}
-                                        />
-                                      </Hidden>
-                                      {_.get(visit, 'user.name')}
-                                    </Fragment>
-                                  }
-                                  dialog={<UserDialog/>}
-                                />
-                              </UserStore>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <div className={classes.avatarContainer}>
-                              <EntityStore entity={getFullEntity(visit.entity)}>
-                                <DialogButtonHandler
-                                  variant="outlined"
-                                  actionText={
-                                    <Fragment>
-                                      <Hidden xsDown>
-                                        <Avatar
-                                          className={classes.avatar}
-                                          src={_.get(visit, 'entity.avatarUrl')}
-                                        />
-                                      </Hidden>
-                                      {_.get(visit, 'entity.name')}
-                                    </Fragment>
-                                  }
-                                  dialog={<EntityDialog/>}
-                                />
-                              </EntityStore>
-                            </div>
-                          </TableCell>
-                        </Hidden>
-                        <TableCell>{resolveStatus(visit)}</TableCell>
                         <TableCell align={"center"}>
                           <div className={classes.rowActions}>
                             {[VISIT_STATUS.SCHEDULED, VISIT_STATUS.CONFIRMED].includes(visit.status) &&

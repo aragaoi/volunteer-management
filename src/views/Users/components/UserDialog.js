@@ -32,9 +32,6 @@ export function UserDialog(props) {
     fullWidth={true}
     fullScreen={useMediaQuery(theme.breakpoints.down('xs'))}
   >
-    <DialogTitle>
-      {user.name}
-    </DialogTitle>
     <DialogContent dividers>
       <BasicInfo {...user}/>
       <Divider variant={"middle"} className={classes.divider}/>

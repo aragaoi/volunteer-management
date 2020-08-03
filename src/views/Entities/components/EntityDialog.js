@@ -35,9 +35,6 @@ export function EntityDialog(props) {
     fullWidth={true}
     fullScreen={useMediaQuery(theme.breakpoints.down('xs'))}
   >
-    <DialogTitle>
-      {entity.name}
-    </DialogTitle>
     <DialogContent dividers>
       <BasicInfo
         {...entity}
