@@ -4,7 +4,7 @@ import {juggler} from '@loopback/repository';
 const config = {
   name: 'db',
   connector: 'loopback-connector-mongodb',
-  host: 'cluster0.pcjc8.gcp.mongodb.net',
+  host: process.env.NODE_ENV === 'production' ? 'cluster0.7qs6i.gcp.mongodb.net' : 'cluster0.pcjc8.gcp.mongodb.net',
   user: 'voluntariado_user',
   password: 'v01unt4r1420',
   database: 'voluntariado',

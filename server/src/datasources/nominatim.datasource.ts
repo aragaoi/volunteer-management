@@ -21,7 +21,7 @@ const config = {
       "responsePath": "$[0]"
     },
     functions: {
-      "geocode": ["street", "city", "zipcode"]
+      "geocode": ["street", "city", "state"]
     }
   }]
 };

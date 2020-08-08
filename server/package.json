@@ -9,10 +9,10 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "engines": {
-    "node": ">=10.16"
+    "node": "10.x"
   },
   "scripts": {
-    "start": "node -r source-map-support/register .",
+    "start": "node .",
     "dev": "nodemon",
     "build": "lb-tsc",
     "build:watch": "lb-tsc --watch",
@@ -27,7 +27,7 @@
     "posttest": "npm run lint",
     "migrate": "node ./dist/migrate",
     "openapi-spec": "node ./dist/openapi-spec",
-    "prestart": "npm run build",
+    "prestart": "npm run clean && npm run build",
     "clean": "lb-clean dist *.tsbuildinfo .eslintcache"
   },
   "repository": {
