@@ -13,8 +13,6 @@ import {
 } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
-import { Facebook as FacebookIcon, Google as GoogleIcon } from 'icons';
-
 const schema = {
   email: {
     presence: { allowEmpty: false, message: 'is required' },
@@ -249,27 +247,27 @@ const SignIn = props => {
                   container
                   spacing={2}
                 >
-                  <Grid item>
-                    <Button
-                      color="primary"
-                      onClick={handleSignIn}
-                      size="large"
-                      variant="contained"
-                    >
-                      <FacebookIcon className={classes.socialIcon} />
-                      Login with Facebook
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      onClick={handleSignIn}
-                      size="large"
-                      variant="contained"
-                    >
-                      <GoogleIcon className={classes.socialIcon} />
-                      Login with Google
-                    </Button>
-                  </Grid>
+                  {/*<Grid item>*/}
+                  {/*  <Button*/}
+                  {/*    color="primary"*/}
+                  {/*    onClick={handleSignIn}*/}
+                  {/*    size="large"*/}
+                  {/*    variant="contained"*/}
+                  {/*  >*/}
+                  {/*    <FacebookIcon className={classes.socialIcon} />*/}
+                  {/*    Login with Facebook*/}
+                  {/*  </Button>*/}
+                  {/*</Grid>*/}
+                  {/*<Grid item>*/}
+                  {/*  <Button*/}
+                  {/*    onClick={handleSignIn}*/}
+                  {/*    size="large"*/}
+                  {/*    variant="contained"*/}
+                  {/*  >*/}
+                  {/*    <GoogleIcon className={classes.socialIcon} />*/}
+                  {/*    Login with Google*/}
+                  {/*  </Button>*/}
+                  {/*</Grid>*/}
                 </Grid>
                 <Typography
                   align="center"
