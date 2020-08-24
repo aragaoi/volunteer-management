@@ -1,12 +1,18 @@
 import {Count, CountSchema, Filter, FilterExcludingWhere, repository, Where,} from '@loopback/repository';
 import {del, get, getModelSchemaRef, param, patch, post, put, requestBody,} from '@loopback/rest';
-import {Institution} from '../models';
+import {Address, Institution} from '../models';
 import {InstitutionRepository} from '../repositories';
+import {Geocoder} from "../services";
+import {inject} from "@loopback/core";
+import * as _ from "lodash";
+import {getBoundsOfDistance} from 'geolib';
 
 export class InstitutionController {
   constructor(
     @repository(InstitutionRepository)
     public institutionRepository: InstitutionRepository,
+    @inject('services.Geocoder')
+    protected geocoderService: Geocoder,
   ) {
   }
 
@@ -38,6 +44,10 @@ export class InstitutionController {
       institution: Omit<Institution, 'id'>,
   ): Promise<Institution> {
     delete institution.evaluations;
+
+    let {latitude, longitude} = await this.findGeolocation(institution?.address);
+    institution.address = {...institution.address, latitude, longitude};
+
     return this.institutionRepository.create(institution);
   }
 
@@ -75,7 +85,12 @@ export class InstitutionController {
   })
   async find(
     @param.filter(Institution) filter?: Filter<Institution>,
+    @param.query.number("latitude") latitude?: number,
+    @param.query.number("longitude") longitude?: number,
+    @param.query.number("distance") distance?: number,
   ): Promise<Institution[]> {
+    filter = this.addGeospatialFilter(filter, latitude, longitude, distance);
+
     return this.institutionRepository.find({
       ...filter, ...{
         include:
@@ -138,6 +153,9 @@ export class InstitutionController {
       institution: Institution,
     @param.where(Institution) where?: Where<Institution>,
   ): Promise<Count> {
+    let {latitude, longitude} = await this.findGeolocation(institution?.address);
+    institution.address = {...institution.address, latitude, longitude};
+
     return this.institutionRepository.updateAll(institution, where);
   }
 
@@ -183,6 +201,10 @@ export class InstitutionController {
   ): Promise<void> {
     delete institution.institutionType;
     delete institution.evaluations;
+
+    let {latitude, longitude} = await this.findGeolocation(institution?.address);
+    institution.address = {...institution.address, latitude, longitude};
+
     await this.institutionRepository.updateById(id, institution);
   }
 
@@ -197,6 +219,9 @@ export class InstitutionController {
     @param.path.string('id') id: string,
     @requestBody() institution: Institution,
   ): Promise<void> {
+    let {latitude, longitude} = await this.findGeolocation(institution?.address);
+    institution.address = {...institution.address, latitude, longitude};
+
     await this.institutionRepository.replaceById(id, institution);
   }
 
@@ -209,5 +234,45 @@ export class InstitutionController {
   })
   async deleteById(@param.path.string('id') id: string): Promise<void> {
     await this.institutionRepository.deleteById(id);
+  }
+
+  private addGeospatialFilter(filter?: Filter<Institution>, latitude?: number, longitude?: number, distance?: number) {
+    if (latitude && longitude && distance) {
+      let [minBound, maxBound] = getBoundsOfDistance(
+        {latitude, longitude},
+        distance
+      );
+
+      filter = {
+        ...filter, where: {
+          ...filter?.where,
+          "address.latitude": {
+            lte: Number(maxBound.latitude),
+            gte: Number(minBound.latitude),
+          },
+          "address.longitude": {
+            lte: Number(maxBound.longitude),
+            gte: Number(minBound.longitude),
+          }
+        }
+      };
+    }
+    return filter;
+  }
+
+  async findGeolocation(address?: Address): Promise<{ latitude?: number, longitude?: number }> {
+    let {street, city, state} = address || {};
+
+    let latitude, longitude;
+    if (street || city || state) {
+      const query = [street, city, state].filter(Boolean).join(",");
+      const places = await this.geocoderService.geocode(query);
+
+      if (!_.isEmpty(places)) {
+        latitude = Number(places[0].lat);
+        longitude = Number(places[0].lon);
+      }
+    }
+    return {latitude, longitude}
   }
 }

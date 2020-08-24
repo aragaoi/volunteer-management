@@ -3,6 +3,14 @@ import {InstitutionType} from './institution-type.model';
 import {UserEvaluation} from './user-evaluation.model';
 import {InstitutionEvaluation} from './institution-evaluation.model';
 
+export type Address = {
+  street?: string,
+  city?: string,
+  state?: string,
+  latitude?: number,
+  longitude?: number
+};
+
 @model({
   settings: {
     strict: false,
@@ -69,10 +77,8 @@ export class Institution extends Entity {
   })
   rating?: number;
 
-  @property({
-    type: 'object',
-  })
-  address?: object;
+  @property()
+  address?: Address;
 
   @property({
     type: 'object',

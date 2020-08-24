@@ -16,12 +16,12 @@ const config = {
         "referer": "plataforma.voluntariado.app.c29Mw"
       },
       "query": {
-        "q": "{street},{city},{state}"
+        "q": "{address}"
       },
       "responsePath": "$[0]"
     },
     functions: {
-      "geocode": ["street", "city", "state"]
+      "geocode": ["address"]
     }
   }]
 };
