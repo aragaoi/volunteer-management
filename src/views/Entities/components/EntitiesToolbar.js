@@ -3,9 +3,11 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {makeStyles} from '@material-ui/styles';
 
-import {SearchInput} from 'components';
+import {TextSearchInput} from 'components';
 import {DialogButtonHandler} from "../../../components/DialogButtonHandler";
 import {EntityFormDialog} from "./EntityFormDialog";
+import ProximitySearchInput from "../../../components/ProximitySearchInput";
+import Grid from "@material-ui/core/Grid";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -48,12 +50,21 @@ const EntitiesToolbar = props => {
           }
         />
       </div>
-      <div className={classes.row}>
-        <SearchInput
-          className={classes.searchInput}
-          placeholder="Buscar entidades"
-        />
-      </div>
+      <Grid container spacing={2} alignItems={"center"}>
+        <Grid item xs={6}>
+          <TextSearchInput
+            className={classes.searchInput}
+            placeholder="Buscar entidades"
+          />
+        </Grid>
+        <Grid item xs={6}>
+        </Grid>
+        <Grid item xs={6}>
+          <ProximitySearchInput
+            className={classes.searchInput}
+          />
+        </Grid>
+      </Grid>
     </div>
   );
 };

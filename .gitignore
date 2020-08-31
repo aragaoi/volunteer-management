@@ -36,3 +36,5 @@ yarn.lock
 firebase-debug.log
 
 server/package-lock.json
+
+package-lock.json

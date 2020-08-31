@@ -1,9 +1,10 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
 import { Paper, Input } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
+import {FilterContext} from "../contexts/filter.context";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -11,7 +12,8 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     padding: theme.spacing(1),
     display: 'flex',
-    flexBasis: 420
+    flexBasis: 420,
+    height: '46px'
   },
   icon: {
     marginRight: theme.spacing(1),
@@ -25,10 +27,15 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const SearchInput = props => {
+const TextSearchInput = props => {
   const { className, onChange, style, ...rest } = props;
 
   const classes = useStyles();
+  const [filter, setFilter] = useContext(FilterContext);
+
+  function handleTextSearchChange(event) {
+    setFilter({...filter, searchTerm: event.target.value});
+  }
 
   return (
     <Paper
@@ -41,16 +48,16 @@ const SearchInput = props => {
         {...rest}
         className={classes.input}
         disableUnderline
-        onChange={onChange}
+        onChange={handleTextSearchChange}
       />
     </Paper>
   );
 };
 
-SearchInput.propTypes = {
+TextSearchInput.propTypes = {
   className: PropTypes.string,
   onChange: PropTypes.func,
   style: PropTypes.object
 };
 
-export default SearchInput;
+export default TextSearchInput;

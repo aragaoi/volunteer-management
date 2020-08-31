@@ -2,7 +2,7 @@ import {Grid} from "@material-ui/core";
 import {EntityStore} from "../../../contexts/entity.context";
 import {EntityCard} from "./index";
 import {DialogButtonHandler} from "../../../components/DialogButtonHandler";
-import React, {useContext} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {EntitiesContext} from "../../../contexts/entities.context";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -16,10 +16,18 @@ import {EntityDialog} from "./EntityDialog";
 import {ConfirmDialog} from "../../../components/ConfirmDialog";
 import {EntityFormDialog} from "./EntityFormDialog";
 import {VisitFormDialog} from "../../Visits/components/VisitFormDialog";
+import {FilterContext} from "../../../contexts/filter.context";
 
 export function EntitiesList() {
   const {enqueueSnackbar} = useSnackbar();
   const [entities, setEntities] = useContext(EntitiesContext);
+  const [filter] = useContext(FilterContext);
+  const [searchResults, setSearchResults] = useState(entities);
+
+  useEffect(() => {
+    const results = entities.filter(entity => entity.name.toLowerCase().includes(filter.searchTerm.toLowerCase()));
+    setSearchResults(results);
+  }, [filter, entities]);
 
   async function handleDelete(entity) {
     await remove(entity);
@@ -31,7 +39,7 @@ export function EntitiesList() {
     container
     spacing={3}
   >
-    {entities.map(entity => (
+    {searchResults.map(entity => (
       <Grid
         key={entity.id}
         item

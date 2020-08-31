@@ -3,6 +3,7 @@ import {makeStyles} from '@material-ui/styles';
 
 import {UsersTable, UsersToolbar} from './components';
 import {UsersStore} from "../../contexts/users.context";
+import {FilterStore} from "../../contexts/filter.context";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -19,10 +20,12 @@ const Users = () => {
   return (
     <div className={classes.root}>
       <UsersStore>
-        <UsersToolbar/>
-        <div className={classes.content}>
-          <UsersTable/>
-        </div>
+        <FilterStore>
+          <UsersToolbar/>
+          <div className={classes.content}>
+            <UsersTable/>
+          </div>
+        </FilterStore>
       </UsersStore>
     </div>
   );

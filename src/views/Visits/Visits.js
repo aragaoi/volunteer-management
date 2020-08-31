@@ -4,6 +4,7 @@ import {VisitsStore} from "../../contexts/visits.context";
 import VisitsToolbar from "./components/VisitsToolbar";
 import VisitsTable from "./components/VisitsTable";
 import {EntitiesStore} from "../../contexts/entities.context";
+import {FilterStore} from "../../contexts/filter.context";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -21,10 +22,12 @@ const Visits = () => {
     <div className={classes.root}>
       <VisitsStore>
         <EntitiesStore>
-          <VisitsToolbar/>
-          <div className={classes.content}>
-            <VisitsTable/>
-          </div>
+          <FilterStore>
+            <VisitsToolbar/>
+            <div className={classes.content}>
+              <VisitsTable/>
+            </div>
+          </FilterStore>
         </EntitiesStore>
       </VisitsStore>
     </div>

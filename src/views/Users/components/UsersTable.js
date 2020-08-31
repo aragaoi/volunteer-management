@@ -29,6 +29,7 @@ import {ConfirmDialog} from "../../../components/ConfirmDialog";
 import {DialogButtonHandler} from "../../../components/DialogButtonHandler";
 import {UserFormDialog} from "./UserFormDialog";
 import {UserStore} from "../../../contexts/user.context";
+import {FilterContext} from "../../../contexts/filter.context";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -58,9 +59,17 @@ const UsersTable = props => {
 
   const {enqueueSnackbar} = useSnackbar();
   const [users, setUsers] = useContext(UsersContext);
+  const [filter] = useContext(FilterContext);
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [offset, setOffset] = useState(0);
+  const [searchResults, setSearchResults] = useState(users);
+
+  useEffect(() => {
+    const results = users.filter(user => user.name.toLowerCase().includes(filter.searchTerm.toLowerCase()));
+    setSearchResults(results);
+  }, [filter, users]);
 
   useEffect(() => updateOffset(page, rowsPerPage), [page, rowsPerPage]);
 
@@ -105,7 +114,7 @@ const UsersTable = props => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users.slice(offset, (page + 1) * rowsPerPage).map(user => (
+                {searchResults.slice(offset, (page + 1) * rowsPerPage).map(user => (
                   <Fragment key={user.id}>
                     <UserStore user={user}>
                       <TableRow
@@ -183,7 +192,7 @@ const UsersTable = props => {
       <CardActions className={classes.actions}>
         <TablePagination
           component="div"
-          count={users.length}
+          count={searchResults.length}
           onChangePage={handlePageChange}
           onChangeRowsPerPage={handleRowsPerPageChange}
           page={page}

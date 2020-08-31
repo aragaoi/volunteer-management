@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {makeStyles} from '@material-ui/styles';
 
-import {SearchInput} from 'components';
+import {TextSearchInput} from 'components';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -39,7 +39,7 @@ const VisitsToolbar = props => {
         <span className={classes.spacer} />
       </div>
       <div className={classes.row}>
-        <SearchInput
+        <TextSearchInput
           className={classes.searchInput}
           placeholder="Buscar visitas"
         />

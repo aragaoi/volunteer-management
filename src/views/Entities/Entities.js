@@ -4,6 +4,7 @@ import {makeStyles} from '@material-ui/styles';
 import {EntitiesToolbar} from './components';
 import {EntitiesStore} from "../../contexts/entities.context";
 import {EntitiesList} from "./components/EntitiesList";
+import {FilterStore} from "../../contexts/filter.context";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -20,10 +21,12 @@ const Entities = () => {
   return (
     <div className={classes.root}>
       <EntitiesStore>
-        <EntitiesToolbar/>
-        <div className={classes.content}>
-          <EntitiesList/>
-        </div>
+        <FilterStore>
+          <EntitiesToolbar/>
+          <div className={classes.content}>
+            <EntitiesList/>
+          </div>
+        </FilterStore>
       </EntitiesStore>
     </div>
   );

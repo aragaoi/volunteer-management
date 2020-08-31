@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {makeStyles} from '@material-ui/styles';
 
-import {SearchInput} from 'components';
+import {TextSearchInput} from 'components';
 import {DialogButtonHandler} from "../../../components/DialogButtonHandler";
 import {UserFormDialog} from "./UserFormDialog";
 
@@ -49,7 +49,7 @@ const UsersToolbar = props => {
         />
       </div>
       <div className={classes.row}>
-        <SearchInput
+        <TextSearchInput
           className={classes.searchInput}
           placeholder="Buscar usuários"
         />

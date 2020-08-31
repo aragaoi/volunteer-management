@@ -31,13 +31,13 @@ import Chip from "@material-ui/core/Chip";
 import {DialogButtonHandler} from "../../../components/DialogButtonHandler";
 import {ConfirmDialog} from "../../../components/ConfirmDialog";
 import {FinishVisitFormDialog} from "./FinishVisitFormDialog";
-import InfoIcon from "@material-ui/icons/Info";
 import {EntityDialog} from "../../Entities/components/EntityDialog";
 import {UserDialog} from "../../Users/components/UserDialog";
 import {UserStore} from "../../../contexts/user.context";
 import {EntityStore} from "../../../contexts/entity.context";
 import {UsersContext} from "../../../contexts/users.context";
-import {EntitiesContext, EntitiesStore} from "../../../contexts/entities.context";
+import {EntitiesContext} from "../../../contexts/entities.context";
+import {FilterContext} from "../../../contexts/filter.context";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -78,9 +78,21 @@ const VisitsTable = props => {
   const [visits, setVisits] = useContext(VisitsContext);
   const [users] = useContext(UsersContext);
   const [entities] = useContext(EntitiesContext);
+  const [filter] = useContext(FilterContext);
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [offset, setOffset] = useState(0);
+  const [searchResults, setSearchResults] = useState(visits);
+
+  useEffect(() => {
+    const results = visits.filter(visit => {
+      const term = filter.searchTerm.toLowerCase();
+      return visit.user.name.toLowerCase().includes(term) ||
+        visit.entity.name.toLowerCase().includes(term);
+    });
+    setSearchResults(results);
+  }, [filter, visits]);
 
   useEffect(() => updateOffset(page, rowsPerPage), [page, rowsPerPage]);
 
@@ -165,7 +177,7 @@ const VisitsTable = props => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {visits.slice(offset, (page + 1) * rowsPerPage).map(visit => (
+                {searchResults.slice(offset, (page + 1) * rowsPerPage).map(visit => (
                   <Fragment key={visit.id}>
                     <VisitStore visit={visit}>
                       <TableRow
@@ -189,7 +201,7 @@ const VisitsTable = props => {
                                       label: classes.avatarButtonLabel
                                     }}
                                     actionText={
-                                        _.get(visit, 'user.name')
+                                      _.get(visit, 'user.name')
                                     }
                                     dialog={<UserDialog/>}
                                   />
@@ -326,7 +338,7 @@ const VisitsTable = props => {
       <CardActions className={classes.actions}>
         <TablePagination
           component="div"
-          count={visits.length}
+          count={searchResults.length}
           onChangePage={handlePageChange}
           onChangeRowsPerPage={handleRowsPerPageChange}
           page={page}
