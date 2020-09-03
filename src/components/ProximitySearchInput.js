@@ -36,16 +36,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const marks = [
-  {
-    value: 5,
-    // label: '5km',
-  },
-  {
-    value: 100,
-    // label: '100km',
-  },
-];
+const marks = [{value: 5}, {value: 100}];
 
 const ProximitySearchInput = props => {
   const {className, onChange, style, ...rest} = props;
@@ -61,11 +52,15 @@ const ProximitySearchInput = props => {
     location: undefined
   });
 
+  function updateFilter(searchAttributes) {
+    setFilter({...filter, ...{searchAttributes}});
+  }
+
   const handleSwitchChange = (event) => {
     const isOn = event.target.checked;
     const searchAttributes = isOn ? {...proximity} : undefined;
 
-    setFilter({...filter, ...{searchAttributes}});
+    updateFilter(searchAttributes);
     setEnabled(isOn);
   };
 
@@ -78,7 +73,7 @@ const ProximitySearchInput = props => {
   }
 
   function handleUpdateLocation() {
-    if(error) {
+    if (error) {
       enqueueSnackbar("Ative a localização no navegador", {variant: "error"});
     } else {
       setProximity({...proximity, address: "", location: {latitude, longitude}});
@@ -88,6 +83,12 @@ const ProximitySearchInput = props => {
   function resolveAddressPlaceholder() {
     const enabledMessage = proximity.location ? "Usando sua localização atual" : "Digite seu endereço";
     return enabled ? enabledMessage : "Habilite para buscar por proximidade";
+  }
+
+  function handleApply() {
+    const searchAttributes = {...proximity};
+    updateFilter(searchAttributes);
+    onChange(searchAttributes);
   }
 
   return (
@@ -130,7 +131,6 @@ const ProximitySearchInput = props => {
         <Grid
           item
           container
-          xs={12}
           spacing={2}
           alignItems={"center"}
         >
@@ -162,7 +162,13 @@ const ProximitySearchInput = props => {
             </Typography>
           </Grid>
           <Grid item>
-            <Button onClick={onChange}>
+            <Button
+              disabled={!enabled}
+              onClick={handleApply}
+              size="small"
+              variant="contained"
+              color="secondary"
+            >
               Aplicar
             </Button>
           </Grid>
