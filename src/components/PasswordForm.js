@@ -18,18 +18,33 @@ const PasswordForm = props => {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
 
-  const {register, errors} = useFormContext();
+  const {register, errors, setError, clearErrors} = useFormContext();
 
   const handleChangePassword = event => {
     const value = event.target.value;
     setPassword(value);
+    validate(value, confirm);
+
     onChange(value);
   };
 
   const handleChangeConfirm = event => {
     const value = event.target.value;
     setConfirm(value);
+    validate(password, value);
   };
+
+  const validate = (password, confirm) => {
+    const fieldName = "confirm";
+    if(password === confirm) {
+      clearErrors(fieldName);
+    } else {
+      setError(fieldName, {
+        type: "manual",
+        message: "As senhas devem ser iguais"
+      });
+    }
+  }
 
   return (
     <Card
@@ -59,7 +74,6 @@ const PasswordForm = props => {
               margin="dense"
               onChange={handleChangePassword}
               type="password"
-              value={password}
               variant="outlined"
             />
             <ErrorMessage errors={errors} name="password"/>
@@ -78,7 +92,6 @@ const PasswordForm = props => {
               margin="dense"
               onChange={handleChangeConfirm}
               type="password"
-              value={confirm}
               variant="outlined"
             />
             <ErrorMessage errors={errors} name="confirm"/>

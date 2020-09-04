@@ -24,6 +24,7 @@ export function UserForm(props) {
   const methods = useForm({
     resolver: yupResolver(buildUserSchema(isEdit))
   });
+  const watchConfirm = methods.watch("confirm");
 
   async function handleInsert(user) {
     await insert(user);
@@ -35,19 +36,32 @@ export function UserForm(props) {
     enqueueSnackbar("Usuário editado com sucesso!", {variant: "success"});
   }
 
-  async function handleSave() {
-    try {
-      if (isEdit) {
-        await handleEdit(user);
-      } else {
-        await handleInsert(user);
-      }
-    } catch (e) {
-      enqueueSnackbar("Não foi possível salvar", {variant: "error"});
+  function hasConfirmedPassword(user) {
+    const confirmed = user.password === watchConfirm;
+    if(!confirmed) {
+      methods.setError("confirm", {
+        type: "manual",
+        message: "As senhas devem ser iguais"
+      })
     }
+    return confirmed;
+  }
 
-    setUsers(await list());
-    onSubmit();
+  async function handleSave() {
+    if (hasConfirmedPassword(user)) {
+      try {
+        if (isEdit) {
+          await handleEdit(user);
+        } else {
+          await handleInsert(user);
+        }
+      } catch (e) {
+        enqueueSnackbar("Não foi possível salvar", {variant: "error"});
+      }
+
+      setUsers(await list());
+      onSubmit();
+    }
   }
 
   const handleUpload = async file => {
