@@ -59,7 +59,7 @@ const UsersTable = props => {
 
   const {enqueueSnackbar} = useSnackbar();
   const [users, setUsers] = useContext(UsersContext);
-  const [filter] = useContext(FilterContext);
+  const {localFilter} = useContext(FilterContext);
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -67,9 +67,9 @@ const UsersTable = props => {
   const [searchResults, setSearchResults] = useState(users);
 
   useEffect(() => {
-    const results = users.filter(user => user.name.toLowerCase().includes(filter.searchTerm.toLowerCase()));
+    const results = users.filter(user => user.name.toLowerCase().includes(localFilter.searchTerm.toLowerCase()));
     setSearchResults(results);
-  }, [filter, users]);
+  }, [localFilter, users]);
 
   useEffect(() => updateOffset(page, rowsPerPage), [page, rowsPerPage]);
 

@@ -14,7 +14,7 @@ export function EntityFormDialog(props) {
   const {onClose, isEdit} = props;
   const [entity] = useContext(EntityContext);
 
-  return <EntityStore entity={entity}>
+  return <EntityStore entity={isEdit ? entity : undefined}>
     <Dialog
       open={true}
       maxWidth={"lg"}

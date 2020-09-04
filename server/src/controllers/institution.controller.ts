@@ -45,7 +45,7 @@ export class InstitutionController {
   ): Promise<Institution> {
     delete institution.evaluations;
 
-    let {latitude, longitude} = await this.findGeolocation(institution?.address);
+    let {latitude, longitude} = await this.findGeolocation((institution || {}).address);
     institution.address = {...institution.address, latitude, longitude};
 
     return this.institutionRepository.create(institution);
@@ -87,9 +87,16 @@ export class InstitutionController {
     @param.filter(Institution) filter?: Filter<Institution>,
     @param.query.number("latitude") latitude?: number,
     @param.query.number("longitude") longitude?: number,
-    @param.query.number("distance") distance?: number,
+    @param.query.string("address") address?: string,
+    @param.query.number("distanceKm") distanceKm?: number,
   ): Promise<Institution[]> {
-    filter = this.addGeospatialFilter(filter, latitude, longitude, distance);
+    if (!latitude || !longitude) {
+      const geolocation = await this.findGeolocationFromText(address);
+      latitude = (geolocation || {}).latitude;
+      longitude = (geolocation || {}).longitude;
+    }
+
+    filter = this.addGeospatialFilter(filter, latitude, longitude, distanceKm);
 
     return this.institutionRepository.find({
       ...filter, ...{
@@ -153,7 +160,7 @@ export class InstitutionController {
       institution: Institution,
     @param.where(Institution) where?: Where<Institution>,
   ): Promise<Count> {
-    let {latitude, longitude} = await this.findGeolocation(institution?.address);
+    let {latitude, longitude} = await this.findGeolocation((institution || {}).address);
     institution.address = {...institution.address, latitude, longitude};
 
     return this.institutionRepository.updateAll(institution, where);
@@ -202,7 +209,7 @@ export class InstitutionController {
     delete institution.institutionType;
     delete institution.evaluations;
 
-    let {latitude, longitude} = await this.findGeolocation(institution?.address);
+    let {latitude, longitude} = await this.findGeolocation((institution || {}).address);
     institution.address = {...institution.address, latitude, longitude};
 
     await this.institutionRepository.updateById(id, institution);
@@ -219,7 +226,7 @@ export class InstitutionController {
     @param.path.string('id') id: string,
     @requestBody() institution: Institution,
   ): Promise<void> {
-    let {latitude, longitude} = await this.findGeolocation(institution?.address);
+    let {latitude, longitude} = await this.findGeolocation((institution || {}).address);
     institution.address = {...institution.address, latitude, longitude};
 
     await this.institutionRepository.replaceById(id, institution);
@@ -236,24 +243,34 @@ export class InstitutionController {
     await this.institutionRepository.deleteById(id);
   }
 
-  private addGeospatialFilter(filter?: Filter<Institution>, latitude?: number, longitude?: number, distance?: number) {
-    if (latitude && longitude && distance) {
+  private addGeospatialFilter(filter?: Filter<Institution>, latitude?: number, longitude?: number, distanceKm?: number) {
+    if (latitude && longitude && distanceKm) {
       let [minBound, maxBound] = getBoundsOfDistance(
         {latitude, longitude},
-        distance
+        distanceKm*1000
       );
 
       filter = {
         ...filter, where: {
-          ...filter?.where,
-          "address.latitude": {
-            lte: Number(maxBound.latitude),
-            gte: Number(minBound.latitude),
-          },
-          "address.longitude": {
-            lte: Number(maxBound.longitude),
-            gte: Number(minBound.longitude),
-          }
+          ...(filter || {}).where,
+          and: [
+            {
+              "address.latitude": {
+                between: [
+                  _.round(Number(minBound.latitude), 6),
+                  _.round(Number(maxBound.latitude), 6)
+                ]
+              }
+            },
+            {
+              "address.longitude": {
+                between: [
+                  _.round(Number(minBound.longitude), 6),
+                  _.round(Number(maxBound.longitude), 6)
+                ]
+              }
+            }
+          ]
         }
       };
     }
@@ -263,16 +280,21 @@ export class InstitutionController {
   async findGeolocation(address?: Address): Promise<{ latitude?: number, longitude?: number }> {
     let {street, city, state} = address || {};
 
+    const query = [street, city, state].filter(Boolean).join(",");
+    return await this.findGeolocationFromText(query);
+  }
+
+  private async findGeolocationFromText(query?: string) {
     let latitude, longitude;
-    if (street || city || state) {
-      const query = [street, city, state].filter(Boolean).join(",");
+
+    if (query && !_.isEmpty(query)) {
       const places = await this.geocoderService.geocode(query);
 
       if (!_.isEmpty(places)) {
-        latitude = Number(places[0].lat);
-        longitude = Number(places[0].lon);
+        latitude = _.round(Number(places[0].lat), 6);
+        longitude = _.round(Number(places[0].lon), 6);
       }
     }
-    return {latitude, longitude}
+    return {latitude, longitude};
   }
 }

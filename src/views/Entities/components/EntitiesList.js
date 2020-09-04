@@ -21,17 +21,31 @@ import {FilterContext} from "../../../contexts/filter.context";
 export function EntitiesList() {
   const {enqueueSnackbar} = useSnackbar();
   const [entities, setEntities] = useContext(EntitiesContext);
-  const [filter] = useContext(FilterContext);
+  const {localFilter, remoteFilter} = useContext(FilterContext);
   const [searchResults, setSearchResults] = useState(entities);
 
   useEffect(() => {
-    const results = entities.filter(entity => entity.name.toLowerCase().includes(filter.searchTerm.toLowerCase()));
+    const results = entities.filter(entity => entity.name.toLowerCase().includes(localFilter.searchTerm.toLowerCase()));
     setSearchResults(results);
-  }, [filter, entities]);
+  }, [localFilter, entities]);
+
+  useEffect(() => {
+    loadEntities();
+  }, [remoteFilter]);
+
+  async function loadEntities() {
+    const {distanceKm, address, location} = remoteFilter.searchAttributes || {};
+    setEntities(await list({
+      distanceKm,
+      address,
+      latitude: location?.latitude,
+      longitude: location?.longitude
+    }));
+  }
 
   async function handleDelete(entity) {
     await remove(entity);
-    setEntities(await list());
+    await loadEntities();
     enqueueSnackbar("Entidade removida com sucesso!", {variant: "success"});
   }
 

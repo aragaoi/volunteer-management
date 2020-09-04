@@ -31,10 +31,10 @@ const TextSearchInput = props => {
   const { className, onChange, style, ...rest } = props;
 
   const classes = useStyles();
-  const [filter, setFilter] = useContext(FilterContext);
+  const {localFilter, setLocalFilter} = useContext(FilterContext);
 
   function handleTextSearchChange(event) {
-    setFilter({...filter, searchTerm: event.target.value});
+    setLocalFilter({...localFilter, searchTerm: event.target.value});
   }
 
   return (

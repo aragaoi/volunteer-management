@@ -44,5 +44,5 @@ export const usePosition = (watch = false, settings = defaultSettings) => {
     settings.maximumAge,
   ]);
 
-  return {...position, error};
+  return {position, error};
 };

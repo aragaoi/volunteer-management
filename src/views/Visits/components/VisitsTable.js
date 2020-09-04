@@ -78,7 +78,7 @@ const VisitsTable = props => {
   const [visits, setVisits] = useContext(VisitsContext);
   const [users] = useContext(UsersContext);
   const [entities] = useContext(EntitiesContext);
-  const [filter] = useContext(FilterContext);
+  const {localFilter} = useContext(FilterContext);
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -87,12 +87,12 @@ const VisitsTable = props => {
 
   useEffect(() => {
     const results = visits.filter(visit => {
-      const term = filter.searchTerm.toLowerCase();
-      return visit.user.name.toLowerCase().includes(term) ||
-        visit.entity.name.toLowerCase().includes(term);
+      const term = localFilter?.searchTerm?.toLowerCase();
+      return visit?.user?.name?.toLowerCase()?.includes(term) ||
+        visit?.entity?.name?.toLowerCase()?.includes(term);
     });
     setSearchResults(results);
-  }, [filter, visits]);
+  }, [localFilter, visits]);
 
   useEffect(() => updateOffset(page, rowsPerPage), [page, rowsPerPage]);
 

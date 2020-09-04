@@ -37,35 +37,36 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const marks = [{value: 5}, {value: 100}];
+const DEFAULT_DISTANCE_KM = 10;
 
 const ProximitySearchInput = props => {
   const {className, onChange, style, ...rest} = props;
 
   const classes = useStyles();
   const {enqueueSnackbar} = useSnackbar();
-  const {latitude, longitude, error} = usePosition(true);
-  const [filter, setFilter] = useContext(FilterContext);
+  const {position, error} = usePosition(true);
+  const {remoteFilter, setRemoteFilter} = useContext(FilterContext);
   const [enabled, setEnabled] = useState(false);
   const [proximity, setProximity] = useState({
-    distance: undefined,
+    distanceKm: DEFAULT_DISTANCE_KM,
     address: "",
     location: undefined
   });
 
   function updateFilter(searchAttributes) {
-    setFilter({...filter, ...{searchAttributes}});
+    setRemoteFilter({...remoteFilter, ...{searchAttributes}});
   }
 
   const handleSwitchChange = (event) => {
     const isOn = event.target.checked;
-    const searchAttributes = isOn ? {...proximity} : undefined;
+    const searchAttributes = isOn ? {...proximity} : {};
 
     updateFilter(searchAttributes);
     setEnabled(isOn);
   };
 
   function handleDistanceChange(event, newDistance) {
-    setProximity({...proximity, distance: newDistance});
+    setProximity({...proximity, distanceKm: newDistance});
   }
 
   function handleAddressChange(event) {
@@ -76,7 +77,7 @@ const ProximitySearchInput = props => {
     if (error) {
       enqueueSnackbar("Ative a localização no navegador", {variant: "error"});
     } else {
-      setProximity({...proximity, address: "", location: {latitude, longitude}});
+      setProximity({...proximity, address: "", location: {...position}});
     }
   }
 
@@ -88,7 +89,7 @@ const ProximitySearchInput = props => {
   function handleApply() {
     const searchAttributes = {...proximity};
     updateFilter(searchAttributes);
-    onChange(searchAttributes);
+    onChange && onChange(searchAttributes);
   }
 
   return (
@@ -147,7 +148,7 @@ const ProximitySearchInput = props => {
           <Grid item xs>
             <Slider
               disabled={!enabled}
-              defaultValue={10}
+              defaultValue={DEFAULT_DISTANCE_KM}
               min={5}
               max={100}
               step={5}

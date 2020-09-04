@@ -1,4 +1,5 @@
 import * as axios from "axios";
+import * as _ from "lodash";
 import {API_BASE_URL} from "../constants";
 
 const ENDPOINT_PATH = "/institutions";
@@ -35,8 +36,10 @@ export const emptyEntity = () => (
   }
 );
 
-export async function list() {
-  const result = await api.get(ENDPOINT_PATH);
+export async function list(filter) {
+  const address = _.isEmpty(filter?.address) ? undefined : filter.address;
+  const params = {...filter, address};
+  const result = await api.get(ENDPOINT_PATH, {params});
   return result.data;
 }
 
