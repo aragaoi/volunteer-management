@@ -14,7 +14,7 @@ export function UserFormDialog(props) {
   const {onClose, isEdit} = props;
   const [user] = useContext(UserContext);
 
-  return <UserStore user={user}>
+  return <UserStore user={isEdit ? user : undefined}>
     <Dialog
       open={true}
       maxWidth={"lg"}

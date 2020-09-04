@@ -5,3 +5,4 @@ export * from './user.controller';
 export * from './visit.controller';
 export * from './user-user-evaluation.controller';
 export * from './institution-institution-evaluation.controller';
+export * from './auth.controller';
