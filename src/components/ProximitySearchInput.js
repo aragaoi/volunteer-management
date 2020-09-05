@@ -28,6 +28,9 @@ const useStyles = makeStyles(theme => ({
   icon: {
     color: theme.palette.text.secondary
   },
+  disabled: {
+    color: 'rgba(0, 0, 0, 0.38)'
+  },
   input: {
     flexGrow: 1,
     fontSize: '14px',
@@ -136,12 +139,15 @@ const ProximitySearchInput = props => {
           alignItems={"center"}
         >
           <Grid item>
-            <Typography>
+            <Typography className={clsx(!enabled && classes.disabled)}>
               Distância máx.:
             </Typography>
           </Grid>
           <Grid item>
-            <Typography variant={"caption"}>
+            <Typography
+              variant={"caption"}
+              className={clsx(!enabled && classes.disabled)}
+            >
               5km
             </Typography>
           </Grid>
@@ -158,7 +164,10 @@ const ProximitySearchInput = props => {
             />
           </Grid>
           <Grid item>
-            <Typography variant={"caption"}>
+            <Typography
+              variant={"caption"}
+              className={clsx(!enabled && classes.disabled)}
+            >
               100km
             </Typography>
           </Grid>
