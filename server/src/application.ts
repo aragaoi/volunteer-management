@@ -63,7 +63,7 @@ export class VoluntariadoServerApplication extends BootMixin(
     this.bind(TokenServiceBindings.TOKEN_SERVICE).toClass(JWTService);
 
     this.bind(TokenServiceBindings.TOKEN_SECRET).to('v01un74r14d0jwt');
-    this.bind(TokenServiceBindings.TOKEN_EXPIRES_IN).to(21600);
+    this.bind(TokenServiceBindings.TOKEN_EXPIRES_IN).to('21600');
 
     const binding = this.component(AuthorizationComponent);
     this.configure(binding.key).to({
