@@ -1,4 +1,3 @@
-export {default as Account} from './Account';
 export {default as NotFound} from './NotFound';
 export {default as Entities} from './Entities';
 export {default as Settings} from './Settings';

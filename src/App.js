@@ -9,7 +9,6 @@ import Routes from './Routes';
 import {MuiPickersUtilsProvider} from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 import {EntityStore} from "./contexts/entity.context";
-import {emptyEntity} from "./services/entity.service";
 import {UserStore} from "./contexts/user.context";
 import {LoginStore} from "./contexts/login.context";
 

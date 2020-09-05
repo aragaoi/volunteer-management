@@ -1,15 +1,10 @@
-import * as axios from "axios";
+import Axios from "axios";
 import * as _ from "lodash";
-import {API_BASE_URL} from "../constants";
 
 const ENDPOINT_PATH = "/institution-types";
 
-const api = axios.create({
-  baseURL: API_BASE_URL,
-});
-
 export async function list() {
-  const result = await api.get(ENDPOINT_PATH);
+  const result = await Axios.get(ENDPOINT_PATH);
   return result.data;
 }
 
@@ -23,7 +18,7 @@ export async function saveAll([...entityTypes]) {
     delete type.id;
   });
 
-  const result = await api.post(ENDPOINT_PATH, entityTypes);
+  const result = await Axios.post(ENDPOINT_PATH, entityTypes);
   return result.data;
 }
 
@@ -34,7 +29,7 @@ export async function deleteAll([...entityTypes]) {
 
   entityTypes.forEach(type => delete type.deleted);
 
-  const result = await api.patch(ENDPOINT_PATH, {
+  const result = await Axios.patch(ENDPOINT_PATH, {
     active: false
   }, {
     params: {

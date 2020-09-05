@@ -19,7 +19,7 @@ export function VisitForm(props) {
   const {onSubmit} = props;
 
   const {enqueueSnackbar} = useSnackbar();
-  const [login] = useContext(LoginContext);
+  const {login}  = useContext(LoginContext);
   const [entity] = useContext(EntityContext);
   const [visit, setVisit] = useContext(VisitContext);
   const [periods, setPeriods] = useState([]);

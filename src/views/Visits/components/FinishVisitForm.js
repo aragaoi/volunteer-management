@@ -23,7 +23,7 @@ export function FinishVisitForm(props) {
   const {onSubmit} = props;
 
   const {enqueueSnackbar} = useSnackbar();
-  const [login] = useContext(LoginContext);
+  const {login}  = useContext(LoginContext);
   const [visit] = useContext(VisitContext);
   const [, setVisits] = useContext(VisitsContext);
   const [evaluation, setEvaluation] = useContext(EvaluationContext);

@@ -1,12 +1,9 @@
-import * as axios from "axios";
+import Axios from "axios";
 import * as _ from "lodash";
-import {API_BASE_URL} from "../constants";
 
 const ENDPOINT_PATH = "/institutions";
 
-const api = axios.create({
-  baseURL: API_BASE_URL,
-});
+
 
 const dayPeriodDefault = () => ({
   available: false,
@@ -39,23 +36,28 @@ export const emptyEntity = () => (
 export async function list(filter) {
   const address = _.isEmpty(filter?.address) ? undefined : filter.address;
   const params = {...filter, address};
-  const result = await api.get(ENDPOINT_PATH, {params});
+  const result = await Axios.get(ENDPOINT_PATH, {params});
+  return result.data;
+}
+
+export async function get(id) {
+  const result = await Axios.get(`${ENDPOINT_PATH}/${id}`);
   return result.data;
 }
 
 export async function insert(entity) {
-  const result = await api.post(ENDPOINT_PATH, entity);
+  const result = await Axios.post(ENDPOINT_PATH, entity);
   return result.data;
 }
 
 export async function edit(entity) {
   const url = `${ENDPOINT_PATH}/${entity.id}`;
 
-  const result = await api.patch(url, entity);
+  const result = await Axios.patch(url, entity);
   return result.data;
 }
 
 export async function remove(entity) {
-  const result = await api.delete(`${ENDPOINT_PATH}/${entity.id}`);
+  const result = await Axios.delete(`${ENDPOINT_PATH}/${entity.id}`);
   return result.data;
 }

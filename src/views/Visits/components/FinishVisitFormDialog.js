@@ -31,7 +31,7 @@ export function FinishVisitFormDialog(props) {
   const classes = useStyles();
   const {onClose} = props;
 
-  const [login] = useContext(LoginContext);
+  const {login} = useContext(LoginContext);
   const [visit] = useContext(VisitContext);
 
   return <VisitStore visit={visit}>

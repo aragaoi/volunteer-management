@@ -1,12 +1,13 @@
 /* eslint-disable react/no-multi-comp */
 /* eslint-disable react/display-name */
-import React, { forwardRef } from 'react';
-import { NavLink as RouterLink } from 'react-router-dom';
+import React, {forwardRef, useContext} from 'react';
+import {NavLink as RouterLink, withRouter} from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {List, ListItem, Button, colors, Divider} from '@material-ui/core';
 import InputIcon from "@material-ui/icons/Input";
+import {LoginContext} from "../../../contexts/login.context";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -51,13 +52,18 @@ const CustomRouterLink = forwardRef((props, ref) => (
 ));
 
 const SidebarNav = props => {
-  const { pages, className, ...rest } = props;
+  const { pages, className, history } = props;
 
   const classes = useStyles();
+  const {signOut} = useContext(LoginContext);
+
+  function handleLogout() {
+    signOut();
+    history.push("/sign-in");
+  }
 
   return (
     <List
-      {...rest}
       className={clsx(classes.root, className)}
     >
       {pages.map(page => (
@@ -85,6 +91,7 @@ const SidebarNav = props => {
       >
         <Button
           className={classes.button}
+          onClick={handleLogout}
         >
           <div className={classes.icon}><InputIcon/></div>
           Sair
@@ -99,4 +106,4 @@ SidebarNav.propTypes = {
   pages: PropTypes.array.isRequired
 };
 
-export default SidebarNav;
+export default withRouter(SidebarNav);

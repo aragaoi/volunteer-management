@@ -11,7 +11,6 @@ import ApartmentIcon from "@material-ui/icons/Apartment";
 import {BasicInfo} from "../../../components/BasicInfo";
 import {makeStyles} from "@material-ui/styles";
 import {EntityContext} from "../../../contexts/entity.context";
-import {emptyVisit} from "../../../services/visit.service";
 import {VisitStore} from "../../../contexts/visit.context";
 
 const useStyles = makeStyles(theme => ({

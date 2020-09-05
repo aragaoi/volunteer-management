@@ -11,10 +11,10 @@ export type Credentials = {
   password: string;
 };
 
-export declare enum ROLES {
-  ADMIN = 'ADMIN',
-  USER = 'USER',
-  ENTITY = 'ENTITY'
+export const ROLES = {
+  ADMIN: 'ADMIN',
+  USER: 'USER',
+  ENTITY: 'ENTITY',
 }
 
 export class LoginService implements UserService<Login, Credentials> {

@@ -1,7 +1,6 @@
 import React, {useContext} from "react";
 import {UserContext} from "../../../contexts/user.context";
 import {handleImageUrl} from "../../../helpers/file";
-import Account from "../../Account";
 import Grid from "@material-ui/core/Grid";
 import {UploadButtons} from "../../../components/UploadButtons";
 import {StatesStore} from "../../../contexts/states.context";
@@ -13,6 +12,7 @@ import {useSnackbar} from "notistack";
 import {UsersContext} from "../../../contexts/users.context";
 import UserDetailsForm from "./UserDetailsForm";
 import UserCard from "./UserCard";
+import FormGrid from "../../../components/FormGrid";
 
 export function UserForm(props) {
   const {onSubmit, isEdit} = props;
@@ -81,7 +81,7 @@ export function UserForm(props) {
       noValidate
       onSubmit={methods.handleSubmit(handleSave)}
     >
-      <Account
+      <FormGrid
         onChangePassword={handlePasswordChange}
         profile={<UserCard actions={
           <Grid container justify={"center"}>
@@ -91,7 +91,7 @@ export function UserForm(props) {
         <StatesStore>
           <UserDetailsForm/>
         </StatesStore>
-      </Account>
+      </FormGrid>
     </form>
   </FormProvider>
 }

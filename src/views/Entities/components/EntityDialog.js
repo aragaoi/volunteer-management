@@ -1,5 +1,4 @@
 import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import {Divider, useMediaQuery, useTheme} from "@material-ui/core";
 import DialogActions from "@material-ui/core/DialogActions";

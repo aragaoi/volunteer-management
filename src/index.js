@@ -1,11 +1,15 @@
 import React, {createRef} from 'react';
 import ReactDOM from 'react-dom';
 
+import Axios from "axios";
 import * as serviceWorker from './serviceWorker';
 import App from './App';
 import {SnackbarProvider} from "notistack";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
+import {API_BASE_URL} from "./constants";
+
+Axios.defaults.baseURL = API_BASE_URL;
 
 const notistackRef = createRef();
 const onClickDismiss = key => () => {

@@ -1,9 +1,11 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {makeStyles} from '@material-ui/styles';
 import {Avatar, Typography} from '@material-ui/core';
+import {LoginContext} from "../../../contexts/login.context";
+import {ROLES} from "../../../services/auth.service";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -22,15 +24,22 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Profile = props => {
-  const { className, ...rest } = props;
+  const {className, ...rest} = props;
 
   const classes = useStyles();
+  const {login} = useContext(LoginContext);
 
-  const user = {
-    name: 'Usuário',
-    avatar: '/images/avatars/avatar_11.png',
-    role: 'Administrador'
-  };
+  function getRole(login) {
+    if (login.role === ROLES.ADMIN) {
+      return "Administrador";
+    }
+    if (login.role === ROLES.USER) {
+      return "Voluntário";
+    }
+    if (login.role === ROLES.ENTITY) {
+      return "Entidade";
+    }
+  }
 
   return (
     <div
@@ -41,16 +50,17 @@ const Profile = props => {
         alt="Person"
         className={classes.avatar}
         component={RouterLink}
-        src={user.avatarUrl}
+        src={login.avatarUrl}
         to="/settings"
       />
       <Typography
         className={classes.name}
         variant="h4"
       >
-        {user.name}
+        {login.name}
       </Typography>
-      <Typography variant="body2">{user.role}</Typography>
+      <Typography variant="body2">{login.email}</Typography>
+      <Typography variant="body2">{getRole(login)}</Typography>
     </div>
   );
 };

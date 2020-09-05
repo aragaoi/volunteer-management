@@ -1,4 +1,4 @@
-import React, {createContext, Dispatch, useEffect, useState} from "react";
+import React, {createContext, useState} from "react";
 
 const defaultValue = {
   searchTerm: "",

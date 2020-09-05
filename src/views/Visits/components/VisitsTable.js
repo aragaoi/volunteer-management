@@ -74,7 +74,7 @@ const VisitsTable = props => {
   const classes = useStyles();
 
   const {enqueueSnackbar} = useSnackbar();
-  const [login] = useContext(LoginContext);
+  const {login}  = useContext(LoginContext);
   const [visits, setVisits] = useContext(VisitsContext);
   const [users] = useContext(UsersContext);
   const [entities] = useContext(EntitiesContext);

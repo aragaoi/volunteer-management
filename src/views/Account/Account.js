@@ -1,63 +1,22 @@
-import React from 'react';
-import {makeStyles} from '@material-ui/styles';
-import {Grid} from '@material-ui/core';
-import * as _ from "lodash";
-import PasswordForm from "../../components/PasswordForm";
+import React, {useContext} from 'react';
+import {LoginContext} from "../../contexts/login.context";
+import {ROLES} from "../../services/auth.service";
+import {EntityForm} from "../Entities/components/EntityForm";
+import {UserForm} from "../Users/components/UserForm";
+import {EntityStore} from "../../contexts/entity.context";
+import {UserStore} from "../../contexts/user.context";
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    padding: theme.spacing(4)
-  }
-}));
-
-const Account = (props) => {
-  const classes = useStyles();
-
-  const {profile, children, onChangePassword} = props;
+export const Account = () => {
+  const {login} = useContext(LoginContext);
 
   return (
-    <div className={classes.root}>
-      <Grid
-        container
-        spacing={4}
-      >
-        <Grid
-          item
-          lg={4}
-          md={6}
-          xl={4}
-          xs={12}
-        >
-          {profile}
-        </Grid>
-        <Grid
-          lg={8}
-          md={6}
-          xl={8}
-          xs={12}
-          item
-          container
-          spacing={4}
-        >
-          {(_.isArray(children) ? children : [children]).map((child, index) =>
-            <Grid
-              key={index}
-              item
-              xs={12}
-            >
-              {child}
-            </Grid>)
-          }
-          <Grid
-            item
-            xs={12}
-          >
-            <PasswordForm onChange={onChangePassword}/>
-          </Grid>
-        </Grid>
-      </Grid>
-    </div>
+    login.role === ROLES.ENTITY ?
+      <EntityStore entity={login}>
+        <EntityForm/>
+      </EntityStore>
+      :
+      <UserStore user={login}>
+        <UserForm/>
+      </UserStore>
   );
 };
-
-export default Account;

@@ -1,4 +1,5 @@
 import React, {createContext, useState} from "react";
+import {doLogin, doLogout} from "../services/auth.service";
 
 export const LoginContext = createContext(null);
 
@@ -9,8 +10,18 @@ export const LoginStore = props => {
     isAdmin: true,
   });
 
+  const signIn = async (credentials) => {
+    const authData = await doLogin(credentials);
+    setLogin(authData);
+  }
+
+  const signOut = () => {
+    doLogout();
+    setLogin(null);
+  }
+
   return (
-    <LoginContext.Provider value={[login, setLogin]}>
+    <LoginContext.Provider value={{login, setLogin, signIn, signOut}}>
       {props.children}
     </LoginContext.Provider>
   );

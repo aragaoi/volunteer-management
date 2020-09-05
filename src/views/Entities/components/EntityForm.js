@@ -1,7 +1,6 @@
 import React, {useContext} from "react";
 import {EntityContext} from "../../../contexts/entity.context";
 import {handleImageUrl} from "../../../helpers/file";
-import Account from "../../Account";
 import {EntityCard} from "./index";
 import Grid from "@material-ui/core/Grid";
 import {UploadButtons} from "../../../components/UploadButtons";
@@ -15,6 +14,7 @@ import {buildEntitySchema} from "../../../common/validators";
 import {edit, insert, list} from "../../../services/entity.service";
 import {useSnackbar} from "notistack";
 import {EntitiesContext} from "../../../contexts/entities.context";
+import FormGrid from "../../../components/FormGrid";
 
 export function EntityForm(props) {
   const {onSubmit, isEdit} = props;
@@ -83,7 +83,7 @@ export function EntityForm(props) {
       noValidate
       onSubmit={methods.handleSubmit(handleSave)}
     >
-      <Account
+      <FormGrid
         onChangePassword={handlePasswordChange}
         profile={<EntityCard actions={
           <Grid container justify={"center"}>
@@ -96,7 +96,7 @@ export function EntityForm(props) {
           </EntityTypesStore>
         </StatesStore>
         <EntityHours/>
-      </Account>
+      </FormGrid>
     </form>
   </FormProvider>
 }

@@ -7,7 +7,7 @@ import {authenticate} from "@loopback/authentication";
 import {authorize} from "@loopback/authorization";
 import {inject, service} from "@loopback/core";
 import {SecurityBindings, UserProfile} from "@loopback/security";
-import {LoginService} from "../services/login.service";
+import {LoginService, ROLES} from "../services/login.service";
 
 @authenticate('jwt')
 @authorize({allowedRoles: ["ADMIN"]})
@@ -108,7 +108,7 @@ export class UserController {
     });
   }
 
-  @authorize({allowedRoles: ["ADMIN", "USER"]})
+  @authorize({allowedRoles: [ROLES.ADMIN, ROLES.USER]})
   @get('/users/{id}', {
     responses: {
       '200': {

@@ -1,11 +1,6 @@
-import * as axios from "axios";
-import {API_BASE_URL} from "../constants";
+import Axios from "axios";
 
 const ENDPOINT_PATH = "/visits";
-
-const api = axios.create({
-  baseURL: API_BASE_URL,
-});
 
 export const VISIT_STATUS = {
   SCHEDULED: "SCHEDULED",
@@ -39,12 +34,12 @@ export const getPeriods = () => [
 ];
 
 export async function list() {
-  const result = await api.get(ENDPOINT_PATH);
+  const result = await Axios.get(ENDPOINT_PATH);
   return result.data;
 }
 
 export async function insert(visit) {
-  const result = await api.post(ENDPOINT_PATH, visit);
+  const result = await Axios.post(ENDPOINT_PATH, visit);
   return result.data;
 }
 
@@ -79,6 +74,6 @@ export async function finishByEntity(visit) {
 async function update(visit, patch) {
   const url = `${ENDPOINT_PATH}/${visit.id}`;
 
-  const result = await api.patch(url, patch);
+  const result = await Axios.patch(url, patch);
   return result.data;
 }

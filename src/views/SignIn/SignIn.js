@@ -1,28 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { Link as RouterLink, withRouter } from 'react-router-dom';
+import React, {useContext, useEffect, useState} from 'react';
+import {Link as RouterLink, withRouter} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import validate from 'validate.js';
-import { makeStyles } from '@material-ui/styles';
-import {
-  Grid,
-  Button,
-  IconButton,
-  TextField,
-  Link,
-  Typography
-} from '@material-ui/core';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import {makeStyles} from '@material-ui/styles';
+import {Button, Grid, Link, TextField, Typography} from '@material-ui/core';
+import {LoginContext} from "../../contexts/login.context";
 
 const schema = {
   email: {
-    presence: { allowEmpty: false, message: 'is required' },
+    presence: {allowEmpty: false, message: 'is required'},
     email: true,
     length: {
       maximum: 64
     }
   },
   password: {
-    presence: { allowEmpty: false, message: 'is required' },
+    presence: {allowEmpty: false, message: 'is required'},
     length: {
       maximum: 128
     }
@@ -124,10 +117,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const SignIn = props => {
-  const { history } = props;
+  const {history} = props;
 
   const classes = useStyles();
 
+  const {signIn} = useContext(LoginContext);
   const [formState, setFormState] = useState({
     isValid: false,
     values: {},
@@ -144,10 +138,6 @@ const SignIn = props => {
       errors: errors || {}
     }));
   }, [formState.values]);
-
-  const handleBack = () => {
-    history.goBack();
-  };
 
   const handleChange = event => {
     event.persist();
@@ -168,8 +158,9 @@ const SignIn = props => {
     }));
   };
 
-  const handleSignIn = event => {
-    event.preventDefault();
+  const handleSignIn = async event => {
+    event.preventDefault()
+    await signIn(formState.values);
     history.push('/');
   };
 
@@ -181,38 +172,8 @@ const SignIn = props => {
       <Grid
         className={classes.grid}
         container
+        justify={"center"}
       >
-        <Grid
-          className={classes.quoteContainer}
-          item
-          lg={5}
-        >
-          <div className={classes.quote}>
-            <div className={classes.quoteInner}>
-              <Typography
-                className={classes.quoteText}
-                variant="h1"
-              >
-                Hella narwhal Cosby sweater McSweeney's, salvia kitsch before
-                they sold out High Life.
-              </Typography>
-              <div className={classes.person}>
-                <Typography
-                  className={classes.name}
-                  variant="body1"
-                >
-                  Takamaru Ayako
-                </Typography>
-                <Typography
-                  className={classes.bio}
-                  variant="body2"
-                >
-                  Manager at inVision
-                </Typography>
-              </div>
-            </div>
-          </div>
-        </Grid>
         <Grid
           className={classes.content}
           item
@@ -220,11 +181,6 @@ const SignIn = props => {
           xs={12}
         >
           <div className={classes.content}>
-            <div className={classes.contentHeader}>
-              <IconButton onClick={handleBack}>
-                <ArrowBackIcon />
-              </IconButton>
-            </div>
             <div className={classes.contentBody}>
               <form
                 className={classes.form}
@@ -234,48 +190,7 @@ const SignIn = props => {
                   className={classes.title}
                   variant="h2"
                 >
-                  Sign in
-                </Typography>
-                <Typography
-                  color="textSecondary"
-                  gutterBottom
-                >
-                  Sign in with social media
-                </Typography>
-                <Grid
-                  className={classes.socialButtons}
-                  container
-                  spacing={2}
-                >
-                  {/*<Grid item>*/}
-                  {/*  <Button*/}
-                  {/*    color="primary"*/}
-                  {/*    onClick={handleSignIn}*/}
-                  {/*    size="large"*/}
-                  {/*    variant="contained"*/}
-                  {/*  >*/}
-                  {/*    <FacebookIcon className={classes.socialIcon} />*/}
-                  {/*    Login with Facebook*/}
-                  {/*  </Button>*/}
-                  {/*</Grid>*/}
-                  {/*<Grid item>*/}
-                  {/*  <Button*/}
-                  {/*    onClick={handleSignIn}*/}
-                  {/*    size="large"*/}
-                  {/*    variant="contained"*/}
-                  {/*  >*/}
-                  {/*    <GoogleIcon className={classes.socialIcon} />*/}
-                  {/*    Login with Google*/}
-                  {/*  </Button>*/}
-                  {/*</Grid>*/}
-                </Grid>
-                <Typography
-                  align="center"
-                  className={classes.sugestion}
-                  color="textSecondary"
-                  variant="body1"
-                >
-                  or login with email address
+                  Entrar
                 </Typography>
                 <TextField
                   className={classes.textField}
@@ -284,7 +199,7 @@ const SignIn = props => {
                   helperText={
                     hasError('email') ? formState.errors.email[0] : null
                   }
-                  label="Email address"
+                  label="Email"
                   name="email"
                   onChange={handleChange}
                   type="text"
@@ -298,7 +213,7 @@ const SignIn = props => {
                   helperText={
                     hasError('password') ? formState.errors.password[0] : null
                   }
-                  label="PasswordForm"
+                  label="Senha"
                   name="password"
                   onChange={handleChange}
                   type="password"
@@ -313,20 +228,20 @@ const SignIn = props => {
                   size="large"
                   type="submit"
                   variant="contained"
+                  onClick={handleSignIn}
                 >
-                  Sign in now
+                  Entrar
                 </Button>
                 <Typography
                   color="textSecondary"
                   variant="body1"
                 >
-                  Don't have an account?{' '}
                   <Link
                     component={RouterLink}
                     to="/sign-up"
                     variant="h6"
                   >
-                    Sign up
+                    Criar um cadastro
                   </Link>
                 </Typography>
               </form>
