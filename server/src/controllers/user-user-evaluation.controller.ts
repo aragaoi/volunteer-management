@@ -1,35 +1,24 @@
-import {Count, CountSchema, Filter, repository, Where,} from '@loopback/repository';
-import {del, get, getModelSchemaRef, getWhereSchemaFor, param, patch, post, requestBody,} from '@loopback/rest';
+import {repository,} from '@loopback/repository';
+import {getModelSchemaRef, param, post, requestBody,} from '@loopback/rest';
 import {User, UserEvaluation,} from '../models';
 import {UserRepository} from '../repositories';
-import {service} from "@loopback/core";
+import {inject, service} from "@loopback/core";
 import {EvaluationService} from "../services";
+import {authenticate} from "@loopback/authentication";
+import {authorize} from "@loopback/authorization";
+import {SecurityBindings, UserProfile} from "@loopback/security";
+import {LoginService} from "../services/login.service";
 
+@authenticate('jwt')
 export class UserUserEvaluationController {
   constructor(
     @repository(UserRepository) protected userRepository: UserRepository,
+    @service(LoginService) protected loginService: LoginService,
     @service(EvaluationService) protected evaluationService: EvaluationService,
-  ) { }
-
-  @get('/users/{id}/evaluations', {
-    responses: {
-      '200': {
-        description: 'Array of User has many UserEvaluation',
-        content: {
-          'application/json': {
-            schema: {type: 'array', items: getModelSchemaRef(UserEvaluation)},
-          },
-        },
-      },
-    },
-  })
-  async find(
-    @param.path.string('id') id: string,
-    @param.query.object('filter') filter?: Filter<UserEvaluation>,
-  ): Promise<UserEvaluation[]> {
-    return this.userRepository.evaluations(id).find(filter);
+  ) {
   }
 
+  @authorize({allowedRoles: ["ADMIN", "ENTITY"]})
   @post('/users/{id}/evaluations', {
     responses: {
       '200': {
@@ -39,6 +28,7 @@ export class UserUserEvaluationController {
     },
   })
   async create(
+    @inject(SecurityBindings.USER) currentLogin: UserProfile,
     @param.path.string('id') id: typeof User.prototype.id,
     @requestBody({
       content: {
@@ -52,6 +42,8 @@ export class UserUserEvaluationController {
       },
     }) userEvaluation: Omit<UserEvaluation, 'id'>,
   ): Promise<UserEvaluation> {
+    this.loginService.validateIdConsistency(userEvaluation.entityId, currentLogin);
+
     const result = await this.userRepository.evaluations(id).create(userEvaluation);
 
     const userEvaluations = await this.userRepository.evaluations(id).find({
@@ -61,43 +53,5 @@ export class UserUserEvaluationController {
     const averageRating = this.evaluationService.calculateAverageRating(userEvaluations);
     await this.userRepository.updateById(id, {rating: averageRating});
     return result;
-  }
-
-  @patch('/users/{id}/evaluations', {
-    responses: {
-      '200': {
-        description: 'User.UserEvaluation PATCH success count',
-        content: {'application/json': {schema: CountSchema}},
-      },
-    },
-  })
-  async patch(
-    @param.path.string('id') id: string,
-    @requestBody({
-      content: {
-        'application/json': {
-          schema: getModelSchemaRef(UserEvaluation, {partial: true}),
-        },
-      },
-    })
-    userEvaluation: Partial<UserEvaluation>,
-    @param.query.object('where', getWhereSchemaFor(UserEvaluation)) where?: Where<UserEvaluation>,
-  ): Promise<Count> {
-    return this.userRepository.evaluations(id).patch(userEvaluation, where);
-  }
-
-  @del('/users/{id}/evaluations', {
-    responses: {
-      '200': {
-        description: 'User.UserEvaluation DELETE success count',
-        content: {'application/json': {schema: CountSchema}},
-      },
-    },
-  })
-  async delete(
-    @param.path.string('id') id: string,
-    @param.query.object('where', getWhereSchemaFor(UserEvaluation)) where?: Where<UserEvaluation>,
-  ): Promise<Count> {
-    return this.userRepository.evaluations(id).delete(where);
   }
 }

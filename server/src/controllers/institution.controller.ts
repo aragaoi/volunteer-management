@@ -1,16 +1,24 @@
-import {Count, CountSchema, Filter, FilterExcludingWhere, repository, Where,} from '@loopback/repository';
-import {del, get, getModelSchemaRef, param, patch, post, put, requestBody,} from '@loopback/rest';
+import {Filter, FilterExcludingWhere, repository, Where,} from '@loopback/repository';
+import {del, get, getModelSchemaRef, HttpErrors, param, patch, post, requestBody,} from '@loopback/rest';
 import {Address, Institution} from '../models';
 import {InstitutionRepository} from '../repositories';
 import {Geocoder} from "../services";
-import {inject} from "@loopback/core";
+import {inject, service} from "@loopback/core";
 import * as _ from "lodash";
 import {getBoundsOfDistance} from 'geolib';
+import {authorize} from '@loopback/authorization';
+import {authenticate} from "@loopback/authentication";
+import {SecurityBindings, UserProfile} from "@loopback/security";
+import {LoginService, ROLES} from "../services/login.service";
 
+@authenticate('jwt')
+@authorize({allowedRoles: ["ADMIN"]})
 export class InstitutionController {
   constructor(
     @repository(InstitutionRepository)
     public institutionRepository: InstitutionRepository,
+    @service(LoginService)
+    public loginService: LoginService,
     @inject('services.Geocoder')
     protected geocoderService: Geocoder,
   ) {
@@ -43,7 +51,10 @@ export class InstitutionController {
     })
       institution: Omit<Institution, 'id'>,
   ): Promise<Institution> {
+    await this.validateUnique(institution);
+
     delete institution.evaluations;
+    delete institution.role;
 
     let {latitude, longitude} = await this.findGeolocation((institution || {}).address);
     institution.address = {...institution.address, latitude, longitude};
@@ -51,20 +62,8 @@ export class InstitutionController {
     return this.institutionRepository.create(institution);
   }
 
-  @get('/institutions/count', {
-    responses: {
-      '200': {
-        description: 'Institution model count',
-        content: {'application/json': {schema: CountSchema}},
-      },
-    },
-  })
-  async count(
-    @param.where(Institution) where?: Where<Institution>,
-  ): Promise<Count> {
-    return this.institutionRepository.count(where);
-  }
-
+  @authenticate.skip()
+  @authorize.skip()
   @get('/institutions', {
     responses: {
       '200': {
@@ -141,31 +140,7 @@ export class InstitutionController {
     });
   }
 
-  @patch('/institutions', {
-    responses: {
-      '200': {
-        description: 'Institution PATCH success count',
-        content: {'application/json': {schema: CountSchema}},
-      },
-    },
-  })
-  async updateAll(
-    @requestBody({
-      content: {
-        'application/json': {
-          schema: getModelSchemaRef(Institution, {partial: true}),
-        },
-      },
-    })
-      institution: Institution,
-    @param.where(Institution) where?: Where<Institution>,
-  ): Promise<Count> {
-    let {latitude, longitude} = await this.findGeolocation((institution || {}).address);
-    institution.address = {...institution.address, latitude, longitude};
-
-    return this.institutionRepository.updateAll(institution, where);
-  }
-
+  @authorize({allowedRoles: ["ADMIN", "ENTITY"]})
   @get('/institutions/{id}', {
     responses: {
       '200': {
@@ -182,12 +157,16 @@ export class InstitutionController {
     },
   })
   async findById(
+    @inject(SecurityBindings.USER) currentLogin: UserProfile,
     @param.path.string('id') id: string,
-    @param.filter(Institution, {exclude: 'where'}) filter?: FilterExcludingWhere<Institution>
+    @param.filter(Institution, {exclude: 'where'}) filter?: FilterExcludingWhere<Institution>,
   ): Promise<Institution> {
+    this.loginService.validateIdConsistency(id, currentLogin);
+
     return this.institutionRepository.findById(id, {...filter, ...{include: [{relation: "institutionType"}]}});
   }
 
+  @authorize({allowedRoles: ["ADMIN", "ENTITY"]})
   @patch('/institutions/{id}', {
     responses: {
       '204': {
@@ -196,6 +175,7 @@ export class InstitutionController {
     },
   })
   async updateById(
+    @inject(SecurityBindings.USER) currentLogin: UserProfile,
     @param.path.string('id') id: string,
     @requestBody({
       content: {
@@ -206,30 +186,17 @@ export class InstitutionController {
     })
       institution: Institution,
   ): Promise<void> {
+    this.loginService.validateIdConsistency(id, currentLogin);
+    await this.validateUnique(institution, id);
+
     delete institution.institutionType;
     delete institution.evaluations;
+    delete institution.role;
 
     let {latitude, longitude} = await this.findGeolocation((institution || {}).address);
     institution.address = {...institution.address, latitude, longitude};
 
     await this.institutionRepository.updateById(id, institution);
-  }
-
-  @put('/institutions/{id}', {
-    responses: {
-      '204': {
-        description: 'Institution PUT success',
-      },
-    },
-  })
-  async replaceById(
-    @param.path.string('id') id: string,
-    @requestBody() institution: Institution,
-  ): Promise<void> {
-    let {latitude, longitude} = await this.findGeolocation((institution || {}).address);
-    institution.address = {...institution.address, latitude, longitude};
-
-    await this.institutionRepository.replaceById(id, institution);
   }
 
   @del('/institutions/{id}', {
@@ -247,7 +214,7 @@ export class InstitutionController {
     if (latitude && longitude && distanceKm) {
       let [minBound, maxBound] = getBoundsOfDistance(
         {latitude, longitude},
-        distanceKm*1000
+        distanceKm * 1000
       );
 
       filter = {
@@ -296,5 +263,20 @@ export class InstitutionController {
       }
     }
     return {latitude, longitude};
+  }
+
+  private async validateUnique(institution: Omit<Institution, "id">, id?: string) {
+    const where: Where<Institution> = {email: institution.email};
+
+    if (!!id) {
+      where.id = {
+        neq: id
+      }
+    }
+
+    const existing = await this.institutionRepository.count(where);
+    if (existing.count > 0) {
+      throw new HttpErrors.BadRequest("Já existe uma entidade com esse email");
+    }
   }
 }

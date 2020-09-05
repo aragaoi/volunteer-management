@@ -1,7 +1,8 @@
-import {Entity, model, property, belongsTo, hasMany} from '@loopback/repository';
+import {belongsTo, Entity, hasMany, model, property} from '@loopback/repository';
 import {InstitutionType} from './institution-type.model';
 import {UserEvaluation} from './user-evaluation.model';
 import {InstitutionEvaluation} from './institution-evaluation.model';
+import {UserCredentials} from "@loopback/authentication-jwt";
 
 export type Address = {
   street?: string,
@@ -26,7 +27,13 @@ export class Institution extends Entity {
     id: true,
     generated: true,
   })
-  id?: string;
+  id: string;
+
+  @property({
+    type: 'string',
+    default: "ENTITY"
+  })
+  role?: string;
 
   @property({
     type: 'string',
@@ -89,10 +96,10 @@ export class Institution extends Entity {
   institutionTypeId: string;
 
   @hasMany(() => UserEvaluation, {keyTo: 'entityId'})
-  userEvaluations: UserEvaluation[];
+  userEvaluations?: UserEvaluation[];
 
   @hasMany(() => InstitutionEvaluation, {keyTo: 'entityId'})
-  evaluations: InstitutionEvaluation[];
+  evaluations?: InstitutionEvaluation[];
   // Define well-known properties here
 
   // Indexer property to allow additional data

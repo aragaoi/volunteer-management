@@ -44,6 +44,7 @@
   "dependencies": {
     "@loopback/authentication": "^6.0.1",
     "@loopback/authentication-jwt": "^0.6.0",
+    "@loopback/authorization": "^0.6.6",
     "@loopback/boot": "^2.5.0",
     "@loopback/core": "^2.9.4",
     "@loopback/repository": "^2.11.1",
@@ -67,7 +68,7 @@
     "eslint": "^7.7.0",
     "nodemon": "^2.0.4",
     "source-map-support": "^0.5.19",
-    "typescript": "~3.9.7"
+    "typescript": "^4.0.2"
   },
   "nodemonConfig": {
     "watch": [

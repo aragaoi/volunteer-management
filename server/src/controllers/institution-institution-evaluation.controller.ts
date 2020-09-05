@@ -1,53 +1,24 @@
-import {
-  Count,
-  CountSchema,
-  Filter,
-  repository,
-  Where,
-} from '@loopback/repository';
-import {
-  del,
-  get,
-  getModelSchemaRef,
-  getWhereSchemaFor,
-  param,
-  patch,
-  post,
-  requestBody,
-} from '@loopback/rest';
-import {
-  Institution,
-  InstitutionEvaluation,
-} from '../models';
+import {repository,} from '@loopback/repository';
+import {getModelSchemaRef, param, post, requestBody,} from '@loopback/rest';
+import {Institution, InstitutionEvaluation,} from '../models';
 import {InstitutionRepository} from '../repositories';
-import {service} from "@loopback/core";
+import {inject, service} from "@loopback/core";
 import {EvaluationService} from "../services";
+import {authenticate} from "@loopback/authentication";
+import {authorize} from "@loopback/authorization";
+import {SecurityBindings, UserProfile} from "@loopback/security";
+import {LoginService} from "../services/login.service";
 
+@authenticate('jwt')
 export class InstitutionInstitutionEvaluationController {
   constructor(
     @repository(InstitutionRepository) protected institutionRepository: InstitutionRepository,
+    @service(LoginService) protected loginService: LoginService,
     @service(EvaluationService) protected evaluationService: EvaluationService,
-  ) { }
-
-  @get('/institutions/{id}/evaluations', {
-    responses: {
-      '200': {
-        description: 'Array of Institution has many InstitutionEvaluation',
-        content: {
-          'application/json': {
-            schema: {type: 'array', items: getModelSchemaRef(InstitutionEvaluation)},
-          },
-        },
-      },
-    },
-  })
-  async find(
-    @param.path.string('id') id: string,
-    @param.query.object('filter') filter?: Filter<InstitutionEvaluation>,
-  ): Promise<InstitutionEvaluation[]> {
-    return this.institutionRepository.evaluations(id).find(filter);
+  ) {
   }
 
+  @authorize({allowedRoles: ["ADMIN", "USER"]})
   @post('/institutions/{id}/evaluations', {
     responses: {
       '200': {
@@ -57,6 +28,7 @@ export class InstitutionInstitutionEvaluationController {
     },
   })
   async create(
+    @inject(SecurityBindings.USER) currentLogin: UserProfile,
     @param.path.string('id') id: typeof Institution.prototype.id,
     @requestBody({
       content: {
@@ -70,6 +42,8 @@ export class InstitutionInstitutionEvaluationController {
       },
     }) institutionEvaluation: Omit<InstitutionEvaluation, 'id'>,
   ): Promise<InstitutionEvaluation> {
+    this.loginService.validateIdConsistency(institutionEvaluation.userId, currentLogin);
+
     const result = await this.institutionRepository.evaluations(id).create(institutionEvaluation);
 
     const institutionEvaluations = await this.institutionRepository.evaluations(id).find({
@@ -79,43 +53,5 @@ export class InstitutionInstitutionEvaluationController {
     const averageRating = this.evaluationService.calculateAverageRating(institutionEvaluations);
     await this.institutionRepository.updateById(id, {rating: averageRating});
     return result;
-  }
-
-  @patch('/institutions/{id}/evaluations', {
-    responses: {
-      '200': {
-        description: 'Institution.InstitutionEvaluation PATCH success count',
-        content: {'application/json': {schema: CountSchema}},
-      },
-    },
-  })
-  async patch(
-    @param.path.string('id') id: string,
-    @requestBody({
-      content: {
-        'application/json': {
-          schema: getModelSchemaRef(InstitutionEvaluation, {partial: true}),
-        },
-      },
-    })
-    institutionEvaluation: Partial<InstitutionEvaluation>,
-    @param.query.object('where', getWhereSchemaFor(InstitutionEvaluation)) where?: Where<InstitutionEvaluation>,
-  ): Promise<Count> {
-    return this.institutionRepository.evaluations(id).patch(institutionEvaluation, where);
-  }
-
-  @del('/institutions/{id}/evaluations', {
-    responses: {
-      '200': {
-        description: 'Institution.InstitutionEvaluation DELETE success count',
-        content: {'application/json': {schema: CountSchema}},
-      },
-    },
-  })
-  async delete(
-    @param.path.string('id') id: string,
-    @param.query.object('where', getWhereSchemaFor(InstitutionEvaluation)) where?: Where<InstitutionEvaluation>,
-  ): Promise<Count> {
-    return this.institutionRepository.evaluations(id).delete(where);
   }
 }

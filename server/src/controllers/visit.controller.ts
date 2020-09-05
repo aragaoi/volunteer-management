@@ -1,31 +1,25 @@
-import {
-  Count,
-  CountSchema,
-  Filter,
-  FilterExcludingWhere,
-  repository,
-  Where,
-} from '@loopback/repository';
-import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
-  put,
-  del,
-  requestBody,
-} from '@loopback/rest';
+import {Filter, repository,} from '@loopback/repository';
+import {get, getModelSchemaRef, param, patch, post, requestBody,} from '@loopback/rest';
 import {Visit} from '../models';
 import {VisitRepository} from '../repositories';
+import {authenticate} from "@loopback/authentication";
+import {authorize} from "@loopback/authorization";
+import {inject, service} from "@loopback/core";
+import {LoginService, ROLES} from "../services/login.service";
+import {SecurityBindings, UserProfile} from "@loopback/security";
+import { merge } from 'lodash';
 
+@authenticate('jwt')
+@authorize({allowedRoles: ["ADMIN"]})
 export class VisitController {
   constructor(
     @repository(VisitRepository)
     public visitRepository: VisitRepository,
+    @service(LoginService) protected loginService: LoginService,
   ) {
   }
 
+  @authorize({allowedRoles: ["ADMIN", "USER"]})
   @post('/visits', {
     responses: {
       '200': {
@@ -35,6 +29,7 @@ export class VisitController {
     },
   })
   async create(
+    @inject(SecurityBindings.USER) currentLogin: UserProfile,
     @requestBody({
       content: {
         'application/json': {
@@ -47,23 +42,12 @@ export class VisitController {
     })
       visit: Omit<Visit, 'id'>,
   ): Promise<Visit> {
+    this.loginService.validateIdConsistency(visit.userId, currentLogin);
+
     return this.visitRepository.create(visit);
   }
 
-  @get('/visits/count', {
-    responses: {
-      '200': {
-        description: 'Visit model count',
-        content: {'application/json': {schema: CountSchema}},
-      },
-    },
-  })
-  async count(
-    @param.where(Visit) where?: Where<Visit>,
-  ): Promise<Count> {
-    return this.visitRepository.count(where);
-  }
-
+  @authorize({allowedRoles: ["ADMIN", "USER", "ENTITY"]})
   @get('/visits', {
     responses: {
       '200': {
@@ -80,10 +64,19 @@ export class VisitController {
     },
   })
   async find(
+    @inject(SecurityBindings.USER) currentLogin: UserProfile,
     @param.filter(Visit) filter?: Filter<Visit>,
   ): Promise<Visit[]> {
+    const role = currentLogin.role;
+    const filterByAuth = role === ROLES.ADMIN ? {} : {
+      [role === ROLES.USER ? "userId" : "entityId"] : currentLogin.id
+    };
+
+    filter = merge(filter, {where: filterByAuth});
+
     return this.visitRepository.find({
-      ...filter, ...{
+      ...filter,
+      ...{
         include: [
           {
             relation: "user",
@@ -109,47 +102,7 @@ export class VisitController {
     });
   }
 
-  @patch('/visits', {
-    responses: {
-      '200': {
-        description: 'Visit PATCH success count',
-        content: {'application/json': {schema: CountSchema}},
-      },
-    },
-  })
-  async updateAll(
-    @requestBody({
-      content: {
-        'application/json': {
-          schema: getModelSchemaRef(Visit, {partial: true}),
-        },
-      },
-    })
-      visit: Visit,
-    @param.where(Visit) where?: Where<Visit>,
-  ): Promise<Count> {
-    return this.visitRepository.updateAll(visit, where);
-  }
-
-  @get('/visits/{id}', {
-    responses: {
-      '200': {
-        description: 'Visit model instance',
-        content: {
-          'application/json': {
-            schema: getModelSchemaRef(Visit, {includeRelations: true}),
-          },
-        },
-      },
-    },
-  })
-  async findById(
-    @param.path.string('id') id: string,
-    @param.filter(Visit, {exclude: 'where'}) filter?: FilterExcludingWhere<Visit>
-  ): Promise<Visit> {
-    return this.visitRepository.findById(id, filter);
-  }
-
+  @authorize({allowedRoles: ["ADMIN", "USER", "ENTITY"]})
   @patch('/visits/{id}', {
     responses: {
       '204': {
@@ -158,6 +111,7 @@ export class VisitController {
     },
   })
   async updateById(
+    @inject(SecurityBindings.USER) currentLogin: UserProfile,
     @param.path.string('id') id: string,
     @requestBody({
       content: {
@@ -168,31 +122,10 @@ export class VisitController {
     })
       visit: Visit,
   ): Promise<void> {
+    const role = currentLogin.role;
+    const referenceId = currentLogin[role === ROLES.USER ? "userId" : "entityId"];
+    this.loginService.validateIdConsistency(referenceId, currentLogin);
+
     await this.visitRepository.updateById(id, visit);
-  }
-
-  @put('/visits/{id}', {
-    responses: {
-      '204': {
-        description: 'Visit PUT success',
-      },
-    },
-  })
-  async replaceById(
-    @param.path.string('id') id: string,
-    @requestBody() visit: Visit,
-  ): Promise<void> {
-    await this.visitRepository.replaceById(id, visit);
-  }
-
-  @del('/visits/{id}', {
-    responses: {
-      '204': {
-        description: 'Visit DELETE success',
-      },
-    },
-  })
-  async deleteById(@param.path.string('id') id: string): Promise<void> {
-    await this.visitRepository.deleteById(id);
   }
 }

@@ -1,6 +1,7 @@
-import {Entity, model, property, hasMany} from '@loopback/repository';
+import {Entity, hasMany, model, property} from '@loopback/repository';
 import {UserEvaluation} from './user-evaluation.model';
 import {InstitutionEvaluation} from './institution-evaluation.model';
+import {UserCredentials} from "@loopback/authentication-jwt";
 
 @model({
   settings: {
@@ -17,7 +18,13 @@ export class User extends Entity {
     id: true,
     generated: true,
   })
-  id?: string;
+  id: string;
+
+  @property({
+    type: 'string',
+    default: "USER"
+  })
+  role?: string;
 
   @property({
     type: 'string',
@@ -68,10 +75,10 @@ export class User extends Entity {
   address?: object;
 
   @hasMany(() => UserEvaluation)
-  evaluations: UserEvaluation[];
+  evaluations?: UserEvaluation[];
 
   @hasMany(() => InstitutionEvaluation)
-  institutionEvaluations: InstitutionEvaluation[];
+  institutionEvaluations?: InstitutionEvaluation[];
   // Define well-known properties here
 
   // Indexer property to allow additional data

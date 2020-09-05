@@ -1,12 +1,22 @@
-import {Count, CountSchema, Filter, FilterExcludingWhere, repository, Where,} from '@loopback/repository';
-import {del, get, getModelSchemaRef, param, patch, post, put, requestBody,} from '@loopback/rest';
+import {Filter, FilterExcludingWhere, repository, Where,} from '@loopback/repository';
+import {del, get, getModelSchemaRef, HttpErrors, param, patch, post, requestBody,} from '@loopback/rest';
 import {User} from '../models';
 import {UserRepository} from '../repositories';
+import {genSalt, hash} from "bcryptjs";
+import {authenticate} from "@loopback/authentication";
+import {authorize} from "@loopback/authorization";
+import {inject, service} from "@loopback/core";
+import {SecurityBindings, UserProfile} from "@loopback/security";
+import {LoginService} from "../services/login.service";
 
+@authenticate('jwt')
+@authorize({allowedRoles: ["ADMIN"]})
 export class UserController {
   constructor(
     @repository(UserRepository)
     public userRepository: UserRepository,
+    @service(LoginService)
+    public loginService: LoginService,
   ) {
   }
 
@@ -31,22 +41,11 @@ export class UserController {
     })
       user: Omit<User, 'id'>,
   ): Promise<User> {
+    await this.validateUnique(user);
     delete user.evaluations;
-    return this.userRepository.create(user);
-  }
 
-  @get('/users/count', {
-    responses: {
-      '200': {
-        description: 'User model count',
-        content: {'application/json': {schema: CountSchema}},
-      },
-    },
-  })
-  async count(
-    @param.where(User) where?: Where<User>,
-  ): Promise<Count> {
-    return this.userRepository.count(where);
+    user.password = await hash(user.password, await genSalt());
+    return this.userRepository.create(user);
   }
 
   @get('/users', {
@@ -109,28 +108,7 @@ export class UserController {
     });
   }
 
-  @patch('/users', {
-    responses: {
-      '200': {
-        description: 'User PATCH success count',
-        content: {'application/json': {schema: CountSchema}},
-      },
-    },
-  })
-  async updateAll(
-    @requestBody({
-      content: {
-        'application/json': {
-          schema: getModelSchemaRef(User, {partial: true}),
-        },
-      },
-    })
-      user: User,
-    @param.where(User) where?: Where<User>,
-  ): Promise<Count> {
-    return this.userRepository.updateAll(user, where);
-  }
-
+  @authorize({allowedRoles: ["ADMIN", "USER"]})
   @get('/users/{id}', {
     responses: {
       '200': {
@@ -144,12 +122,16 @@ export class UserController {
     },
   })
   async findById(
+    @inject(SecurityBindings.USER) currentLogin: UserProfile,
     @param.path.string('id') id: string,
     @param.filter(User, {exclude: 'where'}) filter?: FilterExcludingWhere<User>
   ): Promise<User> {
+    this.loginService.validateIdConsistency(id, currentLogin);
+
     return this.userRepository.findById(id, filter);
   }
 
+  @authorize({allowedRoles: ["ADMIN", "USER"]})
   @patch('/users/{id}', {
     responses: {
       '204': {
@@ -158,6 +140,7 @@ export class UserController {
     },
   })
   async updateById(
+    @inject(SecurityBindings.USER) currentLogin: UserProfile,
     @param.path.string('id') id: string,
     @requestBody({
       content: {
@@ -168,22 +151,15 @@ export class UserController {
     })
       user: User,
   ): Promise<void> {
-    delete user.evaluations;
-    await this.userRepository.updateById(id, user);
-  }
+    this.loginService.validateIdConsistency(id, currentLogin);
+    await this.validateUnique(user, id);
 
-  @put('/users/{id}', {
-    responses: {
-      '204': {
-        description: 'User PUT success',
-      },
-    },
-  })
-  async replaceById(
-    @param.path.string('id') id: string,
-    @requestBody() user: User,
-  ): Promise<void> {
-    await this.userRepository.replaceById(id, user);
+    delete user.evaluations;
+
+    if (user.password) {
+      user.password = await hash(user.password, await genSalt());
+    }
+    await this.userRepository.updateById(id, user);
   }
 
   @del('/users/{id}', {
@@ -195,5 +171,20 @@ export class UserController {
   })
   async deleteById(@param.path.string('id') id: string): Promise<void> {
     await this.userRepository.deleteById(id);
+  }
+
+  private async validateUnique(user: Omit<User, "id">, id?: string) {
+    const where: Where<User> = {email: user.email};
+
+    if (!!id) {
+      where.id = {
+        neq: id
+      }
+    }
+
+    const existing = await this.userRepository.count(where);
+    if (existing.count > 0) {
+      throw new HttpErrors.BadRequest("Já existe um usuário com esse email");
+    }
   }
 }

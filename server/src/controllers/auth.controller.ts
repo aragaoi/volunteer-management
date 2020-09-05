@@ -1,18 +1,13 @@
 import {authenticate, TokenService} from '@loopback/authentication';
-import {
-  Credentials,
-  MyUserService,
-  TokenServiceBindings,
-  User,
-  UserRepository,
-  UserServiceBindings,
-} from '@loopback/authentication-jwt';
+import {get, getModelSchemaRef, HttpErrors, post, requestBody,} from '@loopback/rest';
+import {Credentials, TokenServiceBindings, UserServiceBindings,} from '@loopback/authentication-jwt';
 import {inject} from '@loopback/core';
-import {model, property, repository} from '@loopback/repository';
-import {get, getModelSchemaRef, post, requestBody} from '@loopback/rest';
-import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
+import {model, property, repository, Where} from '@loopback/repository';
+import {SecurityBindings, UserProfile} from '@loopback/security';
 import {genSalt, hash} from 'bcryptjs';
-import _ from 'lodash';
+import {LoginService} from "../services/login.service";
+import {User} from "../models";
+import {UserRepository} from "../repositories";
 
 @model()
 export class NewUserRequest extends User {
@@ -33,7 +28,7 @@ const CredentialsSchema = {
     },
     password: {
       type: 'string',
-      minLength: 8,
+      minLength: 6,
     },
   },
 };
@@ -51,7 +46,7 @@ export class AuthController {
     @inject(TokenServiceBindings.TOKEN_SERVICE)
     public jwtService: TokenService,
     @inject(UserServiceBindings.USER_SERVICE)
-    public userService: MyUserService,
+    public loginService: LoginService,
     @inject(SecurityBindings.USER, {optional: true})
     public user: UserProfile,
     @repository(UserRepository) protected userRepository: UserRepository,
@@ -81,31 +76,13 @@ export class AuthController {
     @requestBody(CredentialsRequestBody) credentials: Credentials,
   ): Promise<{ token: string }> {
     // ensure the user exists, and the password is correct
-    const user = await this.userService.verifyCredentials(credentials);
+    const user = await this.loginService.verifyCredentials(credentials);
     // convert a User object into a UserProfile object (reduced set of properties)
-    const userProfile = this.userService.convertToUserProfile(user);
+    const userProfile = this.loginService.convertToUserProfile(user);
 
     // create a JSON Web Token based on the user profile
     const token = await this.jwtService.generateToken(userProfile);
     return {token};
-  }
-
-  @authenticate('jwt')
-  @get('/auth/whoAmI', {
-    responses: {
-      '200': {
-        description: '',
-        schema: {
-          type: 'string',
-        },
-      },
-    },
-  })
-  async whoAmI(
-    @inject(SecurityBindings.USER)
-      currentUserProfile: UserProfile,
-  ): Promise<string> {
-    return currentUserProfile[securityId];
   }
 
   @post('/auth/signup', {
@@ -134,13 +111,37 @@ export class AuthController {
     })
       newUserRequest: NewUserRequest,
   ): Promise<User> {
-    const password = await hash(newUserRequest.password, await genSalt());
-    const savedUser = await this.userRepository.create(
-      _.omit(newUserRequest, 'password'),
-    );
+    await this.validateUnique(newUserRequest);
 
-    await this.userRepository.userCredentials(savedUser.id).create({password});
+    delete newUserRequest.role;
+    newUserRequest.password = await hash(newUserRequest.password, await genSalt());
+    return await this.userRepository.create(newUserRequest);
+  }
 
-    return savedUser;
+  @authenticate('jwt')
+  @get('/auth/whoAmI', {
+    responses: {
+      '200': {
+        description: '',
+        schema: {
+          type: 'string',
+        },
+      },
+    },
+  })
+  async whoAmI(
+    @inject(SecurityBindings.USER)
+      currentUserProfile: UserProfile,
+  ): Promise<UserProfile> {
+    return currentUserProfile;
+  }
+
+  private async validateUnique(user: User) {
+    const where: Where<User> = {email: user.email};
+
+    const existing = await this.userRepository.count(where);
+    if (existing.count > 0) {
+      throw new HttpErrors.BadRequest("Já existe um usuário com esse email");
+    }
   }
 }
