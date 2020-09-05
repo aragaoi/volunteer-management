@@ -199,6 +199,7 @@ const UsersTable = props => {
           rowsPerPage={rowsPerPage}
           rowsPerPageOptions={[5, 10, 25]}
           labelRowsPerPage="Itens por página"
+          labelDisplayedRows={({count, page }) => `Pág. ${page+1} de ${Math.ceil(count/rowsPerPage)+1}`}
         />
       </CardActions>
     </Card>

@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import {makeStyles} from '@material-ui/styles';
 
 import {TextSearchInput} from 'components';
+import Grid from "@material-ui/core/Grid";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -26,7 +27,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const VisitsToolbar = props => {
-  const { className, ...rest } = props;
+  const {className, ...rest} = props;
 
   const classes = useStyles();
 
@@ -35,15 +36,19 @@ const VisitsToolbar = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-      <div className={classes.actions}>
-        <span className={classes.spacer} />
-      </div>
-      <div className={classes.row}>
-        <TextSearchInput
-          className={classes.searchInput}
-          placeholder="Buscar visitas"
-        />
-      </div>
+      <Grid container spacing={2} alignItems="center">
+        <Grid item xs={12}>
+          <div className={classes.actions}>
+            <span className={classes.spacer}/>
+          </div>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <TextSearchInput
+            className={classes.searchInput}
+            placeholder="Buscar visitas"
+          />
+        </Grid>
+      </Grid>
     </div>
   );
 };
