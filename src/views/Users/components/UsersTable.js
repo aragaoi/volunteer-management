@@ -58,7 +58,7 @@ const UsersTable = props => {
   const classes = useStyles();
 
   const {enqueueSnackbar} = useSnackbar();
-  const [users, setUsers] = useContext(UsersContext);
+  const {users, setUsers} = useContext(UsersContext);
   const {localFilter} = useContext(FilterContext);
 
   const [page, setPage] = useState(0);

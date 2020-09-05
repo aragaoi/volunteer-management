@@ -11,18 +11,15 @@ import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
+import {Typography} from "@material-ui/core";
+import {ShowByRole} from "../../../components/ShowByRole";
+import {ROLES} from "../../../services/auth.service";
 
 const useStyles = makeStyles(theme => ({
   root: {},
   actions: {
     display: 'flex',
     alignItems: 'center'
-  },
-  row: {
-    height: '42px',
-    display: 'flex',
-    alignItems: 'center',
-    marginTop: theme.spacing(2)
   },
   spacer: {
     flexGrow: 1
@@ -47,42 +44,54 @@ const EntitiesToolbar = props => {
       className={clsx(classes.root, className)}
     >
       <Grid container spacing={2} alignItems="center">
-        <Grid item xs={12}>
-          <div className={classes.actions}>
-            <span className={classes.spacer}/>
-            <DialogButtonHandler
-              color="primary"
-              variant="contained"
-              actionText={"Adicionar entidade"}
-              dialog={
-                <EntityFormDialog/>
-              }
-            />
-          </div>
-        </Grid>
-        <Grid item xs={10} md={6}>
-          <TextSearchInput
-            className={classes.searchInput}
-            placeholder="Buscar entidades"
-          />
-        </Grid>
-        <Grid item xs={2} md={6}>
-          <Button
-            className={classes.moreFilters}
-            size="small"
-            startIcon={
-              showFilters ? <ArrowUpwardIcon/> : <ArrowDownwardIcon/>
-            }
-            onClick={() => setShowFilters((prev) => !prev)}
+        <Grid item xs={6}>
+          <Typography
+            className={classes.title}
+            variant="h2"
           >
-            Filtros
-          </Button>
+            Entidades
+          </Typography>
         </Grid>
-        {showFilters && <Grid item xs={12} md={6}>
-          <ProximitySearchInput
-            className={classes.searchInput}
-          />
-        </Grid>}
+        <Grid item xs={6}>
+          <ShowByRole roles={[ROLES.ADMIN]}>
+            <div className={classes.actions}>
+              <span className={classes.spacer}/>
+              <DialogButtonHandler
+                color="primary"
+                variant="contained"
+                actionText={"Adicionar entidade"}
+                dialog={
+                  <EntityFormDialog/>
+                }
+              />
+            </div>
+          </ShowByRole>
+        </Grid>
+        <Grid item container spacing={2} xs={12} md={6} alignItems="center">
+          <Grid item xs={10}>
+            <TextSearchInput
+              className={classes.searchInput}
+              placeholder="Buscar entidades"
+            />
+          </Grid>
+          <Grid item xs={2}>
+            <Button
+              className={classes.moreFilters}
+              size="small"
+              startIcon={
+                showFilters ? <ArrowUpwardIcon/> : <ArrowDownwardIcon/>
+              }
+              onClick={() => setShowFilters((prev) => !prev)}
+            >
+              Filtros
+            </Button>
+          </Grid>
+          {showFilters && <Grid item xs={12}>
+            <ProximitySearchInput
+              className={classes.searchInput}
+            />
+          </Grid>}
+        </Grid>
       </Grid>
     </div>
   );

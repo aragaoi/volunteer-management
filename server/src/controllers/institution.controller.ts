@@ -10,6 +10,7 @@ import {authorize} from '@loopback/authorization';
 import {authenticate} from "@loopback/authentication";
 import {SecurityBindings, UserProfile} from "@loopback/security";
 import {LoginService, ROLES} from "../services/login.service";
+import {isEmpty} from "lodash";
 
 @authenticate('jwt')
 @authorize({allowedRoles: ["ADMIN"]})
@@ -266,16 +267,10 @@ export class InstitutionController {
   }
 
   private async validateUnique(institution: Omit<Institution, "id">, id?: string) {
-    const where: Where<Institution> = {email: institution.email};
+    let existings = await this.institutionRepository.find({where: {email: institution.email}});
+    existings = id ? existings.filter(existing => existing.id === id) : existings;
 
-    if (!!id) {
-      where.id = {
-        neq: id
-      }
-    }
-
-    const existing = await this.institutionRepository.count(where);
-    if (existing.count > 0) {
+    if (!isEmpty(existings)) {
       throw new HttpErrors.BadRequest("Já existe uma entidade com esse email");
     }
   }

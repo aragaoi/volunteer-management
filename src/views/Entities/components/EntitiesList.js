@@ -17,6 +17,8 @@ import {ConfirmDialog} from "../../../components/ConfirmDialog";
 import {EntityFormDialog} from "./EntityFormDialog";
 import {VisitFormDialog} from "../../Visits/components/VisitFormDialog";
 import {FilterContext} from "../../../contexts/filter.context";
+import {ROLES} from "../../../services/auth.service";
+import {ShowByRole} from "../../../components/ShowByRole";
 
 export function EntitiesList() {
   const {enqueueSnackbar} = useSnackbar();
@@ -80,41 +82,45 @@ export function EntitiesList() {
                   }
                   dialog={<EntityDialog/>}
                 />
-                <DialogButtonHandler
-                  color={"primary"}
-                  actionIcon={
-                    <Tooltip title="Agendar visita">
-                      <EventIcon/>
-                    </Tooltip>
-                  }
-                  dialog={<VisitFormDialog/>}
-                />
-                <DialogButtonHandler
-                  actionIcon={
-                    <Tooltip title="Editar">
-                      <EditIcon/>
-                    </Tooltip>
-                  }
-                  dialog={
-                    <EntityFormDialog
-                      isEdit={true}
-                    />
-                  }
-                />
-                <DialogButtonHandler
-                  actionIcon={
-                    <Tooltip title="Excluir">
-                      <DeleteIcon/>
-                    </Tooltip>
-                  }
-                  dialog={
-                    <ConfirmDialog
-                      title={"Excluir entidade"}
-                      message={`Essa ação não poderá ser desfeita. Deseja realmente excluir a entidade ${entity.name}?`}
-                      onClose={(confirmed) => confirmed && handleDelete(entity)}
-                    />
-                  }
-                />
+                <ShowByRole roles={[ROLES.ADMIN, ROLES.USER]}>
+                  <DialogButtonHandler
+                    color={"primary"}
+                    actionIcon={
+                      <Tooltip title="Agendar visita">
+                        <EventIcon/>
+                      </Tooltip>
+                    }
+                    dialog={<VisitFormDialog/>}
+                  />
+                </ShowByRole>
+                <ShowByRole roles={[ROLES.ADMIN]}>
+                  <DialogButtonHandler
+                    actionIcon={
+                      <Tooltip title="Editar">
+                        <EditIcon/>
+                      </Tooltip>
+                    }
+                    dialog={
+                      <EntityFormDialog
+                        isEdit={true}
+                      />
+                    }
+                  />
+                  <DialogButtonHandler
+                    actionIcon={
+                      <Tooltip title="Excluir">
+                        <DeleteIcon/>
+                      </Tooltip>
+                    }
+                    dialog={
+                      <ConfirmDialog
+                        title={"Excluir entidade"}
+                        message={`Essa ação não poderá ser desfeita. Deseja realmente excluir a entidade ${entity.name}?`}
+                        onClose={(confirmed) => confirmed && handleDelete(entity)}
+                      />
+                    }
+                  />
+                </ShowByRole>
               </Grid>
             </Grid>
           }/>

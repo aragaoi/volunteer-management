@@ -37,7 +37,9 @@ export class JWTService implements TokenService {
           [securityId]: decodedToken.id,
           name: decodedToken.name,
           id: decodedToken.id,
+          email: decodedToken.email,
           role: decodedToken.role,
+          token: token,
         },
       );
     } catch (error) {

@@ -5,6 +5,7 @@ import {makeStyles} from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Divider, Grid, TextField} from '@material-ui/core';
 import {useFormContext} from "react-hook-form";
 import {ErrorMessage} from "@hookform/error-message";
+import {isEmpty} from "lodash";
 
 const useStyles = makeStyles(() => ({
   root: {}
@@ -36,7 +37,7 @@ const PasswordForm = props => {
 
   const validate = (password, confirm) => {
     const fieldName = "confirm";
-    if(password === confirm) {
+    if (password === confirm || (isEmpty(password) && isEmpty(confirm))) {
       clearErrors(fieldName);
     } else {
       setError(fieldName, {

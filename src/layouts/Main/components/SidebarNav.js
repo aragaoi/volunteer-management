@@ -1,13 +1,14 @@
 /* eslint-disable react/no-multi-comp */
 /* eslint-disable react/display-name */
-import React, {forwardRef, useContext} from 'react';
+import React, {forwardRef, useContext, useEffect, useState} from 'react';
 import {NavLink as RouterLink, withRouter} from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/styles';
-import {List, ListItem, Button, colors, Divider} from '@material-ui/core';
+import {makeStyles} from '@material-ui/styles';
+import {Button, colors, Divider, List, ListItem} from '@material-ui/core';
 import InputIcon from "@material-ui/icons/Input";
 import {LoginContext} from "../../../contexts/login.context";
+import {isEmpty} from "lodash";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -55,7 +56,12 @@ const SidebarNav = props => {
   const { pages, className, history } = props;
 
   const classes = useStyles();
-  const {signOut} = useContext(LoginContext);
+  const [allowedPages, setAllowedPages] = useState([]);
+  const {login, signOut} = useContext(LoginContext);
+
+  useEffect(() => {
+    setAllowedPages(pages.filter(page => isEmpty(page.roles) || page.roles.includes(login.role)));
+  }, [login, pages]);
 
   function handleLogout() {
     signOut();
@@ -66,7 +72,7 @@ const SidebarNav = props => {
     <List
       className={clsx(classes.root, className)}
     >
-      {pages.map(page => (
+      {allowedPages.map(page => (
         <ListItem
           className={classes.item}
           disableGutters

@@ -9,29 +9,33 @@ export function AddressLink(props) {
 
   const {address = {}, ...rest} = props;
 
-  return (address.street && address.city && address.state &&
-    <a target="_blank"
-       rel="noopener noreferrer"
-       href={`${googleMapsBaseUrl}${address.street},${address.city},${address.state}`}>
-      <Grid
-        container
-        justify="center"
-        alignItems="center"
-      >
-        <Grid item>
-          <LocationOnIcon fontSize="small"/>
+  return (
+    <Fragment>
+      {address.street && address.city && address.state &&
+      <a target="_blank"
+         rel="noopener noreferrer"
+         href={`${googleMapsBaseUrl}${address.street},${address.city},${address.state}`}>
+        <Grid
+          container
+          justify="center"
+          alignItems="center"
+        >
+          <Grid item>
+            <LocationOnIcon fontSize="small"/>
+          </Grid>
+          <Grid item>
+            <Typography
+              align="center"
+              variant="body2"
+              {...rest}
+            >
+              {`${address.street} - ${address.city} / ${address.state}`}
+            </Typography>
+          </Grid>
         </Grid>
-        <Grid item>
-          <Typography
-            align="center"
-            variant="body2"
-            {...rest}
-          >
-            {`${address.street} - ${address.city} / ${address.state}`}
-          </Typography>
-        </Grid>
-      </Grid>
-    </a>
+      </a>
+      }
+    </Fragment>
   )
 }
 

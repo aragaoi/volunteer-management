@@ -1,6 +1,7 @@
 import {Filter, FilterExcludingWhere, repository, Where,} from '@loopback/repository';
 import {del, get, getModelSchemaRef, HttpErrors, param, patch, post, requestBody,} from '@loopback/rest';
 import {User} from '../models';
+import {isEmpty} from 'lodash';
 import {UserRepository} from '../repositories';
 import {genSalt, hash} from "bcryptjs";
 import {authenticate} from "@loopback/authentication";
@@ -174,16 +175,10 @@ export class UserController {
   }
 
   private async validateUnique(user: Omit<User, "id">, id?: string) {
-    const where: Where<User> = {email: user.email};
+    let existings = await this.userRepository.find({where: {email: user.email}});
+    existings = id ? existings.filter(existing => existing.id != id) : existings;
 
-    if (!!id) {
-      where.id = {
-        neq: id
-      }
-    }
-
-    const existing = await this.userRepository.count(where);
-    if (existing.count > 0) {
+    if (!isEmpty(existings)) {
       throw new HttpErrors.BadRequest("Já existe um usuário com esse email");
     }
   }

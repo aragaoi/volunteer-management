@@ -1,14 +1,24 @@
-import React, {createContext, useState} from "react";
-import {doLogin, doLogout} from "../services/auth.service";
+import React, {createContext, useContext, useEffect, useState} from "react";
+import {doLogin, doLoginWithToken, doLogout} from "../services/auth.service";
+import {LoadingContext} from "./loading.context";
 
 export const LoginContext = createContext(null);
 
 export const LoginStore = props => {
-  const [login, setLogin] = useState({
-    userId: process.env.NODE_ENV === "production" ? "5f2e00fabe6e1600047c2d63" : "5f223e9d42ea623a1828eb56",
-    entityId: undefined,
-    isAdmin: true,
-  });
+  const {setIsLoading} = useContext(LoadingContext);
+  const [login, setLogin] = useState(null);
+
+  useEffect(() => {
+    const signInWithToken = async () => {
+      setIsLoading(true);
+      try {
+        await refresh();
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    signInWithToken();
+  }, []);
 
   const signIn = async (credentials) => {
     const authData = await doLogin(credentials);
@@ -20,8 +30,12 @@ export const LoginStore = props => {
     setLogin(null);
   }
 
+  const refresh = async () => {
+    setLogin(await doLoginWithToken());
+  }
+
   return (
-    <LoginContext.Provider value={{login, setLogin, signIn, signOut}}>
+    <LoginContext.Provider value={{login, setLogin, signIn, signOut, refresh}}>
       {props.children}
     </LoginContext.Provider>
   );

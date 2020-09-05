@@ -3,8 +3,6 @@ import * as _ from "lodash";
 
 const ENDPOINT_PATH = "/institutions";
 
-
-
 const dayPeriodDefault = () => ({
   available: false,
   maxVolunteers: undefined

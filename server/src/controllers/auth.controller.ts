@@ -138,8 +138,12 @@ export class AuthController {
   async whoAmI(
     @inject(SecurityBindings.USER)
       currentUserProfile: UserProfile,
-  ): Promise<UserProfile> {
-    return currentUserProfile;
+  ): Promise<any> {
+    return {
+      id: currentUserProfile.id,
+      role: currentUserProfile.role,
+      token: currentUserProfile.token
+    };
   }
 
   private async validateUnique(user: User) {

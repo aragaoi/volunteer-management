@@ -121,13 +121,17 @@ const SignIn = props => {
 
   const classes = useStyles();
 
-  const {signIn} = useContext(LoginContext);
+  const {login, signIn} = useContext(LoginContext);
   const [formState, setFormState] = useState({
     isValid: false,
     values: {},
     touched: {},
     errors: {}
   });
+
+  useEffect(() => {
+    login && history.push("/")
+  }, [])
 
   useEffect(() => {
     const errors = validate(formState.values, schema);
@@ -235,6 +239,7 @@ const SignIn = props => {
                 <Typography
                   color="textSecondary"
                   variant="body1"
+                  align={"right"}
                 >
                   <Link
                     component={RouterLink}

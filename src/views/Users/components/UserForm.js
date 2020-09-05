@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, {Fragment, useContext, useEffect, useState} from "react";
 import {UserContext} from "../../../contexts/user.context";
 import {handleImageUrl} from "../../../helpers/file";
 import Grid from "@material-ui/core/Grid";
@@ -13,13 +13,29 @@ import {UsersContext} from "../../../contexts/users.context";
 import UserDetailsForm from "./UserDetailsForm";
 import UserCard from "./UserCard";
 import FormGrid from "../../../components/FormGrid";
+import clsx from "clsx";
+import {Card, CardContent, TextField} from "@material-ui/core";
+import * as _ from "lodash";
+import {getRoleName, ROLES} from "../../../services/auth.service";
+import {isEmpty} from "lodash";
 
 export function UserForm(props) {
   const {onSubmit, isEdit} = props;
 
   const [user, setUser] = useContext(UserContext);
   const {enqueueSnackbar} = useSnackbar();
-  const [, setUsers] = useContext(UsersContext);
+  const {refresh} = useContext(UsersContext);
+  const [roles, setRoles] = useState([]);
+
+  useEffect(() => {
+    setRoles([
+      ROLES.USER,
+      ROLES.ADMIN,
+    ].map(role => ({
+      key: role,
+      value: getRoleName(role)
+    })))
+  }, [])
 
   const methods = useForm({
     resolver: yupResolver(buildUserSchema(isEdit))
@@ -37,8 +53,8 @@ export function UserForm(props) {
   }
 
   function hasConfirmedPassword(user) {
-    const confirmed = user.password === watchConfirm;
-    if(!confirmed) {
+    const confirmed = user.password === watchConfirm || (isEmpty(user.password) && isEmpty(watchConfirm));
+    if (!confirmed) {
       methods.setError("confirm", {
         type: "manual",
         message: "As senhas devem ser iguais"
@@ -59,7 +75,7 @@ export function UserForm(props) {
         enqueueSnackbar("Não foi possível salvar", {variant: "error"});
       }
 
-      setUsers(await list());
+      refresh && refresh();
       onSubmit();
     }
   }
@@ -74,6 +90,12 @@ export function UserForm(props) {
     setUser({...user, password});
   }
 
+  const handleChange = event => {
+    const newState = {...user};
+    _.set(newState, event.target.name, event.target.value);
+    setUser(newState);
+  };
+
   return <FormProvider {...methods}>
     <form
       id="user-form"
@@ -83,11 +105,52 @@ export function UserForm(props) {
     >
       <FormGrid
         onChangePassword={handlePasswordChange}
-        profile={<UserCard actions={
-          <Grid container justify={"center"}>
-            <UploadButtons name="avatar" onChange={handleUpload}/>
-          </Grid>
-        }/>}>
+        profile={
+          <Fragment>
+            <Grid
+              container
+              spacing={2}
+              alignItems={"center"}
+            >
+              <Grid
+                item
+                xs={12}
+              >
+                <UserCard actions={
+                  <Grid container justify={"center"}>
+                    <UploadButtons name="avatar" onChange={handleUpload}/>
+                  </Grid>
+                }/>
+              </Grid>
+              <Grid
+                item
+                xs={12}
+              >
+                <Card>
+                  <CardContent>
+                    <TextField
+                      fullWidth
+                      label="Perfil"
+                      margin="dense"
+                      name="role"
+                      onChange={handleChange}
+                      select
+                      SelectProps={{native: true}}
+                      value={user?.role}
+                      variant="outlined"
+                    >
+                      {roles.map(option => (
+                        <option key={option.key} value={option.key}>
+                          {option.value}
+                        </option>
+                      ))}
+                    </TextField>
+                  </CardContent>
+                </Card>
+              </Grid>
+            </Grid>
+          </Fragment>
+        }>
         <StatesStore>
           <UserDetailsForm/>
         </StatesStore>

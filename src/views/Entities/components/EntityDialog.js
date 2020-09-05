@@ -12,6 +12,8 @@ import {BasicInfo} from "../../../components/BasicInfo";
 import ApartmentIcon from "@material-ui/icons/Apartment";
 import {DialogButtonHandler} from "../../../components/DialogButtonHandler";
 import {VisitFormDialog} from "../../Visits/components/VisitFormDialog";
+import {ROLES} from "../../../services/auth.service";
+import {ShowByRole} from "../../../components/ShowByRole";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -48,12 +50,14 @@ export function EntityDialog(props) {
       <Button onClick={onClose} color="secondary">
         Fechar
       </Button>
-      <DialogButtonHandler
-        color="primary"
-        variant="contained"
-        actionText="Agendar visita"
-        dialog={<VisitFormDialog/>}
-      />
+      <ShowByRole roles={[ROLES.ADMIN, ROLES.USER]}>
+        <DialogButtonHandler
+          color="primary"
+          variant="contained"
+          actionText="Agendar visita"
+          dialog={<VisitFormDialog/>}
+        />
+      </ShowByRole>
     </DialogActions>
   </Dialog>
 }

@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import {makeStyles} from '@material-ui/styles';
 import {Avatar, Typography} from '@material-ui/core';
 import {LoginContext} from "../../../contexts/login.context";
-import {ROLES} from "../../../services/auth.service";
+import {getRoleName, ROLES} from "../../../services/auth.service";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -29,18 +29,6 @@ const Profile = props => {
   const classes = useStyles();
   const {login} = useContext(LoginContext);
 
-  function getRole(login) {
-    if (login.role === ROLES.ADMIN) {
-      return "Administrador";
-    }
-    if (login.role === ROLES.USER) {
-      return "Voluntário";
-    }
-    if (login.role === ROLES.ENTITY) {
-      return "Entidade";
-    }
-  }
-
   return (
     <div
       {...rest}
@@ -60,7 +48,7 @@ const Profile = props => {
         {login.name}
       </Typography>
       <Typography variant="body2">{login.email}</Typography>
-      <Typography variant="body2">{getRole(login)}</Typography>
+      <Typography variant="body2">{getRoleName(login.role)}</Typography>
     </div>
   );
 };

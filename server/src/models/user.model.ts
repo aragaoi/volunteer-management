@@ -9,7 +9,7 @@ import {UserCredentials} from "@loopback/authentication-jwt";
     hiddenProperties: ['password'],
     scope: {
       order: "name ASC"
-    }
+    },
   }
 })
 export class User extends Entity {

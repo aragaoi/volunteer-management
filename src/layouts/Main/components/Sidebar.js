@@ -11,6 +11,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import EventIcon from "@material-ui/icons/Event";
 import Profile from "./Profile";
 import SidebarNav from "./SidebarNav";
+import {ROLES} from "../../../services/auth.service";
 
 const useStyles = makeStyles(theme => ({
   drawer: {
@@ -49,7 +50,8 @@ const Sidebar = props => {
     {
       title: 'Usuários',
       href: '/users',
-      icon: <PeopleIcon />
+      icon: <PeopleIcon />,
+      roles: [ROLES.ADMIN]
     },
     {
       title: 'Visitas',
@@ -64,7 +66,8 @@ const Sidebar = props => {
     {
       title: 'Configurações',
       href: '/settings',
-      icon: <SettingsIcon />
+      icon: <SettingsIcon />,
+      roles: [ROLES.ADMIN]
     }
   ];
 

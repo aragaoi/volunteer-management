@@ -4,22 +4,15 @@ import {Grid} from '@material-ui/core';
 import * as _ from "lodash";
 import PasswordForm from "./PasswordForm";
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    padding: theme.spacing(4)
-  }
-}));
-
 const FormGrid = (props) => {
-  const classes = useStyles();
 
   const {profile, children, onChangePassword} = props;
 
   return (
-    <div className={classes.root}>
+    <div>
       <Grid
         container
-        spacing={4}
+        spacing={2}
       >
         <Grid
           item
@@ -37,22 +30,27 @@ const FormGrid = (props) => {
           xs={12}
           item
           container
-          spacing={4}
         >
-          {(_.isArray(children) ? children : [children]).map((child, index) =>
+          <Grid
+            container
+            spacing={2}
+            alignItems={"center"}
+          >
+            {(_.isArray(children) ? children : [children]).map((child, index) =>
+              <Grid
+                key={index}
+                item
+                xs={12}
+              >
+                {child}
+              </Grid>)
+            }
             <Grid
-              key={index}
               item
               xs={12}
             >
-              {child}
-            </Grid>)
-          }
-          <Grid
-            item
-            xs={12}
-          >
-            <PasswordForm onChange={onChangePassword}/>
+              <PasswordForm onChange={onChangePassword}/>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>

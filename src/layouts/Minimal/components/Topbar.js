@@ -5,10 +5,17 @@ import PropTypes from 'prop-types';
 import {makeStyles} from '@material-ui/styles';
 import {AppBar, Toolbar} from '@material-ui/core';
 import {Brand} from "../../Brand";
+import Button from "@material-ui/core/Button";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     boxShadow: 'none'
+  },
+  flexGrow: {
+    flexGrow: 1
+  },
+  text: {
+    color: theme.palette.white
   }
 }));
 
@@ -27,6 +34,12 @@ const Topbar = props => {
       <Toolbar>
         <RouterLink to="/">
           <Brand/>
+        </RouterLink>
+        <div className={classes.flexGrow}/>
+        <RouterLink to="/sign-in">
+          <Button className={classes.text}>
+            Entrar
+          </Button>
         </RouterLink>
       </Toolbar>
     </AppBar>

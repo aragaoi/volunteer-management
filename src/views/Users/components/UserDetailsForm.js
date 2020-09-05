@@ -66,7 +66,7 @@ const UserDetailsForm = props => {
               inputRef={register}
               onChange={handleChange}
               required
-              value={user.name}
+              value={user?.name}
               variant="outlined"
             />
             <ErrorMessage errors={errors} name="name"/>
@@ -84,7 +84,7 @@ const UserDetailsForm = props => {
               inputRef={register}
               onChange={handleChange}
               required
-              value={user.email}
+              value={user?.email}
               variant="outlined"
             />
             <ErrorMessage errors={errors} name="email"/>
@@ -103,7 +103,7 @@ const UserDetailsForm = props => {
               margin="dense"
               name="description"
               onChange={handleChange}
-              value={user.description}
+              value={user?.description}
               variant="outlined"
             />
           </Grid>
@@ -119,7 +119,7 @@ const UserDetailsForm = props => {
               name="phone"
               inputRef={register}
               onChange={handleChange}
-              value={user.phone}
+              value={user?.phone}
               variant="outlined"
             />
             <ErrorMessage errors={errors} name="phone"/>
@@ -135,7 +135,7 @@ const UserDetailsForm = props => {
               margin="dense"
               name="address.street"
               onChange={handleChange}
-              value={user.address.street}
+              value={user?.address?.street}
               variant="outlined"
             />
           </Grid>
@@ -150,7 +150,7 @@ const UserDetailsForm = props => {
               margin="dense"
               name="address.city"
               onChange={handleChange}
-              value={user.address.city}
+              value={user?.address?.city}
               variant="outlined"
             />
           </Grid>
@@ -167,7 +167,7 @@ const UserDetailsForm = props => {
               onChange={handleChange}
               select
               SelectProps={{native: true}}
-              value={user.address.state}
+              value={user?.address?.state}
               variant="outlined"
             >
               <option
@@ -196,7 +196,7 @@ const UserDetailsForm = props => {
                   style={{justifyContent: "center"}}
                   control={
                     <Checkbox
-                      checked={user.acceptsContact}
+                      checked={user?.acceptsContact}
                       name={`acceptsContact`}
                       onChange={handleChange}
                       margin="dense"

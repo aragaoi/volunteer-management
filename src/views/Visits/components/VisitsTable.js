@@ -76,7 +76,7 @@ const VisitsTable = props => {
   const {enqueueSnackbar} = useSnackbar();
   const {login}  = useContext(LoginContext);
   const [visits, setVisits] = useContext(VisitsContext);
-  const [users] = useContext(UsersContext);
+  const {users} = useContext(UsersContext);
   const [entities] = useContext(EntitiesContext);
   const {localFilter} = useContext(FilterContext);
 

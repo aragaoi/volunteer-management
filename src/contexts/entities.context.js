@@ -7,7 +7,9 @@ export const EntitiesStore = props => {
   const [entities, setEntities] = useState([]);
 
   useEffect(() => {
-    (async () => setEntities(await list()))();
+    const load = async () => setEntities(await list());
+    load();
+    return () => { setEntities(null) };
   }, []);
 
   return (
