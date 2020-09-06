@@ -4,6 +4,15 @@ import {UserEvaluation} from './user-evaluation.model';
 import {Institution} from './institution.model';
 import {User} from './user.model';
 
+export const VISIT_STATUSES = {
+  SCHEDULED: "SCHEDULED",
+  CONFIRMED: "CONFIRMED",
+  CANCELED: "CANCELED",
+  REJECTED: "REJECTED",
+  EVALUATION: "EVALUATION",
+  DONE: "DONE",
+};
+
 @model({settings: {strict: false}})
 export class Visit extends Entity {
   @property({

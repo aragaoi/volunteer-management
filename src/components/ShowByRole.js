@@ -8,7 +8,11 @@ export const ShowByRole = (props) => {
   const {roles, children} = props;
   const {login} = useContext(LoginContext);
 
-  return (login && roles.includes(login.role) && children);
+  return (
+    <>
+      {login && roles.includes(login.role) && children}
+    </>
+  );
 };
 
 ShowByRole.propTypes = {

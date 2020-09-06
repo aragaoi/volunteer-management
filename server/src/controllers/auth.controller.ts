@@ -23,12 +23,10 @@ const CredentialsSchema = {
   required: ['email', 'password'],
   properties: {
     email: {
-      type: 'string',
-      format: 'email',
+      type: 'string'
     },
     password: {
-      type: 'string',
-      minLength: 6,
+      type: 'string'
     },
   },
 };
@@ -88,6 +86,41 @@ export class AuthController {
       email: userProfile.email,
       role: userProfile.role,
       token
+    };
+  }
+
+  @authenticate('jwt')
+  @post('/auth/refresh', {
+    responses: {
+      '200': {
+        description: 'Token',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                token: {
+                  type: 'string',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  })
+  async refresh(
+    @inject(SecurityBindings.USER)
+      currentUserProfile: UserProfile,
+  ): Promise<any> {
+    // create a JSON Web Token based on the user profile
+    const newToken = await this.jwtService.generateToken(currentUserProfile);
+    return {
+      id: currentUserProfile.id,
+      name: currentUserProfile.name,
+      email: currentUserProfile.email,
+      role: currentUserProfile.role,
+      token: newToken
     };
   }
 

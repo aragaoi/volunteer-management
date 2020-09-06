@@ -7,8 +7,19 @@ import {LoadingContext} from "../contexts/loading.context";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Main from "../layouts/Main";
 import {Minimal} from "../layouts";
+import Grid from "@material-ui/core/Grid";
+import {makeStyles} from "@material-ui/styles";
+
+const useStyles = makeStyles(() => ({
+  loadingContainer: {
+    height: '100%',
+    display: 'flex'
+  },
+}));
 
 const RouteWithLayout = props => {
+  const classes = useStyles();
+
   const {
     component: Component,
     needsAuth,
@@ -39,12 +50,25 @@ const RouteWithLayout = props => {
     );
   }
 
+  function getCircularProgress() {
+    return <Grid
+      container
+      className={classes.loadingContainer}
+      alignItems="center"
+      justify="center"
+    >
+      <Grid item>
+        <CircularProgress color="secondary"/>
+      </Grid>
+    </Grid>;
+  }
+
   return (
     <Route
       {...rest}
       render={matchProps => (
         resolveLayout(
-          isLoading ? <CircularProgress color="secondary"/> : <Component {...matchProps} />
+          isLoading ? getCircularProgress() : <Component {...matchProps} />
         )
         || <Redirect to="/sign-in"/>
       )}

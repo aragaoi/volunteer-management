@@ -2,7 +2,7 @@ import Axios from "axios";
 
 const ENDPOINT_PATH = "/visits";
 
-export const VISIT_STATUS = {
+export const VISIT_STATUSES = {
   SCHEDULED: "SCHEDULED",
   CONFIRMED: "CONFIRMED",
   CANCELED: "CANCELED",
@@ -13,7 +13,7 @@ export const VISIT_STATUS = {
 
 export const emptyVisit = () => (
   {
-    status: VISIT_STATUS.SCHEDULED,
+    status: VISIT_STATUSES.SCHEDULED,
   }
 );
 
@@ -44,21 +44,21 @@ export async function insert(visit) {
 }
 
 export async function cancel(visit) {
-  return await update(visit, {status: VISIT_STATUS.CANCELED});
+  return await update(visit, {status: VISIT_STATUSES.CANCELED});
 }
 
 export async function reject(visit) {
-  return await update(visit, {status: VISIT_STATUS.REJECTED});
+  return await update(visit, {status: VISIT_STATUSES.REJECTED});
 }
 
 export async function confirm(visit) {
-  return await update(visit, {status: VISIT_STATUS.CONFIRMED});
+  return await update(visit, {status: VISIT_STATUSES.CONFIRMED});
 }
 
 export async function finishByUser(visit) {
   const patch = {
     evaluatedByUser: true,
-    status: VISIT_STATUS.EVALUATION
+    status: VISIT_STATUSES.EVALUATION
   }
   return await update(visit, patch);
 }
@@ -66,7 +66,7 @@ export async function finishByUser(visit) {
 export async function finishByEntity(visit) {
   const patch = {
     evaluatedByEntity: true,
-    status: VISIT_STATUS.EVALUATION
+    status: VISIT_STATUSES.EVALUATION
   }
   return await update(visit, patch);
 }

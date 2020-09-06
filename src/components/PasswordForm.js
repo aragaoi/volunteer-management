@@ -12,7 +12,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const PasswordForm = props => {
-  const {className, onChange, ...rest} = props;
+  const {className, onChange, fullWidth, ...rest} = props;
 
   const classes = useStyles();
 

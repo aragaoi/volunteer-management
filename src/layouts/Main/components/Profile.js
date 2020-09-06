@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import {makeStyles} from '@material-ui/styles';
 import {Avatar, Typography} from '@material-ui/core';
 import {LoginContext} from "../../../contexts/login.context";
-import {getRoleName, ROLES} from "../../../services/auth.service";
+import {getRoleName} from "../../../services/auth.service";
 
 const useStyles = makeStyles(theme => ({
   root: {

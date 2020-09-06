@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
@@ -6,6 +6,7 @@ import {makeStyles} from '@material-ui/styles';
 import {AppBar, Toolbar} from '@material-ui/core';
 import {Brand} from "../../Brand";
 import Button from "@material-ui/core/Button";
+import {LoadingContext} from "../../../contexts/loading.context";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,6 +24,7 @@ const Topbar = props => {
   const {className, ...rest} = props;
 
   const classes = useStyles();
+  const {isLoading} = useContext(LoadingContext);
 
   return (
     <AppBar
@@ -36,11 +38,13 @@ const Topbar = props => {
           <Brand/>
         </RouterLink>
         <div className={classes.flexGrow}/>
+        {!isLoading &&
         <RouterLink to="/sign-in">
           <Button className={classes.text}>
             Entrar
           </Button>
         </RouterLink>
+        }
       </Toolbar>
     </AppBar>
   );

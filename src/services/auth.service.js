@@ -18,10 +18,15 @@ export async function doLoginWithToken() {
     return null;
   }
 
-  const {data} = await Axios.get(`${ENDPOINT_PATH}/whoAmI`, {
+  const {data} = await Axios.post(`${ENDPOINT_PATH}/refresh`, null, {
     headers: {'Authorization': `Bearer ${token}`}
   });
   return handleAuthData(data);
+}
+
+export async function signUp(credentials) {
+  const {data} = await Axios.post(`${ENDPOINT_PATH}/signup`, credentials);
+  return data;
 }
 
 export async function doLogin(user) {

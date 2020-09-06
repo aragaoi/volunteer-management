@@ -7,17 +7,17 @@ import {StatesStore} from "../../../contexts/states.context";
 import {FormProvider, useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers";
 import {buildUserSchema} from "../../../common/validators";
-import {edit, insert, list} from "../../../services/user.service";
+import {edit, insert} from "../../../services/user.service";
 import {useSnackbar} from "notistack";
 import {UsersContext} from "../../../contexts/users.context";
 import UserDetailsForm from "./UserDetailsForm";
 import UserCard from "./UserCard";
 import FormGrid from "../../../components/FormGrid";
-import clsx from "clsx";
 import {Card, CardContent, TextField} from "@material-ui/core";
 import * as _ from "lodash";
-import {getRoleName, ROLES} from "../../../services/auth.service";
 import {isEmpty} from "lodash";
+import {getRoleName, ROLES} from "../../../services/auth.service";
+import {ShowByRole} from "../../../components/ShowByRole";
 
 export function UserForm(props) {
   const {onSubmit, isEdit} = props;
@@ -126,27 +126,29 @@ export function UserForm(props) {
                 item
                 xs={12}
               >
-                <Card>
-                  <CardContent>
-                    <TextField
-                      fullWidth
-                      label="Perfil"
-                      margin="dense"
-                      name="role"
-                      onChange={handleChange}
-                      select
-                      SelectProps={{native: true}}
-                      value={user?.role}
-                      variant="outlined"
-                    >
-                      {roles.map(option => (
-                        <option key={option.key} value={option.key}>
-                          {option.value}
-                        </option>
-                      ))}
-                    </TextField>
-                  </CardContent>
-                </Card>
+                <ShowByRole roles={[ROLES.ADMIN]}>
+                  <Card>
+                    <CardContent>
+                      <TextField
+                        fullWidth
+                        label="Perfil"
+                        margin="dense"
+                        name="role"
+                        onChange={handleChange}
+                        select
+                        SelectProps={{native: true}}
+                        value={user?.role}
+                        variant="outlined"
+                      >
+                        {roles.map(option => (
+                          <option key={option.key} value={option.key}>
+                            {option.value}
+                          </option>
+                        ))}
+                      </TextField>
+                    </CardContent>
+                  </Card>
+                </ShowByRole>
               </Grid>
             </Grid>
           </Fragment>

@@ -1,6 +1,6 @@
 import {Filter, repository,} from '@loopback/repository';
 import {get, getModelSchemaRef, param, patch, post, requestBody,} from '@loopback/rest';
-import {Visit} from '../models';
+import {Visit, VISIT_STATUSES} from '../models';
 import {VisitRepository} from '../repositories';
 import {authenticate} from "@loopback/authentication";
 import {authorize} from "@loopback/authorization";
@@ -125,6 +125,11 @@ export class VisitController {
     const role = currentLogin.role;
     const referenceId = currentLogin[role === ROLES.USER ? "userId" : "entityId"];
     this.loginService.validateIdConsistency(referenceId, currentLogin);
+
+    if([VISIT_STATUSES.CONFIRMED,VISIT_STATUSES.EVALUATION].includes(visit.status) &&
+      visit.evaluatedByEntity && visit.evaluatedByUser) {
+      visit.status = VISIT_STATUSES.DONE;
+    }
 
     await this.visitRepository.updateById(id, visit);
   }
