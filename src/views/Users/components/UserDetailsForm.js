@@ -12,6 +12,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import Tooltip from "@material-ui/core/Tooltip";
+import {TextMaskCustom} from "../../../components/TextMaskCustom";
 
 const useStyles = makeStyles(() => ({
   root: {},
@@ -121,6 +122,10 @@ const UserDetailsForm = props => {
               onChange={handleChange}
               value={user?.phone}
               variant="outlined"
+              mask={'(99)99999-9999'}
+              InputProps={{
+                inputComponent: TextMaskCustom,
+              }}
             />
             <ErrorMessage errors={errors} name="phone"/>
           </Grid>

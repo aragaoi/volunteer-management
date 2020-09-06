@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {Link as RouterLink} from 'react-router-dom';
+import {Link as RouterLink, withRouter} from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {makeStyles} from '@material-ui/styles';
@@ -38,7 +38,7 @@ const Topbar = props => {
           <Brand/>
         </RouterLink>
         <div className={classes.flexGrow}/>
-        {!isLoading &&
+        {!isLoading && props?.location?.pathname !== "/sign-in" &&
         <RouterLink to="/sign-in">
           <Button className={classes.text}>
             Entrar
@@ -54,4 +54,4 @@ Topbar.propTypes = {
   className: PropTypes.string
 };
 
-export default Topbar;
+export default withRouter(Topbar);

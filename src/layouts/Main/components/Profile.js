@@ -44,6 +44,7 @@ const Profile = props => {
       <Typography
         className={classes.name}
         variant="h4"
+        align="center"
       >
         {login.name}
       </Typography>

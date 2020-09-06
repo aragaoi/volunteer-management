@@ -68,13 +68,13 @@ const EntitiesToolbar = props => {
           </ShowByRole>
         </Grid>
         <Grid item container spacing={2} xs={12} md={6} alignItems="center">
-          <Grid item xs={10}>
+          <Grid item xs={9} sm={10}>
             <TextSearchInput
               className={classes.searchInput}
               placeholder="Buscar entidades"
             />
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={3} sm={2}>
             <Button
               className={classes.moreFilters}
               size="small"
@@ -86,7 +86,7 @@ const EntitiesToolbar = props => {
               Filtros
             </Button>
           </Grid>
-          {showFilters && <Grid item xs={12}>
+          {showFilters && <Grid item xs={12} sm={10}>
             <ProximitySearchInput
               className={classes.searchInput}
             />
