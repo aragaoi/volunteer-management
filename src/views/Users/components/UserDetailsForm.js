@@ -12,7 +12,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import Tooltip from "@material-ui/core/Tooltip";
-import {TextMaskCustom} from "../../../components/TextMaskCustom";
+import {MaskedInput} from "../../../components/MaskedInput";
 
 const useStyles = makeStyles(() => ({
   root: {},
@@ -118,13 +118,18 @@ const UserDetailsForm = props => {
               label="Telefone"
               margin="dense"
               name="phone"
-              inputRef={register}
               onChange={handleChange}
-              value={user?.phone}
               variant="outlined"
-              mask={'(99)99999-9999'}
+              // value="123"
+              // unmask={true} // true|false|'typed'
+              // input props also available
+              // inputComponent={MaskedInput}
               InputProps={{
-                inputComponent: TextMaskCustom,
+                inputComponent: MaskedInput,
+                inputProps: {
+                  mask: "(00)00000-0000"
+                },
+                value: user?.phone ?? ""
               }}
             />
             <ErrorMessage errors={errors} name="phone"/>
