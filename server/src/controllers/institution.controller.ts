@@ -199,7 +199,7 @@ export class InstitutionController {
     let {latitude, longitude} = await this.findGeolocation((institution || {}).address);
     institution.address = {...institution.address, latitude, longitude};
 
-    if (user.password) {
+    if (institution.password) {
       institution.password = await hash(institution.password, await genSalt());
     }
 
