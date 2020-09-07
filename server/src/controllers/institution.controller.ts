@@ -198,7 +198,10 @@ export class InstitutionController {
 
     let {latitude, longitude} = await this.findGeolocation((institution || {}).address);
     institution.address = {...institution.address, latitude, longitude};
-    institution.password = await hash(institution.password, await genSalt());
+
+    if (user.password) {
+      institution.password = await hash(institution.password, await genSalt());
+    }
 
     await this.institutionRepository.updateById(id, institution);
   }
