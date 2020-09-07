@@ -29,7 +29,7 @@ export class JWTService implements TokenService {
 
     try {
       // decode user profile from token
-      const decodedToken = await verifyAsync(token, this.jwtSecret);
+      const decodedToken = await verifyAsync(token, this.jwtSecret, {ignoreExpiration: true});
       // don't copy over  token field 'iat' and 'exp', nor 'email' to user profile
       userProfile = Object.assign(
         {[securityId]: '', name: ''},
