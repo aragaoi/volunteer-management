@@ -24,9 +24,10 @@ export function EntityForm(props) {
   const [, setEntities] = useContext(EntitiesContext);
 
   const methods = useForm({
+    mode: 'onBlur',
+    reValidateMode: 'onBlur',
     resolver: yupResolver(buildEntitySchema(isEdit))
   });
-  const watchConfirm = methods.watch("confirm");
 
   async function handleInsert(entity) {
     await insert(entity);
@@ -38,32 +39,19 @@ export function EntityForm(props) {
     enqueueSnackbar("Entidade editada com sucesso!", {variant: "success"});
   }
 
-  function hasConfirmedPassword(entity) {
-    const confirmed = entity.password === watchConfirm;
-    if(!confirmed) {
-      methods.setError("confirm", {
-        type: "manual",
-        message: "As senhas devem ser iguais"
-      })
-    }
-    return confirmed;
-  }
-
   async function handleSave() {
-    if (hasConfirmedPassword(entity)) {
-      try {
-        if (isEdit) {
-          await handleEdit(entity);
-        } else {
-          await handleInsert(entity);
-        }
-      } catch (e) {
-        enqueueSnackbar("Não foi possível salvar", {variant: "error"});
+    try {
+      if (isEdit) {
+        await handleEdit(entity);
+      } else {
+        await handleInsert(entity);
       }
-
-      setEntities(await list());
-      onSubmit();
+    } catch (e) {
+      enqueueSnackbar("Não foi possível salvar", {variant: "error"});
     }
+
+    setEntities(await list());
+    onSubmit();
   }
 
   const handleUpload = async file => {

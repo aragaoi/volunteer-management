@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
   title: {
     marginTop: theme.spacing(3)
   },
-  signInButton: {
+  signUpButton: {
     margin: theme.spacing(2, 0)
   }
 }));

@@ -12,6 +12,7 @@ import {ErrorMessage} from '@hookform/error-message';
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
+import {MaskedTextField} from "../../../components/MaskedTextField";
 
 const useStyles = makeStyles(() => ({
   root: {},
@@ -69,7 +70,8 @@ const EntityDetailsForm = props => {
               required
               select
               SelectProps={{native: true}}
-              value={entity?.institutionTypeId}
+              InputLabelProps={{shrink: Boolean(entity?.institutionTypeId)}}
+              value={entity?.institutionTypeId ?? ""}
               variant="outlined"
             >
               <option
@@ -101,7 +103,7 @@ const EntityDetailsForm = props => {
               inputRef={register}
               onChange={handleChange}
               required
-              value={entity?.name}
+              value={entity?.name ?? ""}
               variant="outlined"
             />
             <ErrorMessage errors={errors} name="name"/>
@@ -111,7 +113,8 @@ const EntityDetailsForm = props => {
             md={6}
             xs={12}
           >
-            <TextField
+            <MaskedTextField
+              mask={"00.000.000/0000-00"}
               fullWidth
               label="CNPJ"
               margin="dense"
@@ -119,7 +122,7 @@ const EntityDetailsForm = props => {
               inputRef={register}
               onChange={handleChange}
               required
-              value={entity?.document}
+              value={entity?.document ?? ""}
               variant="outlined"
             />
             <ErrorMessage errors={errors} name="document"/>
@@ -137,7 +140,7 @@ const EntityDetailsForm = props => {
               inputRef={register}
               onChange={handleChange}
               required
-              value={entity?.email}
+              value={entity?.email ?? ""}
               variant="outlined"
             />
             <ErrorMessage errors={errors} name="email"/>
@@ -156,7 +159,7 @@ const EntityDetailsForm = props => {
               margin="dense"
               name="description"
               onChange={handleChange}
-              value={entity?.description}
+              value={entity?.description ?? ""}
               variant="outlined"
             />
           </Grid>
@@ -165,14 +168,15 @@ const EntityDetailsForm = props => {
             md={4}
             xs={12}
           >
-            <TextField
+            <MaskedTextField
+              mask={[{mask: "(00) 0000-0000"}, {mask: "(00) 0 0000-0000"}]}
               fullWidth
               label="Telefone"
               margin="dense"
               name="phone"
               inputRef={register}
               onChange={handleChange}
-              value={entity?.phone}
+              value={entity?.phone ?? ""}
               variant="outlined"
             />
             <ErrorMessage errors={errors} name="phone"/>
@@ -188,7 +192,7 @@ const EntityDetailsForm = props => {
               margin="dense"
               name="address.street"
               onChange={handleChange}
-              value={entity?.address?.street}
+              value={entity?.address?.street ?? ""}
               variant="outlined"
             />
           </Grid>
@@ -203,7 +207,7 @@ const EntityDetailsForm = props => {
               margin="dense"
               name="address.city"
               onChange={handleChange}
-              value={entity?.address?.city}
+              value={entity?.address?.city ?? ""}
               variant="outlined"
             />
           </Grid>
@@ -220,7 +224,7 @@ const EntityDetailsForm = props => {
               onChange={handleChange}
               select
               SelectProps={{native: true}}
-              value={entity?.address?.state}
+              value={entity?.address?.state ?? ""}
               variant="outlined"
             >
               <option

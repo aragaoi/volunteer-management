@@ -9,6 +9,7 @@ import {FormProvider, useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers";
 import {buildLoginSchema} from "../../common/validators";
 import * as _ from "lodash";
+import {useSnackbar} from "notistack";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -35,10 +36,12 @@ const SignIn = props => {
   const {history} = props;
 
   const classes = useStyles();
-
+  const {enqueueSnackbar} = useSnackbar();
   const [credentials, setCredentials] = useState({});
   const {login, signIn} = useContext(LoginContext);
   const methods = useForm({
+    mode: 'onBlur',
+    reValidateMode: 'onBlur',
     resolver: yupResolver(buildLoginSchema())
   });
 
@@ -47,7 +50,16 @@ const SignIn = props => {
   }, []);
 
   const handleSignIn = async event => {
-    await signIn(credentials);
+    try {
+      await signIn(credentials);
+    } catch (e) {
+      if (e?.response?.status === 401) {
+        enqueueSnackbar("Usuário e/ou senha incorretos.", {variant: "error"});
+      } else {
+        enqueueSnackbar("Ocorreu um erro, não foi possível acessar.", {variant: "error"});
+      }
+      return;
+    }
     history.push('/');
   };
 
@@ -94,7 +106,6 @@ const SignIn = props => {
                 inputRef={methods.register}
                 onChange={handleChange}
                 required
-                value={credentials?.email}
                 variant="outlined"
               />
               <ErrorMessage errors={methods.errors} name="email"/>

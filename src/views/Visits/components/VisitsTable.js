@@ -153,14 +153,6 @@ const VisitsTable = props => {
     }
   }
 
-  function getFullEntity(entity) {
-    return entity ? _.find(entities, {id: entity.id}) : null;
-  }
-
-  function getFullUser(user) {
-    return user ? _.find(users, {id: user.id}) : null;
-  }
-
   return (
     <Card>
       <CardContent className={classes.content}>
@@ -191,8 +183,8 @@ const VisitsTable = props => {
                         hover
                         key={visit.id}
                       >
-                        <EntityStore entity={getFullEntity(visit.entity)}>
-                          <UserStore user={getFullUser(visit.user)}>
+                        <EntityStore entity={visit.entity}>
+                          <UserStore user={visit.user}>
                             <TableCell>
                               <div className={classes.nameContainer}>
                                 <Typography variant="body1" className={classes.nameItems}>

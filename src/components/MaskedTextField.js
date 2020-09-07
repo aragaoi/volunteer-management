@@ -3,7 +3,7 @@ import {TextField} from "@material-ui/core";
 import {MaskedInput} from "./MaskedInput";
 
 export function MaskedTextField(props) {
-  const { mask, value, ...other } = props;
+  const { mask, value, inputRef, ...other } = props;
   return (
     <TextField
       {...other}
@@ -11,7 +11,8 @@ export function MaskedTextField(props) {
       InputProps={{
         inputComponent: MaskedInput,
         inputProps: {
-          mask
+          mask,
+          inputRef
         },
         value
       }}

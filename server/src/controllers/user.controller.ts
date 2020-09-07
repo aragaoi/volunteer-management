@@ -176,7 +176,7 @@ export class UserController {
 
   private async validateUnique(user: Omit<User, "id">, id?: string) {
     let existings = await this.userRepository.find({where: {email: user.email}});
-    existings = id ? existings.filter(existing => existing.id != id) : existings;
+    existings = id ? existings.filter(existing => existing.id !== id) : existings;
 
     if (!isEmpty(existings)) {
       throw new HttpErrors.BadRequest("Já existe um usuário com esse email");

@@ -5,7 +5,6 @@ import {makeStyles} from '@material-ui/styles';
 import {Card, CardContent, CardHeader, Divider, Grid, TextField} from '@material-ui/core';
 import {useFormContext} from "react-hook-form";
 import {ErrorMessage} from "@hookform/error-message";
-import {isEmpty} from "lodash";
 
 const useStyles = makeStyles(() => ({
   root: {}
@@ -16,15 +15,14 @@ const PasswordForm = props => {
 
   const classes = useStyles();
 
-  const [password, setPassword] = useState("");
-  const [confirm, setConfirm] = useState("");
+  const [password, setPassword] = useState(null);
+  const [confirm, setConfirm] = useState(null);
 
   const {register, errors, setError, clearErrors} = useFormContext();
 
   const handleChangePassword = event => {
     const value = event.target.value;
     setPassword(value);
-    validate(value, confirm);
 
     onChange(value);
   };
@@ -32,20 +30,7 @@ const PasswordForm = props => {
   const handleChangeConfirm = event => {
     const value = event.target.value;
     setConfirm(value);
-    validate(password, value);
   };
-
-  const validate = (password, confirm) => {
-    const fieldName = "confirm";
-    if (password === confirm || (isEmpty(password) && isEmpty(confirm))) {
-      clearErrors(fieldName);
-    } else {
-      setError(fieldName, {
-        type: "manual",
-        message: "As senhas devem ser iguais"
-      });
-    }
-  }
 
   return (
     <Card

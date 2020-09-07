@@ -81,20 +81,83 @@ export class VisitController {
           {
             relation: "user",
             scope: {
-              fields: {
-                id: true,
-                name: true,
-                avatarUrl: true
-              }
+              include:
+                [
+                  {
+                    relation: "evaluations",
+                    scope: {
+                      fields: {
+                        id: true,
+                        userId: true,
+                        entityId: true,
+                        visitId: true,
+                        date: true,
+                        rating: true,
+                        comment: true
+                      },
+                      include: [{
+                        relation: "entity",
+                        scope: {
+                          fields: {
+                            id: true,
+                            name: true,
+                            avatarUrl: true
+                          }
+                        }
+                      }, {
+                        relation: "visit",
+                        scope: {
+                          fields: {
+                            id: true,
+                            date: true,
+                            period: true,
+                          }
+                        }
+                      }]
+                    }
+                  },
+                ]
             }
           }, {
             relation: "entity",
             scope: {
-              fields: {
-                id: true,
-                name: true,
-                avatarUrl: true
-              }
+              include:
+                [
+                  {relation: "institutionType"},
+                  {
+                    relation: "evaluations",
+                    scope: {
+                      fields: {
+                        id: true,
+                        userId: true,
+                        entityId: true,
+                        visitId: true,
+                        date: true,
+                        rating: true,
+                        comment: true
+                      },
+                      include: [{
+                        relation: "user",
+                        scope: {
+                          fields: {
+                            id: true,
+                            name: true,
+                            avatarUrl: true
+                          }
+                        }
+                      }, {
+                        relation: "visit",
+                        scope: {
+                          fields: {
+                            id: true,
+                            date: true,
+                            period: true,
+                          }
+                        }
+                      }]
+                    }
+                  },
+                ]
             }
           }
         ]

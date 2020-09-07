@@ -14,32 +14,32 @@ export function UserFormDialog(props) {
   const {onClose, isEdit} = props;
   const [user] = useContext(UserContext);
 
-  return <UserStore user={isEdit ? user : undefined}>
-    <Dialog
-      open={true}
-      maxWidth={"lg"}
-      fullWidth={true}
-      fullScreen={useMediaQuery(theme.breakpoints.down('sm'))}
-    >
-      <DialogTitle>
-        {isEdit ? "Editar Usuário" : "Novo Usuário"}
-      </DialogTitle>
-      <DialogContent dividers>
+  return <Dialog
+    open={true}
+    maxWidth={"lg"}
+    fullWidth={true}
+    fullScreen={useMediaQuery(theme.breakpoints.down('sm'))}
+  >
+    <DialogTitle>
+      {isEdit ? "Editar Usuário" : "Novo Usuário"}
+    </DialogTitle>
+    <DialogContent dividers>
+      <UserStore user={isEdit ? user : undefined}>
         <UserForm
           isEdit={isEdit}
           onSubmit={onClose}
         />
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} color="secondary">
-          Cancelar
-        </Button>
-        <Button type={"submit"} form="user-form" color="primary" variant={"contained"}>
-          Salvar
-        </Button>
-      </DialogActions>
-    </Dialog>
-  </UserStore>
+      </UserStore>
+    </DialogContent>
+    <DialogActions>
+      <Button onClick={onClose} color="secondary">
+        Cancelar
+      </Button>
+      <Button type={"submit"} form="user-form" color="primary" variant={"contained"}>
+        Salvar
+      </Button>
+    </DialogActions>
+  </Dialog>
 }
 
 UserFormDialog.propTypes = {

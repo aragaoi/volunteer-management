@@ -15,7 +15,6 @@ import UserCard from "./UserCard";
 import FormGrid from "../../../components/FormGrid";
 import {Card, CardContent, TextField} from "@material-ui/core";
 import * as _ from "lodash";
-import {isEmpty} from "lodash";
 import {getRoleName, ROLES} from "../../../services/auth.service";
 import {ShowByRole} from "../../../components/ShowByRole";
 
@@ -38,9 +37,10 @@ export function UserForm(props) {
   }, [])
 
   const methods = useForm({
+    mode: 'onBlur',
+    reValidateMode: 'onBlur',
     resolver: yupResolver(buildUserSchema(isEdit))
   });
-  const watchConfirm = methods.watch("confirm");
 
   async function handleInsert(user) {
     await insert(user);
@@ -52,32 +52,19 @@ export function UserForm(props) {
     enqueueSnackbar("Usuário editado com sucesso!", {variant: "success"});
   }
 
-  function hasConfirmedPassword(user) {
-    const confirmed = user.password === watchConfirm || (isEmpty(user.password) && isEmpty(watchConfirm));
-    if (!confirmed) {
-      methods.setError("confirm", {
-        type: "manual",
-        message: "As senhas devem ser iguais"
-      })
-    }
-    return confirmed;
-  }
-
   async function handleSave() {
-    if (hasConfirmedPassword(user)) {
-      try {
-        if (isEdit) {
-          await handleEdit(user);
-        } else {
-          await handleInsert(user);
-        }
-      } catch (e) {
-        enqueueSnackbar("Não foi possível salvar", {variant: "error"});
+    try {
+      if (isEdit) {
+        await handleEdit(user);
+      } else {
+        await handleInsert(user);
       }
-
-      refresh && refresh();
-      onSubmit();
+    } catch (e) {
+      enqueueSnackbar("Não foi possível salvar", {variant: "error"});
     }
+
+    refresh && refresh();
+    onSubmit();
   }
 
   const handleUpload = async file => {

@@ -11,6 +11,7 @@ import {authenticate} from "@loopback/authentication";
 import {SecurityBindings, UserProfile} from "@loopback/security";
 import {LoginService, ROLES} from "../services/login.service";
 import {isEmpty} from "lodash";
+import {genSalt, hash} from "bcryptjs";
 
 @authenticate('jwt')
 @authorize({allowedRoles: ["ADMIN"]})
@@ -59,6 +60,7 @@ export class InstitutionController {
 
     let {latitude, longitude} = await this.findGeolocation((institution || {}).address);
     institution.address = {...institution.address, latitude, longitude};
+    institution.password = await hash(institution.password, await genSalt());
 
     return this.institutionRepository.create(institution);
   }
@@ -196,6 +198,7 @@ export class InstitutionController {
 
     let {latitude, longitude} = await this.findGeolocation((institution || {}).address);
     institution.address = {...institution.address, latitude, longitude};
+    institution.password = await hash(institution.password, await genSalt());
 
     await this.institutionRepository.updateById(id, institution);
   }
@@ -268,7 +271,7 @@ export class InstitutionController {
 
   private async validateUnique(institution: Omit<Institution, "id">, id?: string) {
     let existings = await this.institutionRepository.find({where: {email: institution.email}});
-    existings = id ? existings.filter(existing => existing.id === id) : existings;
+    existings = id ? existings.filter(existing => existing.id !== id) : existings;
 
     if (!isEmpty(existings)) {
       throw new HttpErrors.BadRequest("Já existe uma entidade com esse email");

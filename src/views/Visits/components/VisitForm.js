@@ -55,7 +55,7 @@ export function VisitForm(props) {
     try {
       const parts = {
         entityId: entity.id,
-        userId: login.userId
+        userId: login.id
       };
       await insert({...visit, ...parts});
       enqueueSnackbar("Visita agendada com sucesso!", {variant: "success"});
@@ -115,7 +115,7 @@ export function VisitForm(props) {
           margin="dense"
           name="date"
           label="Data da visita"
-          value={visit.date}
+          value={visit.date ?? ""}
           inputRef={register}
           onChange={handleDateChange}
           required
@@ -139,7 +139,7 @@ export function VisitForm(props) {
           required
           select
           SelectProps={{native: true}}
-          value={visit.period}
+          value={visit.period ?? ""}
           variant="outlined"
           disabled={_.isEmpty(periods)}
         >

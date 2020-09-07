@@ -11,6 +11,7 @@ import {VisitContext} from "../../../contexts/visit.context";
 import {VisitsContext} from "../../../contexts/visits.context";
 import {finishByEntity, finishByUser, list} from "../../../services/visit.service";
 import {LoginContext} from "../../../contexts/login.context";
+import {ROLES} from "../../../services/auth.service";
 
 const useStyles = makeStyles(theme => ({
   rating: {
@@ -41,7 +42,7 @@ export function FinishVisitForm(props) {
       entityId: visit.entityId,
       visitId: visit.id
     }
-    if (login.userId) {
+    if (login.role === ROLES.USER) {
       await insertEntityEvaluation({...evaluation, ...parts});
     } else {
       await insertUserEvaluation({...evaluation, ...parts});
@@ -99,7 +100,7 @@ export function FinishVisitForm(props) {
           label="Comentário"
           margin="dense"
           name="comment"
-          value={evaluation.comment}
+          value={evaluation.comment ?? ""}
           onChange={handleChange}
           variant="outlined"
         />

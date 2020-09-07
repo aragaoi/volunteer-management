@@ -4,7 +4,6 @@ import {yupResolver} from "@hookform/resolvers";
 import {useSnackbar} from "notistack";
 import {TextField} from "@material-ui/core";
 import * as _ from "lodash";
-import {isEmpty} from "lodash";
 import {ErrorMessage} from "@hookform/error-message";
 import {buildUserSchema} from "../../common/validators";
 import {LoginContext} from "../../contexts/login.context";
@@ -19,53 +18,44 @@ export function SignUpForm(props) {
   const [confirm, setConfirm] = useState("");
 
   const methods = useForm({
+    mode: 'onBlur',
+    reValidateMode: 'onBlur',
     resolver: yupResolver(buildUserSchema())
   });
   const watchConfirm = methods.watch("confirm");
 
   async function handleInsert(user) {
-    await signUp(user);
+    try {
+      await signUp(user);
+    } catch (e) {
+      enqueueSnackbar("Não foi possível cadastrar.", {variant: "error"});
+    }
     enqueueSnackbar("Usuário cadastrado com sucesso!", {variant: "success"});
   }
 
-  function hasConfirmedPassword(user) {
-    const confirmed = isPasswordConfirmed(user.password, watchConfirm);
-    if (!confirmed) {
-      methods.setError("confirm", {
-        type: "manual",
-        message: "As senhas devem ser iguais"
-      })
-    }
-    return confirmed;
-  }
-
   async function handleSave() {
-    if (hasConfirmedPassword(user)) {
-      try {
-        await handleInsert(user);
-      } catch (e) {
-        enqueueSnackbar("Não foi possível cadastrar", {variant: "error"});
-      }
-
-      await signIn({
-        email: user.email,
-        password: user.password
-      });
-      onSubmit();
+    try {
+      await handleInsert(user);
+    } catch (e) {
+      enqueueSnackbar("Não foi possível cadastrar", {variant: "error"});
+      return;
     }
+
+    await signIn({
+      email: user.email,
+      password: user.password
+    });
+    onSubmit();
   }
 
   const handleChangePassword = event => {
     const value = event.target.value;
-    validate(value, confirm);
-
     setUser({...user, password: value});
   };
 
   const handleChangeConfirm = event => {
     const value = event.target.value;
     setConfirm(value);
-    validate(user.password, value);
   };
 
   const handleChange = event => {
@@ -73,22 +63,6 @@ export function SignUpForm(props) {
     _.set(newState, event.target.name, event.target.value);
     setUser(newState);
   };
-
-  function isPasswordConfirmed(password, confirm) {
-    return password === confirm || (isEmpty(password) && isEmpty(confirm));
-  }
-
-  const validate = (password, confirm) => {
-    const fieldName = "confirm";
-    if (isPasswordConfirmed(password, confirm)) {
-      methods.clearErrors(fieldName);
-    } else {
-      methods.setError(fieldName, {
-        type: "manual",
-        message: "As senhas devem ser iguais"
-      });
-    }
-  }
 
   return <FormProvider {...methods}>
     <form
@@ -117,7 +91,6 @@ export function SignUpForm(props) {
         inputRef={methods.register}
         onChange={handleChange}
         required
-        value={user?.email}
         variant="outlined"
       />
       <ErrorMessage errors={methods.errors} name="email"/>

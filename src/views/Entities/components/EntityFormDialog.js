@@ -14,32 +14,32 @@ export function EntityFormDialog(props) {
   const {onClose, isEdit} = props;
   const [entity] = useContext(EntityContext);
 
-  return <EntityStore entity={isEdit ? entity : undefined}>
-    <Dialog
-      open={true}
-      maxWidth={"lg"}
-      fullWidth={true}
-      fullScreen={useMediaQuery(theme.breakpoints.down('sm'))}
-    >
-      <DialogTitle>
-        {isEdit ? "Editar Entidade" : "Nova Entidade"}
-      </DialogTitle>
-      <DialogContent dividers>
+  return <Dialog
+    open={true}
+    maxWidth={"lg"}
+    fullWidth={true}
+    fullScreen={useMediaQuery(theme.breakpoints.down('sm'))}
+  >
+    <DialogTitle>
+      {isEdit ? "Editar Entidade" : "Nova Entidade"}
+    </DialogTitle>
+    <DialogContent dividers>
+      <EntityStore entity={isEdit ? entity : undefined}>
         <EntityForm
           isEdit={isEdit}
           onSubmit={onClose}
         />
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} color="secondary">
-          Cancelar
-        </Button>
-        <Button type={"submit"} form="entity-form" color="primary" variant={"contained"}>
-          Salvar
-        </Button>
-      </DialogActions>
-    </Dialog>
-  </EntityStore>
+      </EntityStore>
+    </DialogContent>
+    <DialogActions>
+      <Button onClick={onClose} color="secondary">
+        Cancelar
+      </Button>
+      <Button type={"submit"} form="entity-form" color="primary" variant={"contained"}>
+        Salvar
+      </Button>
+    </DialogActions>
+  </Dialog>
 }
 
 EntityFormDialog.propTypes = {
