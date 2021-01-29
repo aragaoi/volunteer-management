@@ -92,15 +92,6 @@ export class UserController {
                       avatarUrl: true
                     }
                   }
-                }, {
-                  relation: "visit",
-                  scope: {
-                    fields: {
-                      id: true,
-                      date: true,
-                      period: true,
-                    }
-                  }
                 }]
               }
             },

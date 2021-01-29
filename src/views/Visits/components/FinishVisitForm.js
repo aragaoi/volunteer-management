@@ -53,7 +53,7 @@ export function FinishVisitForm(props) {
     event.preventDefault();
 
     try {
-      if (login.userId) {
+      if (login.role === ROLES.USER) {
         await finishByUser(visit);
       } else {
         await finishByEntity(visit);

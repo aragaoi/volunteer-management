@@ -126,15 +126,6 @@ export class InstitutionController {
                       avatarUrl: true
                     }
                   }
-                }, {
-                  relation: "visit",
-                  scope: {
-                    fields: {
-                      id: true,
-                      date: true,
-                      period: true,
-                    }
-                  }
                 }]
               }
             },

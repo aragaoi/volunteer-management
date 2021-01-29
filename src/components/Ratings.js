@@ -95,7 +95,7 @@ export function Ratings(props) {
                               <Rating defaultValue={evaluation.rating} readOnly size={"small"}/>
                             </Grid>
                             <Grid item>
-                              {`${evaluation.user.name} | ${moment(evaluation.date).format("DD/MM/YY")}`}
+                              {`${evaluation?.user?.name ?? evaluation?.entity?.name ?? ''} | ${moment(evaluation.date).format("DD/MM/YY")}`}
                             </Grid>
                         </Grid>
                       }

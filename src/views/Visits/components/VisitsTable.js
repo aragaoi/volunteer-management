@@ -114,7 +114,7 @@ const VisitsTable = props => {
 
   async function handleCancel(visit) {
     let message = "Visita cancelada com sucesso!";
-    if (login.userId) {
+    if (login.role === ROLES.USER) {
       await cancel(visit);
     } else {
       await reject(visit);

@@ -15,6 +15,7 @@ import {EvaluationStore} from "../../../contexts/evaluation.context";
 import {LoginContext} from "../../../contexts/login.context";
 import Typography from "@material-ui/core/Typography";
 import {formatDateAndPeriod} from "../../../helpers/date";
+import {ROLES} from "../../../services/auth.service";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -45,7 +46,7 @@ export function FinishVisitFormDialog(props) {
         Finalizar Visita
       </DialogTitle>
       <DialogContent dividers>
-        {login.userId ?
+        {login.role === ROLES.USER ?
           <BasicInfo
             {...visit.entity}
             defaultAvatar={

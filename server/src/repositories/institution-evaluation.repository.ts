@@ -18,12 +18,10 @@ export class InstitutionEvaluationRepository extends DefaultCrudRepository<
 
   constructor(
     @inject('datasources.db') dataSource: DbDataSource,
-    @repository.getter('VisitRepository') protected visitRepositoryGetter: Getter<VisitRepository>, @repository.getter('UserRepository') protected userRepositoryGetter: Getter<UserRepository>,
+    @repository.getter('UserRepository') protected userRepositoryGetter: Getter<UserRepository>,
   ) {
     super(InstitutionEvaluation, dataSource);
     this.user = this.createBelongsToAccessorFor('user', userRepositoryGetter,);
     this.registerInclusionResolver('user', this.user.inclusionResolver);
-    this.visit = this.createBelongsToAccessorFor('visit', visitRepositoryGetter,);
-    this.registerInclusionResolver('visit', this.visit.inclusionResolver);
   }
 }

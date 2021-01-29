@@ -104,15 +104,6 @@ export class VisitController {
                             avatarUrl: true
                           }
                         }
-                      }, {
-                        relation: "visit",
-                        scope: {
-                          fields: {
-                            id: true,
-                            date: true,
-                            period: true,
-                          }
-                        }
                       }]
                     }
                   },
@@ -143,15 +134,6 @@ export class VisitController {
                             id: true,
                             name: true,
                             avatarUrl: true
-                          }
-                        }
-                      }, {
-                        relation: "visit",
-                        scope: {
-                          fields: {
-                            id: true,
-                            date: true,
-                            period: true,
                           }
                         }
                       }]
@@ -185,12 +167,15 @@ export class VisitController {
     })
       visit: Visit,
   ): Promise<void> {
-    const role = currentLogin.role;
-    const referenceId = currentLogin[role === ROLES.USER ? "userId" : "entityId"];
+    const fullVisit = await this.visitRepository.findById(id);
+    const referenceId = fullVisit[currentLogin.role === ROLES.USER ? "userId" : "entityId"];
     this.loginService.validateIdConsistency(referenceId, currentLogin);
 
-    if([VISIT_STATUSES.CONFIRMED,VISIT_STATUSES.EVALUATION].includes(visit.status) &&
-      visit.evaluatedByEntity && visit.evaluatedByUser) {
+    if(
+      [VISIT_STATUSES.CONFIRMED,VISIT_STATUSES.EVALUATION].includes(visit.status) &&
+      (visit.evaluatedByEntity || fullVisit.evaluatedByEntity) &&
+      (visit.evaluatedByUser || fullVisit.evaluatedByUser)
+    ) {
       visit.status = VISIT_STATUSES.DONE;
     }
 
