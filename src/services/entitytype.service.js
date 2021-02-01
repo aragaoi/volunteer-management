@@ -10,11 +10,12 @@ export async function list() {
 
 export async function saveAll([...entityTypes]) {
   if (_.isEmpty(entityTypes)) {
-    return;
+    return [];
   }
 
   entityTypes.forEach(type => {
     delete type.added;
+    delete type.deleted;
     delete type.id;
   });
 
@@ -24,7 +25,7 @@ export async function saveAll([...entityTypes]) {
 
 export async function deleteAll([...entityTypes]) {
   if (_.isEmpty(entityTypes)) {
-    return;
+    return [];
   }
 
   entityTypes.forEach(type => delete type.deleted);
@@ -33,11 +34,9 @@ export async function deleteAll([...entityTypes]) {
     active: false
   }, {
     params: {
-      where: JSON.stringify({
-        id: {
-          inq: entityTypes.map(type => type.id)
-        }
-      })
+      ids: entityTypes
+        .filter(type => type.id)
+        .map(type => type.id)
     }
   });
   return result.data;

@@ -293,8 +293,10 @@ const VisitsTable = props => {
                               }
                               dialog={
                                 <ConfirmDialog
-                                  title={"Cancelar visita"}
+                                  title={"Cancelar visita?"}
                                   message={`Essa ação não poderá ser desfeita. Deseja realmente cancelar a visita?`}
+                                  okButtonMessage={'Sim'}
+                                  cancelButtonMessage={'Não'}
                                   onClose={(confirmed) => confirmed && handleCancel(visit)}
                                 />
                               }
@@ -311,7 +313,7 @@ const VisitsTable = props => {
                                 dialog={
                                   <ConfirmDialog
                                     color="primary"
-                                    title={"Aceitar visita"}
+                                    title={"Aceitar visita?"}
                                     message={`Deseja realmente confirmar a visita agendada?`}
                                     onClose={(confirmed) => confirmed && handleConfirm(visit)}
                                   />

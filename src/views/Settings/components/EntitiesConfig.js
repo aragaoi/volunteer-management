@@ -32,17 +32,18 @@ const EntitiesConfig = props => {
   }
 
   function handleDelete(type) {
-    if (!_.isEmpty(type.id)) {
-      dispatch({type: "DELETE", payload: type});
-    }
+    dispatch({type: "DELETE", payload: type});
   }
 
   async function handleSave() {
-    const addedTypes = _.filter(entityTypes, {added: true});
-    const deletedTypes = _.filter(entityTypes, {deleted: true});
+    const allTypes = [...entityTypes];
+    let addedTypes = _.remove(allTypes, {added: true}) || [];
+    const deletedTypes = _.remove(allTypes, {deleted: true}) || [];
 
     await deleteAll(deletedTypes);
-    await saveAll(addedTypes);
+    addedTypes = await saveAll(addedTypes);
+
+    dispatch({type: "INIT", payload: [...allTypes, ...addedTypes]});
     enqueueSnackbar("Configurações salvas com sucesso!", {variant: "success"});
   }
 

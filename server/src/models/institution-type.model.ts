@@ -4,7 +4,6 @@ import {Entity, model, property} from '@loopback/repository';
   settings: {
     strict: false,
     scope: {
-      where: {active: true},
       order: "name ASC"
     },
   }
@@ -25,10 +24,9 @@ export class InstitutionType extends Entity {
 
   @property({
     type: 'boolean',
-    required: false,
     default: true,
   })
-  active: string;
+  active?: boolean;
 
   // Define well-known properties here
 

@@ -8,14 +8,21 @@ function reducer(state, action) {
   switch (action.type) {
     case 'ADD':
       action.payload.added = true;
+      action.payload.deleted = false;
       action.payload.active = true;
       return [...state, action.payload];
     case 'DELETE':
-      if(!action.payload.added) {
+      if (action.payload.added) {
+        action.payload.added = false;
+      } else {
         action.payload.deleted = true;
       }
 
-      _.remove(state, {id: action.payload.id});
+      if (_.isEmpty(action.payload.id)) {
+        _.remove(state, {name: action.payload.name});
+      } else {
+        _.remove(state, {id: action.payload.id});
+      }
       action.payload.active = false;
       return [...state, action.payload];
     case 'INIT':

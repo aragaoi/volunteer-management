@@ -65,7 +65,10 @@ export class InstitutionTypeController {
   async find(
     @param.filter(InstitutionType) filter?: Filter<InstitutionType>,
   ): Promise<InstitutionType[]> {
-    return this.institutionTypeRepository.find(filter);
+    return this.institutionTypeRepository.find({
+      ...filter,
+      where: {active: true, ...filter?.where}
+    });
   }
 
   @patch('/institution-types', {
@@ -85,8 +88,11 @@ export class InstitutionTypeController {
       },
     })
       institutionType: InstitutionType,
-    @param.where(InstitutionType) where?: Where<InstitutionType>,
-  ): Promise<Count> {
-    return this.institutionTypeRepository.updateAll(institutionType, where);
+    @param.array('ids', 'query', {type: 'string'}) ids: string[],
+  ): Promise<void> {
+    ids.forEach(id =>
+      this.institutionTypeRepository.updateById(id, institutionType)
+    );
+    return;
   }
 }
