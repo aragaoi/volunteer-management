@@ -1,7 +1,7 @@
-# Plataforma de voluntariado
+# Volunteer Management Platform
 
-Plataforma que conecta voluntários a entidades abertas a trabalho voluntário, facilitando a comunicação e gestão de agenda de trabalho.
+Web platform that connects volunteers to entities that are open to volunteer work. It facilitates communication and work schedule management.
 
-##### Após o primeiro deploy:
- - cadastre um usuário inicial através da tela na rota "sign-up", que será o administrador;
- - acesse o banco de dados e altere o "role" do usuário para "ADMIN", para acessar todas as funcionalidades;
+##### After the first deploy:
+ - register an initial user through the "/sign-up" route;
+ - access the DB and change the user's role to "ADMIN", which has access to all features, including adding other users.
